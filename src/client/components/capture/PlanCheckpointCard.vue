@@ -84,7 +84,7 @@ function toggleDep(id: string) {
       <IconButton :label="t('plan.list.remove', { n: index + 1 })" @click="emit('remove')"><Trash2 /></IconButton>
     </div>
 
-    <div class="mt-3 grid gap-3 pl-[52px] sm:pl-[60px]">
+    <div class="mt-3 grid min-w-0 gap-3 sm:pl-[60px] [&>*]:min-w-0">
       <Field v-slot="{ id, describedby, invalid }" :label="t('plan.card.title')">
         <Input
           :id="id"
@@ -101,7 +101,7 @@ function toggleDep(id: string) {
         <Textarea :id="id" rows="2" :model-value="cp.completionCriteria ?? ''" :aria-describedby="describedby" @update:model-value="(v) => edit({ completionCriteria: (v as string) || null })" />
       </Field>
 
-      <div class="grid grid-cols-2 gap-3 lg:grid-cols-3">
+      <div class="grid min-w-0 grid-cols-2 gap-3 lg:grid-cols-3 [&>*]:min-w-0">
         <Field v-slot="{ id, describedby }" :label="t('plan.card.start')" class="min-w-0">
           <Input :id="id" type="date" size="sm" :model-value="cp.startDate ?? ''" :aria-describedby="describedby" @update:model-value="(v) => edit({ startDate: (v as string) || null })" />
         </Field>

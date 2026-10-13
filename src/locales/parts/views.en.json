@@ -159,7 +159,10 @@
       },
       "heatmap": {
         "title": "Activity calendar",
-        "desc": "Completions and logged progress per day, over the last {days} days."
+        "desc": "Completions and logged progress per day, over the last {days} days.",
+        "less": "Less",
+        "more": "More",
+        "activity": "{n} activities"
       },
       "effort": {
         "title": "Planned vs actual effort",

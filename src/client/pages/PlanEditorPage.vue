@@ -422,7 +422,7 @@ const parentKind = computed(() => (parent.value?.kind === 'goal' ? t('plan.paren
       <!-- Footer -->
       <footer
         v-if="isPending"
-        class="sticky bottom-[calc(64px+env(safe-area-inset-bottom))] z-10 -mx-4 mt-8 border-t border-border bg-surface-raised/95 px-4 py-3 backdrop-blur md:bottom-0 md:-mx-8 md:px-8"
+        class="fixed inset-x-0 bottom-[calc(64px+env(safe-area-inset-bottom))] z-20 border-t border-border bg-surface-raised/95 px-4 py-3 backdrop-blur md:sticky md:inset-x-auto md:bottom-0 md:z-10 md:-mx-8 md:mt-8 md:px-8"
       >
         <div class="mx-auto flex max-w-4xl flex-col gap-2 md:flex-row md:items-center md:justify-between md:gap-3">
           <p class="min-w-0 truncate text-xs" :class="hasBlankTitle ? 'text-warning-text' : 'text-muted'">

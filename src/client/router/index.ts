@@ -16,6 +16,8 @@ const routes: RouteRecordRaw[] = [
   { path: '/signin', component: () => import('@/pages/SignInPage.vue'), meta: { public: true, titleKey: 'auth.signIn' } },
   // AuthCenter redirects here with ?token=...; the page strips it immediately.
   { path: '/sso-callback', component: () => import('@/pages/SsoCallbackPage.vue'), meta: { public: true, titleKey: 'auth.signingIn' } },
+  { path: '/docs', component: () => import('@/pages/DocsPage.vue'), meta: { public: true, titleKey: 'docsPage.title' } },
+  { path: '/privacy', component: () => import('@/pages/PrivacyPage.vue'), meta: { public: true, titleKey: 'privacyPage.title' } },
   {
     path: '/',
     component: AppShell,
@@ -51,7 +53,8 @@ const routes: RouteRecordRaw[] = [
 export const router = createRouter({
   history: createWebHistory(),
   routes,
-  scrollBehavior: (_to, _from, saved) => saved ?? { top: 0 },
+  // Hash links (e.g. /docs#inbox) scroll to their section, offset for the sticky header.
+  scrollBehavior: (to, _from, saved) => saved ?? (to.hash ? { el: to.hash, top: 80, behavior: 'smooth' } : { top: 0 }),
 })
 
 router.beforeEach(async (to) => {

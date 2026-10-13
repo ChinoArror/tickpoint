@@ -1,0 +1,30 @@
+{
+  "footer": {
+    "label": "サイトリンク",
+    "tagline": "締め切り、目標、チェックポイントを、落ち着いて計画。",
+    "rights": "© {year} Aryuki. All rights reserved.",
+    "help": "ヘルプ",
+    "privacy": "プライバシー"
+  },
+  "docsPage": {
+    "title": "ヘルプ",
+    "heading": "TickPoint ヘルプ",
+    "intro": "最初のサインインからリマインダー、チェックポイント、データの管理まで、TickPoint の使い方をまとめました。",
+    "toc": "このページの内容",
+    "enlarge": "スクリーンショットを原寸で表示",
+    "enlargeTitle": "スクリーンショット",
+    "privacyLink": "プライバシーポリシーを読む",
+    "layout": {
+      "language": "言語",
+      "english": "English",
+      "japanese": "日本語",
+      "openApp": "TickPoint を開く",
+      "home": "TickPoint のホーム"
+    }
+  },
+  "privacyPage": {
+    "title": "プライバシーポリシー",
+    "heading": "プライバシーポリシー",
+    "effective": "施行日: 2026年10月13日"
+  }
+}

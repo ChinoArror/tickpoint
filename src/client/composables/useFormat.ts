@@ -111,5 +111,26 @@ export function useFormat() {
 
   const today = computed(() => isoDateInZone(Date.now(), tz.value))
 
-  return { tz, today, dateTime, date, time, due, relativeDay, countdown, minutes, relativeTime, percent, number, zoneAbbr }
+  /** Coarse human duration from minutes: "1d 9h", "5h 20m", "45m". */
+  function span(mins: number): string {
+    const m = Math.max(0, Math.round(mins))
+    const d = Math.floor(m / 1440)
+    const h = Math.floor((m % 1440) / 60)
+    if (d) return h ? t('duration.dh', { d, h }) : t('duration.days', { d })
+    return minutes(m)
+  }
+
+  /** Risk explanation with human-readable durations instead of raw minute counts. */
+  function riskReason(r: { code: string; params?: Record<string, number | string> }): string {
+    const p: Record<string, unknown> = { ...(r.params ?? {}) }
+    if (r.code === 'overdue' && typeof p.minutes === 'number') p.minutes = span(p.minutes)
+    if (r.code === 'effort_exceeds_time') {
+      if (typeof p.effort === 'number') p.effort = span(p.effort)
+      if (typeof p.available === 'number') p.available = span(p.available)
+    }
+    if (r.code === 'little_time_low_progress' && typeof p.hours === 'number') p.hours = span(p.hours * 60)
+    return t(`risk.reason.${r.code}`, p)
+  }
+
+  return { tz, today, dateTime, date, time, due, relativeDay, countdown, minutes, relativeTime, percent, number, zoneAbbr, riskReason, span }
 }

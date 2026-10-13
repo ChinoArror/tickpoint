@@ -338,7 +338,7 @@ const currentStepLabel = computed(() => steps.value[currentStep.value - 1]?.labe
         <p class="text-xs font-medium text-muted">{{ t('capture.stepCompact', { n: currentStep, total: steps.length, label: currentStepLabel }) }}</p>
         <ProgressBar :value="currentStep" :max="steps.length" size="xs" tone="primary" :label="t('capture.progress')" />
       </div>
-      <ol class="hidden items-center gap-1.5 overflow-x-auto pb-1 text-xs sm:flex" :aria-label="t('capture.progress')">
+      <ol class="-m-1 hidden flex-wrap items-center gap-1.5 p-1 text-xs sm:flex" :aria-label="t('capture.progress')">
         <li v-for="s in steps" :key="s.key" class="flex shrink-0 items-center gap-1.5" :aria-current="currentStep === s.n ? 'step' : undefined">
           <span
             class="tabular grid size-5 shrink-0 place-items-center rounded-full text-[11px] font-semibold"
@@ -528,7 +528,7 @@ const currentStepLabel = computed(() => steps.value[currentStep.value - 1]?.labe
 
           <div
             v-if="isPending"
-            class="sticky bottom-[calc(64px+env(safe-area-inset-bottom))] z-10 -mx-4 mt-6 border-t border-border bg-surface-raised/95 px-4 py-3 backdrop-blur md:bottom-0 md:-mx-8 md:px-8"
+            class="fixed inset-x-0 bottom-[calc(64px+env(safe-area-inset-bottom))] z-20 border-t border-border bg-surface-raised/95 px-4 py-3 backdrop-blur md:sticky md:inset-x-auto md:bottom-0 md:z-10 md:-mx-8 md:mt-6 md:px-8"
           >
             <div class="mx-auto flex max-w-6xl flex-col gap-2 md:flex-row md:items-center md:justify-between md:gap-3">
               <div class="min-w-0 md:flex-1">

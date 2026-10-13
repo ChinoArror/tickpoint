@@ -308,7 +308,7 @@
       "discardMessage": "The draft checkpoints are deleted. Nothing has been added to your task.",
       "discardConfirm": "Discard",
       "discarded": "Plan discarded.",
-      "approve": "Approve & add {n} checkpoint(s)",
+      "approve": "Approve",
       "approveBlocked": "Every checkpoint needs a title.",
       "ready": "Check each checkpoint before approving.",
       "approved": "Added {n} checkpoint(s).",

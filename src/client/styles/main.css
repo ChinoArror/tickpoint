@@ -378,3 +378,33 @@ html.dark {
     inset: -8px;
   }
 }
+
+/* iOS Safari zooms the page when a focused field's font-size is below 16px.
+   Use 16px on phones so tapping an input never zooms; pinch-zoom stays available. */
+@media (max-width: 767px) {
+  input:not([type='checkbox']):not([type='radio']):not([type='range']),
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* iOS Safari renders native date/time inputs with an intrinsic width that ignores
+   width:100% and pushes them out of narrow grids/sheets. Normalise them so they
+   always fit their column. */
+input[type='date'],
+input[type='time'],
+input[type='datetime-local'],
+input[type='month'] {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+}
+input[type='date']::-webkit-date-and-time-value,
+input[type='time']::-webkit-date-and-time-value,
+input[type='datetime-local']::-webkit-date-and-time-value {
+  text-align: left;
+  min-height: 1.5em;
+}

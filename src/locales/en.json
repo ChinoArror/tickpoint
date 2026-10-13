@@ -139,7 +139,9 @@
   "duration": {
     "hm": "{h}h {m}m",
     "h": "{h}h",
-    "m": "{m}m"
+    "m": "{m}m",
+    "days": "{d}d",
+    "dh": "{d}d {h}h"
   },
   "time": {
     "today": "Today",
@@ -177,11 +179,11 @@
     "reason": {
       "completed": "Completed.",
       "no_deadline": "No confirmed deadline, so schedule risk is not assessed.",
-      "overdue": "The deadline passed {minutes} minutes ago.",
-      "effort_exceeds_time": "About {effort} min of work left but only {available} min of available time.",
+      "overdue": "The deadline passed {minutes} ago.",
+      "effort_exceeds_time": "About {effort} of work left but only {available} of available time.",
       "tight_schedule": "Remaining work uses {ratio}% of your available time.",
       "behind_expected_progress": "Progress is {actual}% but about {expected}% would be expected by now.",
-      "little_time_low_progress": "Only about {hours}h left with little progress.",
+      "little_time_low_progress": "Only about {hours} left with little progress.",
       "blocked_by_dependencies": "Blocked by {count} unfinished dependency(ies).",
       "delayed_checkpoints": "{count} checkpoint(s) are past their target date.",
       "comfortable": "Enough time for the remaining work."

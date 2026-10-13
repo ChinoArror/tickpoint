@@ -6,6 +6,7 @@ import { onKeyStroke, useMediaQuery, useWindowScroll } from '@vueuse/core'
 import { MoreHorizontal, PanelLeftClose, PanelLeftOpen, Plus, Search } from 'lucide-vue-next'
 import Logo from '@/components/brand/Logo.vue'
 import Kbd from '@/components/ui/Kbd.vue'
+import AppFooter from '@/components/shell/AppFooter.vue'
 import TopBarActions from './TopBarActions.vue'
 import { MOBILE_NAV, NAV, TASK_VIEW_PATHS } from './nav'
 import { useUiStore } from '@/stores/ui'
@@ -163,6 +164,7 @@ onKeyStroke('q', (e) => {
             <component :is="Component" :key="r.meta.transitionKey ?? r.path" />
           </Transition>
         </RouterView>
+        <AppFooter />
       </main>
     </div>
 

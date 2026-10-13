@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, type Component } from 'vue'
+import { computed, ref, watch, type Component } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { keepPreviousData, useQuery } from '@tanstack/vue-query'
 import { useMediaQuery } from '@vueuse/core'
@@ -48,7 +48,7 @@ interface Analytics {
   checkpointTimeline: { title: string; completedOn: string; targetDate: string | null; onTime: boolean | null }[]
 }
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const f = useFormat()
 const session = useSessionStore()
 const isDesktop = useMediaQuery('(min-width: 768px)')
@@ -209,29 +209,68 @@ const heatRows = computed(() => {
   return out
 })
 const heatHas = computed(() => heatRows.value.some((x) => x.count > 0))
+/** Same colour with a different alpha; palette colours arrive as rgb()/rgba() strings. */
+function withAlpha(color: string, alpha: number): string {
+  const m = color.match(/rgba?\(([^)]+)\)/)
+  if (!m) return color
+  const [r, g, b] = m[1].split(',').map((x) => x.trim())
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
+/** GitHub-style contribution levels: 0 = empty, then four intensities of the accent colour. */
+function heatLevels(p: ChartPalette, max: number) {
+  const step = Math.max(1, Math.ceil(max / 4))
+  const colors = [p.border, withAlpha(p.primary, 0.3), withAlpha(p.primary, 0.55), withAlpha(p.primary, 0.8), p.primary]
+  const pieces = [
+    { min: 0, max: 0, color: colors[0] },
+    ...[1, 2, 3, 4].map((lvl) => ({ min: (lvl - 1) * step + 1, max: lvl === 4 ? Number.MAX_SAFE_INTEGER : lvl * step, color: colors[lvl] })),
+  ]
+  return { colors, pieces }
+}
+const heatLegend = ref<string[]>([])
+// Like GitHub, show the most recent weeks first when the year does not fit.
+const heatScroller = ref<HTMLElement | null>(null)
+watch(heatScroller, (el) => el && requestAnimationFrame(() => (el.scrollLeft = el.scrollWidth)))
+
 const heatOption = (p: ChartPalette): EChartsOption => {
   const rows = heatRows.value
   const max = Math.max(1, ...rows.map((r) => r.count))
+  const { colors, pieces } = heatLevels(p, max)
+  heatLegend.value = colors
+  const ja = locale.value === 'ja'
+  const cell = 14
   return {
-    tooltip: { formatter: (params: unknown) => {
-      const x = params as { value: [string, number] }
-      return `${f.date(x.value[0])}: ${f.number(x.value[1], 0)}`
-    } },
-    visualMap: { min: 0, max, show: false, inRange: { color: [p.border, p.primary] } },
+    tooltip: {
+      formatter: (params: unknown) => {
+        const x = params as { value: [string, number] }
+        return `${f.date(x.value[0], { weekday: true })} · ${t('analytics.charts.heatmap.activity', { n: f.number(x.value[1], 0) })}`
+      },
+    },
+    visualMap: { type: 'piecewise', show: false, pieces, outOfRange: { color: colors[0] } },
     calendar: {
-      top: 24,
-      left: 36,
-      right: 8,
-      bottom: 4,
-      cellSize: ['auto', 12],
+      top: 22,
+      left: 34,
+      right: 6,
+      bottom: 2,
+      // Square cells like GitHub; the gap comes from the cell border in the surface colour.
+      cellSize: [cell, cell],
       range: [rows[0]?.date ?? f.today.value, rows[rows.length - 1]?.date ?? f.today.value],
-      itemStyle: { borderWidth: 2, borderColor: p.surface },
+      itemStyle: { color: 'transparent', borderWidth: 0 },
       splitLine: { show: false },
       yearLabel: { show: false },
-      dayLabel: { color: p.muted, fontSize: 10, nameMap: 'en', firstDay: session.settings?.weekStart === 1 ? 1 : 0 },
-      monthLabel: { color: p.muted, fontSize: 10, nameMap: 'en' },
+      dayLabel: { color: p.muted, fontSize: 10, nameMap: ja ? ['日', '月', '火', '水', '木', '金', '土'] : 'en', firstDay: session.settings?.weekStart === 1 ? 1 : 0 },
+      monthLabel: { color: p.muted, fontSize: 10, nameMap: ja ? 'ZH' : 'en' },
     },
-    series: [{ type: 'heatmap', coordinateSystem: 'calendar', data: rows.map((r) => [r.date, r.count]) }],
+    series: [
+      {
+        type: 'heatmap',
+        coordinateSystem: 'calendar',
+        data: rows.map((r) => [r.date, r.count]),
+        // 10px rounded squares with a 4px gap (2px surface-coloured border on each cell).
+        itemStyle: { borderRadius: 2.5, borderWidth: 2, borderColor: p.surface },
+        emphasis: { itemStyle: { borderColor: p.fg, borderWidth: 1 } },
+      },
+    ],
   }
 }
 
@@ -366,7 +405,19 @@ const summaries = computed(() => {
         </Card>
 
         <Card class="lg:col-span-2" :title="t('analytics.charts.heatmap.title')" :subtitle="t('analytics.charts.heatmap.desc', { days: heatDays })">
-          <EChart v-if="heatHas" :option="heatOption" :label="summaries.heatmap" :height="isDesktop ? 190 : 160" />
+          <template v-if="heatHas">
+            <!-- A year of square cells needs ~740px; narrower cards scroll horizontally (newest days on the right). -->
+            <div ref="heatScroller" class="-mx-1 overflow-x-auto px-1 scrollbar-none">
+              <div :class="isDesktop ? 'min-w-[790px]' : 'min-w-[300px]'">
+                <EChart :option="heatOption" :label="summaries.heatmap" :height="isDesktop ? 128 : 136" />
+              </div>
+            </div>
+            <div class="mt-2 flex items-center justify-end gap-1.5 text-[11px] text-subtle" aria-hidden="true">
+              <span>{{ t('analytics.charts.heatmap.less') }}</span>
+              <span v-for="(c, i) in heatLegend" :key="i" class="size-[11px] rounded-[3px]" :style="{ background: c }" />
+              <span>{{ t('analytics.charts.heatmap.more') }}</span>
+            </div>
+          </template>
           <EmptyState v-else compact :icon="Flame" :title="t('analytics.empty.title')" :description="t('analytics.empty.heatmap')" />
         </Card>
 

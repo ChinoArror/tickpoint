@@ -625,7 +625,7 @@ function shown(k: SectionKey): boolean {
 }
 const hiddenSections = computed(() => (Object.keys(contentFlags.value) as SectionKey[]).filter((k) => !shown(k)))
 
-const reasonText = (r: { code: string; params?: Record<string, number | string> }) => t(`risk.reason.${r.code}`, (r.params ?? {}) as Record<string, unknown>)
+const reasonText = (r: { code: string; params?: Record<string, number | string> }) => f.riskReason(r)
 
 const fileInput = ref<HTMLInputElement | null>(null)
 const LOCATION_KEYS = ['physical', 'building', 'room', 'campus', 'online', 'contact'] as const

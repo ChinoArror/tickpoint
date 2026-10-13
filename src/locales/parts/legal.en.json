@@ -1,0 +1,30 @@
+{
+  "footer": {
+    "label": "Site links",
+    "tagline": "Plan deadlines, goals and checkpoints, calmly.",
+    "rights": "© {year} Aryuki. All rights reserved.",
+    "help": "Help",
+    "privacy": "Privacy"
+  },
+  "docsPage": {
+    "title": "Help",
+    "heading": "TickPoint Help",
+    "intro": "A practical guide to TickPoint, from your first sign-in to reminders, checkpoints and your data.",
+    "toc": "On this page",
+    "enlarge": "View screenshot at full size",
+    "enlargeTitle": "Screenshot",
+    "privacyLink": "Read the Privacy Policy",
+    "layout": {
+      "language": "Language",
+      "english": "English",
+      "japanese": "日本語",
+      "openApp": "Open TickPoint",
+      "home": "TickPoint home"
+    }
+  },
+  "privacyPage": {
+    "title": "Privacy Policy",
+    "heading": "Privacy Policy",
+    "effective": "Effective: October 13, 2026"
+  }
+}

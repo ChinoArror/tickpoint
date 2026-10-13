@@ -139,7 +139,9 @@
   "duration": {
     "hm": "{h}時間{m}分",
     "h": "{h}時間",
-    "m": "{m}分"
+    "m": "{m}分",
+    "days": "{d}日",
+    "dh": "{d}日{h}時間"
   },
   "time": {
     "today": "今日",
@@ -177,11 +179,11 @@
     "reason": {
       "completed": "完了しています。",
       "no_deadline": "確定した締め切りがないため、スケジュールのリスクは評価していません。",
-      "overdue": "締め切りを {minutes} 分過ぎています。",
-      "effort_exceeds_time": "残りの作業は約 {effort} 分ですが、使える時間は約 {available} 分です。",
+      "overdue": "締め切りを {minutes} 過ぎています。",
+      "effort_exceeds_time": "残りの作業は約 {effort} ですが、使える時間は約 {available} です。",
       "tight_schedule": "残りの作業が使える時間の {ratio}% を占めています。",
       "behind_expected_progress": "進捗は {actual}% ですが、現時点の目安は約 {expected}% です。",
-      "little_time_low_progress": "残り約 {hours} 時間で、進捗がまだ少ない状態です。",
+      "little_time_low_progress": "残り約 {hours} で、進捗がまだ少ない状態です。",
       "blocked_by_dependencies": "未完了の依存タスクが {count} 件あります。",
       "delayed_checkpoints": "目標日を過ぎたチェックポイントが {count} 件あります。",
       "comfortable": "残りの作業に十分な時間があります。"

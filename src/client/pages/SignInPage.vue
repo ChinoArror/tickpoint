@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { ArrowRight, CalendarClock, ListChecks, Sparkles, Target } from 'lucide-vue-next'
 import Logo from '@/components/brand/Logo.vue'
 import Button from '@/components/ui/Button.vue'
+import AppFooter from '@/components/shell/AppFooter.vue'
 import { api, startSignIn } from '@/lib/api'
 import { useSessionStore } from '@/stores/session'
 import { setLocale } from '@/i18n'
@@ -97,6 +98,7 @@ const features = [
             <Button size="sm" :loading="devLoading" @click="devSignIn('bob')">Bob</Button>
           </div>
         </div>
+        <AppFooter class="mt-12 w-full" />
       </div>
     </section>
   </div>
