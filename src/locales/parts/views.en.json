@@ -1,0 +1,195 @@
+{
+  "calendar": {
+    "title": "Calendar",
+    "navLabel": "Calendar navigation",
+    "viewLabel": "Calendar view",
+    "legendLabel": "Legend",
+    "agendaLabel": "Agenda",
+    "prev": "Previous",
+    "next": "Next",
+    "today": "Today",
+    "views": {
+      "month": "Month",
+      "week": "Week",
+      "day": "Day",
+      "agenda": "Agenda"
+    },
+    "legend": {
+      "exact": "Exact deadline",
+      "date": "Date-only deadline",
+      "goal": "Goal target",
+      "checkpoint": "Checkpoint",
+      "scheduled": "Scheduled"
+    },
+    "kind": {
+      "exact": "Exact time",
+      "date": "Date only",
+      "approximate": "Approximate",
+      "scheduled": "Scheduled",
+      "checkpoint": "Checkpoint",
+      "goal": "Goal target"
+    },
+    "allDay": "All day",
+    "overdue": "Overdue",
+    "noItems": "Nothing scheduled",
+    "noItemsHint": "Deadlines, goal targets and checkpoints in this range appear here.",
+    "moveDeadlineTitle": "Move this deadline?",
+    "moveDeadlineMessage": "Move “{title}” to {date}? Deadlines are strict, so check the new date.",
+    "moveDeadlineConfirm": "Move deadline"
+  },
+  "timeline": {
+    "title": "Timeline",
+    "subtitle": "Deadlines, tasks, checkpoints and goal targets in date order, from 30 days ago to 120 days ahead.",
+    "viewLabel": "Timeline view",
+    "views": {
+      "timeline": "Timeline",
+      "gantt": "Gantt"
+    },
+    "listLabel": "Timeline entries",
+    "today": "Today",
+    "overdue": "Overdue",
+    "empty": "Nothing scheduled in this window",
+    "emptyHint": "Add a deadline or a checkpoint date to see it here.",
+    "noItemsDay": "Nothing on this day",
+    "checkpointPending": "Pending",
+    "kind": {
+      "deadline": "Deadline",
+      "task": "Task",
+      "checkpoint": "Checkpoint",
+      "goal": "Goal target"
+    },
+    "filters": {
+      "project": "Project",
+      "status": "Status",
+      "priority": "Priority",
+      "kind": "Show",
+      "allProjects": "All projects",
+      "allStatuses": "All statuses",
+      "allPriorities": "All priorities",
+      "kindAll": "Everything",
+      "kindDeadlines": "Deadlines only",
+      "showDone": "Show completed checkpoints"
+    }
+  },
+  "gantt": {
+    "regionLabel": "Gantt chart. Scroll horizontally to see dates.",
+    "task": "Task",
+    "noProject": "No project",
+    "needWider": "The Gantt view needs a wider screen, so the timeline is shown instead.",
+    "empty": "No dated tasks in this window",
+    "emptyHint": "Tasks with a due date between 30 days ago and 120 days ahead appear as bars.",
+    "tip": "{title}: {start} to {end}, {progress}% done{blocked}",
+    "blocked": "Blocked by unfinished dependencies",
+    "deadlineMarker": "Deadline {date}",
+    "checkpointTip": "{title}: target {date}, {status}"
+  },
+  "analytics": {
+    "title": "Analytics",
+    "subtitle": "Completion, timeliness and effort over the selected range.",
+    "rangeLabel": "Range",
+    "range": {
+      "7": "7 days",
+      "30": "30 days",
+      "90": "90 days",
+      "365": "1 year"
+    },
+    "metric": {
+      "active": "Active tasks",
+      "completed": "Completed",
+      "completionRate": "Completion rate",
+      "onTimeRate": "On-time rate",
+      "overdue": "Overdue",
+      "checkpoints": "Checkpoints done",
+      "effort": "Actual effort",
+      "consistency": "Consistency"
+    },
+    "hint": {
+      "openDeadlines": "{n} open deadlines",
+      "allTime": "{n} completed all time",
+      "sample": "Based on {n} deadlines",
+      "effort": "Planned {est}",
+      "activeDays": "Active on {n} of the last 28 days"
+    },
+    "noSample": "No sample yet",
+    "infoLabel": "About {metric}",
+    "def": {
+      "active": "Open tasks that are not completed or archived.",
+      "completed": "Tasks completed inside the selected range.",
+      "completionRate": "Completed divided by completed plus open, over tasks created before the end of the range. Archived tasks are excluded.",
+      "onTimeRate": "Of completed tasks with a confirmed deadline, the share finished on or before that deadline. Tasks without a deadline are excluded. Shows a dash when there is no sample.",
+      "overdue": "Open tasks whose deadline has passed.",
+      "checkpoints": "Checkpoints completed inside the selected range.",
+      "effort": "Actual time logged on tasks completed in the range that had an estimate. The card hint shows the planned time for the same tasks.",
+      "consistency": "Days with any recorded activity in the last 28 days, divided by 28."
+    },
+    "series": {
+      "tasks": "Tasks",
+      "checkpoints": "Checkpoints",
+      "strict": "Deadlines (strict)",
+      "others": "Other due dates",
+      "estimated": "Estimated",
+      "actual": "Actual",
+      "onTime": "On time",
+      "late": "Late"
+    },
+    "axis": {
+      "hours": "Hours",
+      "daysEarly": "Days before target (negative = late)"
+    },
+    "tip": {
+      "early": "{days} days before the target date",
+      "late": "{days} days after the target date"
+    },
+    "charts": {
+      "daily": {
+        "title": "Daily completions",
+        "desc": "Tasks and checkpoints completed each day over the last 30 days."
+      },
+      "weekly": {
+        "title": "Weekly completions",
+        "desc": "Completed tasks and checkpoints per week over the last 12 weeks."
+      },
+      "distribution": {
+        "title": "Upcoming deadlines",
+        "desc": "Open items by the week their deadline falls in, for the next 8 weeks. Overdue items are counted separately."
+      },
+      "goals": {
+        "title": "Goal progress",
+        "desc": "Current progress of active goals, from 0 to 100%."
+      },
+      "heatmap": {
+        "title": "Activity calendar",
+        "desc": "Completions and logged progress per day, over the last {days} days."
+      },
+      "effort": {
+        "title": "Planned vs actual effort",
+        "desc": "Estimated and actual hours for tasks completed each week."
+      },
+      "scatter": {
+        "title": "Checkpoint timing",
+        "desc": "Each completed checkpoint against its target date. Points above zero finished early."
+      }
+    },
+    "empty": {
+      "title": "No data yet",
+      "daily": "Nothing was completed in the last 30 days.",
+      "weekly": "Nothing was completed in the last 12 weeks.",
+      "distribution": "No open deadlines in the next 8 weeks.",
+      "goals": "No goals yet.",
+      "heatmap": "No recorded activity in this period.",
+      "effort": "No estimated tasks have been completed yet.",
+      "scatter": "No completed checkpoints with a target date yet."
+    },
+    "overdueCallout": "{n} overdue",
+    "a11y": {
+      "daily": "Daily completions: {tasks} tasks and {checkpoints} checkpoints over the last 30 days.",
+      "weekly": "Weekly completions: {tasks} tasks and {checkpoints} checkpoints over 12 weeks.",
+      "distribution": "Upcoming deadlines: {count} open items in 8 weeks, {overdue} overdue.",
+      "goals": "Goal progress for {count} goals.",
+      "heatmap": "Activity calendar over {days} days, with activity on {active} days.",
+      "effort": "Planned versus actual effort for {count} weeks.",
+      "scatter": "Checkpoint timing: {count} checkpoints, {late} completed late."
+    },
+    "footnote": "All statistics are calculated from your stored data. AI does not change these numbers."
+  }
+}

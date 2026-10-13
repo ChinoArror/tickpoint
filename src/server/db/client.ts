@@ -1,0 +1,19 @@
+import { drizzle } from 'drizzle-orm/d1'
+import * as schema from './schema'
+
+export type DB = ReturnType<typeof getDb>
+
+export function getDb(d1: D1Database) {
+  return drizzle(d1, { schema })
+}
+
+export { schema }
+
+export function parseJson<T>(value: string | null | undefined, fallback: T): T {
+  if (value == null || value === '') return fallback
+  try {
+    return JSON.parse(value) as T
+  } catch {
+    return fallback
+  }
+}

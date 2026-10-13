@@ -1,0 +1,436 @@
+{
+  "taskList": {
+    "mode": {
+      "label": "View mode",
+      "list": "List",
+      "board": "Board"
+    },
+    "filters": {
+      "priority": "Priority",
+      "allPriorities": "Any priority",
+      "project": "Project",
+      "allProjects": "All projects",
+      "kind": "Type",
+      "kindAll": "All items",
+      "kindTask": "Tasks",
+      "kindDeadline": "Deadlines"
+    },
+    "sections": {
+      "overdue": "Overdue"
+    },
+    "add": {
+      "label": "New task title",
+      "placeholder": "Add a task and press Enter",
+      "submit": "Add task"
+    },
+    "loadMore": "Load more",
+    "loadingMore": "Loading…",
+    "empty": {
+      "inbox": {
+        "title": "Your inbox is empty",
+        "description": "Capture anything quickly. Schedule it or add details later.",
+        "action": "New task"
+      },
+      "today": {
+        "title": "Nothing planned for today",
+        "description": "Add something for today, or pull a task forward from Inbox.",
+        "action": "Add for today"
+      },
+      "upcoming": {
+        "title": "No upcoming tasks",
+        "description": "Tasks with a due date or a scheduled day appear here.",
+        "action": "New task"
+      },
+      "deadlines": {
+        "title": "No deadlines yet",
+        "description": "Deadlines carry an exact time, a live countdown and a risk check.",
+        "action": "New deadline"
+      },
+      "completed": {
+        "title": "Nothing completed yet",
+        "description": "Tasks you finish collect here."
+      },
+      "archived": {
+        "title": "No archived tasks",
+        "description": "Archived tasks are kept out of the way. They are never deleted."
+      }
+    },
+    "menu": {
+      "open": "Open",
+      "duplicate": "Duplicate",
+      "pause": "Pause",
+      "resume": "Resume",
+      "archive": "Archive",
+      "unarchive": "Unarchive",
+      "delete": "Delete",
+      "moveTo": "Move to"
+    },
+    "confirmDelete": {
+      "title": "Delete “{title}”?",
+      "message": "Its subtasks are deleted with it. You can undo right after.",
+      "confirm": "Delete"
+    },
+    "toast": {
+      "added": "Task added",
+      "paused": "Paused",
+      "resumed": "Resumed",
+      "archived": "Archived",
+      "unarchived": "Unarchived",
+      "moved": "Moved to {status}"
+    },
+    "errorTitle": "Couldn’t load these tasks",
+    "count": "{n} items"
+  },
+  "board": {
+    "dropHere": "Drop tasks here",
+    "count": "{n} tasks"
+  },
+  "quickAdd": {
+    "title": "Quick add",
+    "description": "Capture it now. Details can wait.",
+    "titleLabel": "Title",
+    "titlePlaceholder": "What needs doing?",
+    "kindLabel": "Type",
+    "kinds": {
+      "task": "Task",
+      "deadline": "Deadline"
+    },
+    "due": "Due",
+    "dueHintDeadline": "A deadline needs an exact date and time.",
+    "dueHintTask": "Optional. Use a date only, or leave it empty.",
+    "priority": "Priority",
+    "project": "Project",
+    "noProject": "No project",
+    "addDetails": "Add details",
+    "hideDetails": "Hide details",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Context, links, notes…",
+    "reminders": "Reminders",
+    "remindersHint": "Fire before the due time.",
+    "remindersNeedDue": "Set a due date to add reminders.",
+    "submit": "Create",
+    "shortcut": "Ctrl/⌘ + Enter to create",
+    "created": "Added “{title}”",
+    "open": "Open",
+    "errors": {
+      "REQUIRED": "This field is required.",
+      "INVALID_DATE": "Enter a real date.",
+      "INVALID_TIME": "Enter a time such as 09:30.",
+      "INVALID_TIME_ZONE": "Choose a valid time zone.",
+      "TIME_REQUIRES_EXACT": "A time needs an exact deadline.",
+      "INVALID_URL": "Enter a valid link.",
+      "deadlineNeedsDue": "A deadline needs an exact date and time.",
+      "generic": "Check this field."
+    }
+  },
+  "taskDetail": {
+    "loadFailed": "Couldn’t load this task.",
+    "notFound": "This task no longer exists.",
+    "openFullPage": "Open full page",
+    "titleLabel": "Task title",
+    "untitled": "Untitled task",
+    "saved": "Saved",
+    "moreActions": "More actions",
+    "fields": {
+      "status": "Status",
+      "priority": "Priority",
+      "due": "Due",
+      "noDate": "No date",
+      "change": "Change",
+      "clearDate": "Clear date",
+      "startDate": "Start date",
+      "scheduledDate": "Scheduled for",
+      "project": "Project",
+      "noProject": "No project",
+      "estimate": "Estimate",
+      "actual": "Time spent",
+      "progress": "Progress",
+      "minutesPlaceholder": "Minutes"
+    },
+    "dueEdit": {
+      "title": "Change due date",
+      "save": "Save due date",
+      "clear": "Remove due date"
+    },
+    "progress": {
+      "expected": "About {n}% would be expected by now",
+      "modeLabel": "Progress is",
+      "mode": {
+        "manual": "Set manually",
+        "checkpoints": "From checkpoints",
+        "subtasks": "From subtasks"
+      },
+      "slider": "Progress percent",
+      "autoCheckpoints": "Calculated from checkpoint completion.",
+      "autoSubtasks": "Calculated from subtask completion."
+    },
+    "risk": {
+      "title": "Schedule check",
+      "details": "Details"
+    },
+    "actions": {
+      "duplicate": "Duplicate",
+      "pause": "Pause",
+      "resume": "Resume",
+      "archive": "Archive",
+      "unarchive": "Unarchive",
+      "delete": "Delete"
+    },
+    "addSection": "Add section",
+    "sections": {
+      "description": {
+        "title": "Description",
+        "placeholder": "What is this about?",
+        "empty": "No description yet"
+      },
+      "checkpoints": {
+        "title": "Checkpoints",
+        "empty": "Break this into checkpoints you can verify."
+      },
+      "subtasks": {
+        "title": "Subtasks",
+        "empty": "No subtasks",
+        "add": "Add subtask",
+        "placeholder": "Add a subtask and press Enter"
+      },
+      "dependencies": {
+        "title": "Dependencies",
+        "blockedBy": "Waiting on",
+        "dependents": "Blocks",
+        "searchPlaceholder": "Search tasks to depend on…",
+        "searchEmpty": "No matching tasks",
+        "add": "Add dependency",
+        "remove": "Remove dependency",
+        "empty": "No dependencies"
+      },
+      "deliverables": {
+        "title": "Deliverables",
+        "placeholder": "Add a deliverable",
+        "add": "Add",
+        "empty": "No deliverables listed"
+      },
+      "requirements": {
+        "title": "Requirements",
+        "placeholder": "Add a requirement",
+        "type": "Requirement type",
+        "empty": "No requirements listed"
+      },
+      "rewards": {
+        "title": "Rewards",
+        "placeholder": "Add a reward",
+        "type": "Reward type",
+        "empty": "No rewards listed"
+      },
+      "location": {
+        "title": "Location",
+        "empty": "No location"
+      },
+      "submission": {
+        "title": "Submission",
+        "empty": "No submission details"
+      },
+      "reminders": {
+        "title": "Reminders"
+      },
+      "attachments": {
+        "title": "Attachments",
+        "empty": "No files attached"
+      },
+      "notes": {
+        "title": "Notes",
+        "placeholder": "Private notes…",
+        "empty": "No notes"
+      },
+      "source": {
+        "title": "Source",
+        "empty": "No source"
+      },
+      "history": {
+        "title": "History",
+        "empty": "No changes recorded yet",
+        "showAll": "Show all"
+      }
+    },
+    "requirementType": {
+      "mandatory": "Mandatory",
+      "optional": "Optional",
+      "criteria": "Criteria",
+      "restriction": "Restriction",
+      "eligibility": "Eligibility",
+      "prerequisite": "Prerequisite",
+      "material": "Material"
+    },
+    "rewardType": {
+      "monetary": "Monetary",
+      "prize": "Prize",
+      "certificate": "Certificate",
+      "credit": "Credit",
+      "recognition": "Recognition",
+      "other": "Other"
+    },
+    "location": {
+      "physical": "Place",
+      "building": "Building",
+      "room": "Room",
+      "campus": "Campus",
+      "online": "Online link",
+      "contact": "Contact"
+    },
+    "submission": {
+      "method": "Method",
+      "platform": "Platform",
+      "url": "Submission link",
+      "destination": "Destination",
+      "fileFormats": "File formats",
+      "fileFormatsHint": "Separate with commas.",
+      "naming": "Naming rule",
+      "sizeLimit": "Size limit",
+      "copies": "Copies",
+      "conditions": "Conditions"
+    },
+    "attachments": {
+      "upload": "Attach file",
+      "uploading": "Uploading…",
+      "download": "Download {name}",
+      "remove": "Remove {name}",
+      "removeConfirm": "Remove “{name}”?",
+      "kb": "{n} KB",
+      "mb": "{n} MB"
+    },
+    "source": {
+      "date": "Source date",
+      "open": "Open source link",
+      "view": "View source"
+    },
+    "ai": {
+      "title": "AI assistance",
+      "hint": "AI output is a draft. It never changes your deadlines or measured numbers.",
+      "generate": "Generate checkpoints",
+      "generating": "Generating…",
+      "analyze": "Analyze",
+      "analyzing": "Analyzing…",
+      "resultLabel": "AI-generated · unconfirmed",
+      "suggestions": "Suggestions",
+      "cautions": "Cautions",
+      "dismiss": "Dismiss analysis",
+      "disabled": "AI features are turned off in Settings."
+    }
+  },
+  "history": {
+    "action": {
+      "created": "Created",
+      "updated": "Updated",
+      "completed": "Completed",
+      "reopened": "Reopened",
+      "paused": "Paused",
+      "resumed": "Resumed",
+      "archived": "Archived",
+      "unarchived": "Unarchived",
+      "status_changed": "Status changed",
+      "deadline_changed": "Deadline changed",
+      "progress_updated": "Progress updated",
+      "estimate_revised": "Estimate revised",
+      "moved": "Moved",
+      "duplicated": "Duplicated",
+      "deleted": "Deleted",
+      "restored": "Restored",
+      "dependency_added": "Dependency added",
+      "dependency_removed": "Dependency removed",
+      "checkpoint_added": "Checkpoint added",
+      "checkpoint_completed": "Checkpoint completed",
+      "checkpoint_reopened": "Checkpoint reopened",
+      "reminder_added": "Reminder added",
+      "reminder_modified": "Reminder changed",
+      "reminder_removed": "Reminder removed",
+      "ai_plan_confirmed": "AI plan confirmed"
+    },
+    "actor": {
+      "ai_confirmed": "AI-confirmed"
+    }
+  },
+  "checkpointList": {
+    "title": "Checkpoints",
+    "progress": "{done} of {total} done",
+    "empty": "No checkpoints yet",
+    "add": "Add checkpoint",
+    "addPlaceholder": "Add a checkpoint and press Enter",
+    "showCompleted": "Show completed",
+    "dragHandle": "Reorder “{title}”",
+    "edit": "Edit “{title}”",
+    "delete": "Delete checkpoint",
+    "after": "After {title}",
+    "origin": {
+      "ai": "AI",
+      "hint": "Suggested by AI and confirmed by you"
+    },
+    "fields": {
+      "title": "Title",
+      "description": "Notes",
+      "completionCriteria": "Done when",
+      "startDate": "Start",
+      "targetDate": "Target date",
+      "estimatedMinutes": "Estimate (minutes)",
+      "weight": "Weight",
+      "weightHint": "Counts toward the goal's progress.",
+      "priority": "Priority",
+      "dependsOn": "Depends on"
+    },
+    "noSiblings": "No other checkpoints to depend on.",
+    "invalidRange": "The target date comes before the start date."
+  },
+  "reminders": {
+    "title": "Reminders",
+    "empty": "No reminders yet",
+    "add": "Add reminder",
+    "presetsHeading": "Before the deadline",
+    "customOffset": "Custom offset",
+    "atTime": "At a specific time",
+    "presets": {
+      "7d": "7 days before",
+      "3d": "3 days before",
+      "1d": "1 day before",
+      "12h": "12 hours before",
+      "3h": "3 hours before",
+      "1h": "1 hour before",
+      "30m": "30 minutes before",
+      "15m": "15 minutes before",
+      "5m": "5 minutes before"
+    },
+    "before": "{when} before",
+    "at": "At {when}",
+    "amount": "Amount",
+    "unitLabel": "Unit",
+    "unit": {
+      "minutes": "minutes",
+      "hours": "hours",
+      "days": "days"
+    },
+    "dateTime": "Date and time",
+    "channels": "Send via",
+    "channel": {
+      "in_app": "In app",
+      "push": "Push",
+      "email": "Email"
+    },
+    "next": "Next: {when}",
+    "noNext": "Not scheduled",
+    "enabled": "On",
+    "enabledLabel": "Reminder enabled",
+    "remove": "Remove reminder",
+    "removeConfirm": "Remove this reminder?",
+    "noDue": "Set a due date to use reminders before it.",
+    "noChannel": "Choose at least one channel.",
+    "invalidTime": "Choose a valid date and time.",
+    "invalidAmount": "Enter an amount of 0 or more.",
+    "confirmAdd": "Add",
+    "jobStatus": {
+      "pending": "Scheduled",
+      "claimed": "Scheduled",
+      "sending": "Sending",
+      "sent": "Sent",
+      "retryable_failure": "Retrying",
+      "permanent_failure": "Failed",
+      "cancelled": "Cancelled"
+    }
+  }
+}

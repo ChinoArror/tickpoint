@@ -1,0 +1,367 @@
+{
+  "settingsPage": {
+    "navLabel": "Settings sections",
+    "sections": {
+      "general": "General",
+      "tasks": "Tasks",
+      "notifications": "Notifications",
+      "ai": "AI",
+      "account": "Account",
+      "data": "Data"
+    },
+    "general": {
+      "title": "General",
+      "subtitle": "Language, time and appearance.",
+      "language": "Language",
+      "languageHint": "The language used across TickPoint and in emails.",
+      "timeZone": "Time zone",
+      "timeZoneHint": "Deadlines and reminders are shown in this zone.",
+      "timeZoneSearch": "Search time zones",
+      "zonePreview": "Current time here: {time}",
+      "dateFormat": "Date format",
+      "dateFormatHint": "How dates are written across the app.",
+      "dateFormats": {
+        "auto": "Automatic (by language)",
+        "ymd": "Year / month / day",
+        "mdy": "Month / day / year",
+        "dmy": "Day / month / year"
+      },
+      "timeFormat": "Time format",
+      "timeFormatHint": "12-hour or 24-hour clock.",
+      "timeFormats": {
+        "auto": "Automatic (by language)",
+        "h12": "12-hour",
+        "h24": "24-hour"
+      },
+      "theme": "Theme",
+      "themeHint": "Follow your device, or pick light or dark.",
+      "weekStart": "Week starts on",
+      "weekStartHint": "Used by the calendar and weekly views.",
+      "weekdays": {
+        "0": "Sunday",
+        "1": "Monday",
+        "6": "Saturday"
+      }
+    },
+    "tasks": {
+      "title": "Tasks",
+      "subtitle": "Defaults for new tasks and deadlines.",
+      "defaultPriority": "Default priority",
+      "defaultPriorityHint": "Applied to new tasks unless you choose otherwise.",
+      "defaultView": "Default view",
+      "defaultViewHint": "The view that opens when you visit a task list.",
+      "views": {
+        "list": "List",
+        "board": "Board",
+        "calendar": "Calendar",
+        "timeline": "Timeline"
+      },
+      "reminders": "Default reminders",
+      "remindersHint": "Added to each new deadline. Choose any number.",
+      "presets": {
+        "7d": "7 days",
+        "3d": "3 days",
+        "1d": "1 day",
+        "12h": "12 hours",
+        "3h": "3 hours",
+        "1h": "1 hour",
+        "30m": "30 min",
+        "15m": "15 min",
+        "5m": "5 min"
+      },
+      "estimate": "Default estimate",
+      "estimateHint": "Leave empty for no estimate.",
+      "estimateInvalid": "Enter a whole number of minutes from 0 to 10,000, or leave it empty.",
+      "minutes": "minutes",
+      "showCompletedCheckpoints": "Show completed checkpoints",
+      "showCompletedCheckpointsHint": "Keep finished checkpoints visible in task lists."
+    },
+    "notifications": {
+      "title": "Channels",
+      "subtitle": "Where TickPoint sends reminders.",
+      "inApp": "In-app notifications",
+      "inAppHint": "Shown in the bell menu and the notifications page.",
+      "push": "Push notifications",
+      "pushHint": "Alerts on this device, even when TickPoint is closed.",
+      "pushResult": {
+        "denied": "Notifications are blocked for TickPoint. Allow them in your browser settings, then try again.",
+        "unsupported": "This browser does not support push notifications.",
+        "no_key": "Push notifications are not configured on this server yet.",
+        "error": "Could not turn on push notifications for this device. Try again."
+      },
+      "iosInstallNote": "On iPhone/iPad, add TickPoint to your Home Screen to receive push notifications.",
+      "email": "Email",
+      "emailHint": "Send reminders to your email address.",
+      "emailNotConfigured": "Email delivery is not configured on this server yet.",
+      "quietHours": "Quiet hours",
+      "quietHoursHint": "Hold push and email reminders during this window. In-app notifications still arrive.",
+      "quietFrom": "From",
+      "quietUntil": "Until",
+      "test": "Test notification",
+      "testHint": "Sends a test through each channel so you can check delivery.",
+      "sendTest": "Send test notification",
+      "testResults": "Test results",
+      "status": {
+        "sent": "Sent",
+        "skipped": "Skipped",
+        "failed": "Failed",
+        "unknown": "Unknown"
+      },
+      "details": {
+        "not_subscribed": "This device is not subscribed to push.",
+        "no_subscription": "No device is subscribed to push.",
+        "disabled": "This channel is turned off.",
+        "quiet_hours": "Skipped during quiet hours.",
+        "not_configured": "Not configured on this server.",
+        "email_not_configured": "Email delivery is not configured on this server yet.",
+        "invalid_subscription": "This device's subscription has expired. Turn push off and on again.",
+        "provider_error": "The delivery service returned an error.",
+        "rate_limited": "Too many notifications were sent recently.",
+        "timeout": "The delivery timed out."
+      },
+      "channels": {
+        "in_app": "In-app",
+        "push": "Push",
+        "email": "Email"
+      },
+      "deliveries": "Delivery log",
+      "deliveriesHint": "Recent attempts to deliver reminders and tests.",
+      "deliveriesEmpty": "No deliveries yet.",
+      "logTime": "Time",
+      "logChannel": "Channel",
+      "logStatus": "Status",
+      "logDetail": "Detail",
+      "devicesTitle": "Registered devices",
+      "devicesHint": "Browsers and devices subscribed to push notifications.",
+      "devicesEmpty": "No devices are registered yet.",
+      "devices": {
+        "unknown": "Unknown device",
+        "added": "Added {date}"
+      }
+    },
+    "ai": {
+      "title": "AI assistance",
+      "subtitle": "Smart Capture and planning suggestions.",
+      "notConfigured": "AI features are not configured on this server.",
+      "enabled": "AI features",
+      "enabledHint": "Turn off to hide every AI action in TickPoint.",
+      "saveSource": "Save original text by default",
+      "saveSourceHint": "Keep the pasted text with the task so you can check it later. You can delete it at any time.",
+      "hours": "Available hours per day",
+      "hoursHint": "Used when AI plans checkpoints around your schedule.",
+      "hoursUnit": "hours",
+      "hoursInvalid": "Enter a value from 0.5 to 16 in steps of 0.5.",
+      "planningStyle": "Planning style",
+      "planningStyleHint": "How AI spreads work across the days before a deadline.",
+      "styles": {
+        "balanced": "Balanced",
+        "front_loaded": "Front-loaded",
+        "steady": "Steady"
+      },
+      "usageTitle": "Usage",
+      "usageHint": "Requests and tokens from the last 30 days.",
+      "usageEmpty": "No AI requests in the last 30 days.",
+      "operation": "Operation",
+      "requests": "Requests",
+      "tokens": "Tokens",
+      "recent": "Recent calls",
+      "recentEmpty": "No recent calls.",
+      "when": "When",
+      "status": "Status",
+      "operations": {
+        "extract": "Smart Capture",
+        "plan": "Checkpoint plan",
+        "analyze": "Analysis",
+        "regenerate": "Regenerate checkpoints"
+      },
+      "privacyTitle": "How your data is processed",
+      "privacyBody": "Text you paste is sent to Google Gemini only when you click Analyze or Generate. Nothing is sent in the background.",
+      "privacyCredentials": "Prompts never include your passwords, tokens or account credentials.",
+      "privacyDrafts": "Every AI result is a draft. Nothing is saved to your tasks until you review and approve it.",
+      "privacyDelete": "You can delete stored source text and drafts at any time from the source or draft page."
+    },
+    "account": {
+      "title": "Profile",
+      "subtitle": "Your Aryuki Accounts identity and session.",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "roles": {
+        "admin": "Administrator",
+        "user": "Member"
+      },
+      "identity": "Identity type",
+      "identities": {
+        "user": "Standard account",
+        "test": "Test account"
+      },
+      "uuid": "User ID",
+      "copyUuid": "Copy user ID",
+      "manage": "Manage your account",
+      "signOutTitle": "Sign out",
+      "signOutSubtitle": "Two ways to leave, with different reach.",
+      "signOutTickPointHint": "Ends your TickPoint session on this browser. Your Aryuki Accounts sign-in and other apps stay active.",
+      "signOutEverywhereHint": "Ends your central Aryuki Accounts session. You will also be signed out of the other Aryuki apps on this browser.",
+      "everywhereConfirmTitle": "Sign out of Aryuki Accounts?",
+      "everywhereConfirm": "Sign out everywhere"
+    }
+  },
+  "notificationsPanel": {
+    "unread": "Unread",
+    "markAllRead": "Mark all read",
+    "emptyTitle": "You're all caught up",
+    "emptyHint": "Reminders and test messages appear here.",
+    "snoozed": "Reminder snoozed",
+    "snooze": {
+      "aria": "Snooze reminder",
+      "heading": "Snooze for",
+      "15m": "15 minutes",
+      "1h": "1 hour",
+      "3h": "3 hours",
+      "tomorrow": "Until tomorrow"
+    }
+  },
+  "notificationsPage": {
+    "subtitle": "Everything TickPoint has told you, newest first.",
+    "unreadOnly": "Unread only",
+    "upcoming": "Upcoming reminders",
+    "upcomingEmpty": "No reminders scheduled.",
+    "history": "History",
+    "noUnread": "No unread notifications.",
+    "loadMore": "Load more"
+  },
+  "searchPalette": {
+    "title": "Search and commands",
+    "groups": {
+      "jump": "Jump to",
+      "actions": "Actions",
+      "tasks": "Tasks",
+      "goals": "Goals",
+      "projects": "Projects"
+    },
+    "commands": {
+      "newTask": "New task",
+      "capture": "Smart Capture"
+    },
+    "noResults": "No results for “{q}”",
+    "hints": {
+      "navigate": "Navigate",
+      "open": "Open",
+      "close": "Close"
+    }
+  },
+  "more": {
+    "title": "More",
+    "description": "All other pages in TickPoint."
+  },
+  "pwa": {
+    "newVersion": "A new version is available",
+    "newVersionHint": "Reload to get the latest improvements.",
+    "later": "Later",
+    "reload": "Reload",
+    "installTitle": "Install TickPoint",
+    "installHint": "Add it to your device for quick access and offline use.",
+    "install": "Install app",
+    "notNow": "Not now",
+    "dismiss": "Dismiss",
+    "offlineReady": "TickPoint is ready to work offline"
+  },
+  "activity": {
+    "title": "Activity",
+    "subtitle": "A timeline of changes across your plans.",
+    "emptyTitle": "No activity yet",
+    "emptyHint": "Changes to your tasks, goals and projects show up here.",
+    "loadMore": "Load more",
+    "entity": {
+      "task": "Task",
+      "deadline": "Deadline",
+      "goal": "Goal",
+      "project": "Project",
+      "checkpoint": "Checkpoint",
+      "reminder": "Reminder",
+      "source": "Source",
+      "tag": "Tag",
+      "plan": "Plan"
+    },
+    "actor": {
+      "ai_confirmed": "AI, confirmed by you",
+      "import": "Import",
+      "system": "System"
+    }
+  },
+  "notFound": {
+    "title": "This page doesn't exist",
+    "description": "The link may be outdated, or the page may have moved.",
+    "backToOverview": "Back to Overview"
+  },
+  "dataTools": {
+    "export": {
+      "title": "Export",
+      "subtitle": "Download a copy of your data.",
+      "json": "Export JSON",
+      "jsonHint": "Everything, including stored source text.",
+      "jsonNoSources": "Export JSON without source texts",
+      "jsonNoSourcesHint": "Smaller file, without pasted originals.",
+      "tasksCsv": "Export tasks (CSV)",
+      "tasksCsvHint": "One row per task, for spreadsheets.",
+      "progressCsv": "Export progress (CSV)",
+      "progressCsvHint": "Progress entries and time logged."
+    },
+    "import": {
+      "title": "Import",
+      "subtitle": "Restore from a TickPoint JSON export. Preview first; nothing changes until you confirm.",
+      "choose": "Choose JSON file",
+      "noFile": "No file selected",
+      "limit": "Maximum size {max}.",
+      "previewing": "Checking the file…",
+      "previewTitle": "Preview",
+      "samples": "Sample tasks",
+      "skipDuplicates": "Skip duplicates",
+      "skipDuplicatesHint": "When on, records that already exist are left alone instead of being added again.",
+      "run": "Import",
+      "resultTitle": "Import finished"
+    },
+    "importTooLarge": "That file is larger than {max}.",
+    "invalidJson": "That file isn't valid JSON.",
+    "imported": "Import finished",
+    "entities": {
+      "tasks": "Tasks",
+      "goals": "Goals",
+      "projects": "Projects",
+      "tags": "Tags",
+      "checkpoints": "Checkpoints",
+      "progress": "Progress entries",
+      "sources": "Sources",
+      "reminders": "Reminders",
+      "duplicates": "Duplicates",
+      "created": "Created",
+      "skipped": "Skipped",
+      "updated": "Updated"
+    },
+    "sizeKb": "{n} KB",
+    "sizeMb": "{n} MB",
+    "backups": {
+      "title": "Backups",
+      "subtitle": "Point-in-time copies of your data, kept on the server.",
+      "create": "Create backup now",
+      "created": "Backup created",
+      "empty": "No backups yet.",
+      "download": "Download",
+      "restore": "Restore",
+      "restored": "Backup restored",
+      "restoreTitle": "Restore this backup?",
+      "restoreMessage": "Items from the backup are merged into your current data. Items that already exist are skipped.",
+      "deleteTitle": "Delete this backup?",
+      "deleteMessage": "The backup file is removed from the server. Your current data is not affected.",
+      "deleted": "Backup deleted"
+    },
+    "danger": {
+      "title": "Delete all TickPoint data",
+      "description": "Permanently removes your tasks, goals, projects, notes, backups and history from TickPoint. Your Aryuki Accounts sign-in is not affected.",
+      "action": "Delete all data",
+      "message": "This cannot be undone. Export your data first if you want a copy.",
+      "confirm": "Delete everything",
+      "deleted": "All TickPoint data was deleted"
+    }
+  }
+}

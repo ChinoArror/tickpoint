@@ -1,0 +1,279 @@
+{
+  "goals": {
+    "model": {
+      "binary": {
+        "label": "Done or not",
+        "hint": "Mark it achieved once it is complete."
+      },
+      "percentage": {
+        "label": "Percentage",
+        "hint": "Set how far along you are, from 0 to 100%."
+      },
+      "quantity": {
+        "label": "Quantity",
+        "hint": "Count units toward a number, such as pages read."
+      },
+      "time": {
+        "label": "Time",
+        "hint": "Track hours spent toward a total."
+      },
+      "checkpoint": {
+        "label": "Checkpoints",
+        "hint": "Progress equals the share of checkpoints you complete."
+      },
+      "weighted": {
+        "label": "Weighted checkpoints",
+        "hint": "Checkpoints count by weight, so bigger steps move progress more."
+      }
+    },
+    "reviewFrequency": {
+      "none": "No reviews",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "biweekly": "Every two weeks",
+      "monthly": "Monthly"
+    }
+  },
+  "goalPage": {
+    "subtitle": "Longer-term outcomes, measured by the progress you record.",
+    "filterLabel": "Filter goals by status",
+    "status": {
+      "active": "Active",
+      "paused": "Paused",
+      "completed": "Completed",
+      "archived": "Archived"
+    },
+    "statusUpdated": "Goal updated",
+    "backToGoals": "All goals",
+    "progressBarLabel": "Progress",
+    "noTargetDate": "No target date",
+    "consistencyLabel": "Active on {n} of the last 28 days",
+    "empty": {
+      "title": "No active goals yet",
+      "description": "Goals work with or without deadlines. Start with something you can measure.",
+      "startBlank": "Start from scratch"
+    },
+    "emptyByStatus": {
+      "title": "No {status} goals",
+      "paused": "Paused goals show up here.",
+      "completed": "Goals you complete will be listed here.",
+      "archived": "Archived goals are kept out of the way here."
+    },
+    "examples": {
+      "heading": "Try an example",
+      "books": "Read 10 books",
+      "booksUnit": "books",
+      "study": "Complete 40 hours of study",
+      "vue": "Learn Vue development"
+    },
+    "progress": {
+      "quantity": "{current} / {target}{unit}",
+      "percent": "{value}%",
+      "byCheckpoints": "{percent} from checkpoints",
+      "binaryDone": "Done",
+      "binaryOpen": "Not done yet"
+    },
+    "health": {
+      "title": "Health",
+      "actual": "Actual",
+      "expected": "Expected by now",
+      "deviation": "Versus plan",
+      "points": "pts",
+      "aheadShort": "ahead",
+      "behindShort": "behind",
+      "projection": "Projection",
+      "projectionHint": "Estimated from your progress over the last 28 days. It is a rough date, not a promise.",
+      "noProjection": "Not enough recent progress to project a date",
+      "targetDate": "Target date: {date}",
+      "expectedMarkerHint": "The marker shows where you would be if you were on schedule.",
+      "activeDays": "Active days (last 28)",
+      "noTargetHint": "There is no target date, so there is no schedule to compare against. This shows your recent consistency instead."
+    },
+    "ai": {
+      "analysisTitle": "AI analysis",
+      "unconfirmed": "AI-generated · unconfirmed",
+      "analyze": "Analyze progress",
+      "suggestions": "Suggestions",
+      "cautions": "Cautions",
+      "notice": "This analysis is an AI draft. The numbers above are calculated from your records."
+    },
+    "checkpoints": {
+      "title": "Checkpoints",
+      "generate": "Generate checkpoints with AI"
+    },
+    "history": {
+      "title": "Progress history",
+      "chartLabel": "Line chart of progress values over time",
+      "notEnough": "Log at least two progress values to see a chart.",
+      "entries": "Entries",
+      "empty": "No progress logged yet."
+    },
+    "tasks": {
+      "title": "Linked tasks",
+      "add": "Add task",
+      "empty": "No tasks linked yet",
+      "emptyHint": "Tasks you link to this goal appear here."
+    },
+    "details": {
+      "title": "Details",
+      "successCriteria": "Success criteria",
+      "weeklyEffort": "Weekly effort",
+      "reviewFrequency": "Review",
+      "estimated": "Estimated effort",
+      "actual": "Logged effort",
+      "targetDate": "Target date"
+    },
+    "activity": {
+      "title": "Activity",
+      "empty": "No activity yet."
+    },
+    "delete": {
+      "title": "Delete “{title}”?",
+      "message": "The goal moves to the trash. You can undo this right away."
+    },
+    "actions": {
+      "pause": "Pause",
+      "resume": "Resume",
+      "complete": "Mark completed",
+      "reopen": "Reopen",
+      "archive": "Archive",
+      "unarchive": "Unarchive"
+    }
+  },
+  "goalForm": {
+    "createTitle": "New goal",
+    "editTitle": "Edit goal",
+    "description": "Choose how progress is measured. You can change this later.",
+    "title": "Title",
+    "titlePlaceholder": "e.g. Read 10 books this year",
+    "descriptionLabel": "Description",
+    "progressModel": "How progress is measured",
+    "targetQuantity": "Target amount",
+    "targetHours": "Target hours",
+    "unit": "Unit",
+    "unitPlaceholder": "pages",
+    "unitFixedHint": "Time goals are measured in hours.",
+    "unitHours": "h",
+    "currentValue": "Current value",
+    "currentPercent": "Current progress (%)",
+    "percentHint": "0 to 100",
+    "targetDate": "Target date",
+    "targetDateHint": "Optional. Goals don't need deadlines.",
+    "clearDate": "Clear date",
+    "weeklyEffort": "Weekly effort (hours)",
+    "estimatedEffort": "Estimated total effort (hours)",
+    "reviewFrequency": "Review cadence",
+    "project": "Project",
+    "noProject": "No project",
+    "successCriteria": "Success criteria",
+    "successCriteriaPlaceholder": "How will you know it is done?",
+    "errors": {
+      "REQUIRED": "This field is required.",
+      "OUT_OF_RANGE": "This value is out of range.",
+      "INVALID": "Enter a valid value."
+    }
+  },
+  "progressLog": {
+    "title": "Log progress",
+    "add": "Add",
+    "addHint": "Adds to the current value.",
+    "addPlaceholder": "e.g. 20",
+    "setTo": "Or set the total",
+    "setToHint": "Replaces the current value. Use one or the other.",
+    "setToPlaceholder": "e.g. 120",
+    "percent": "Progress",
+    "markAchieved": "Mark as achieved",
+    "fromCheckpoints": "Progress for this goal comes from its checkpoints. You can still log time and a note.",
+    "minutes": "Minutes spent",
+    "minutesPlaceholder": "e.g. 30",
+    "note": "Note",
+    "notePlaceholder": "What did you do?",
+    "submit": "Log progress",
+    "logged": "Progress logged",
+    "deleted": "Entry deleted",
+    "deleteEntry": "Delete entry",
+    "delete": {
+      "title": "Delete this entry?",
+      "message": "The progress value will be removed from your history."
+    },
+    "errors": {
+      "valueOrDelta": "Use either Add or Set the total, not both.",
+      "invalid": "Enter valid numbers."
+    }
+  },
+  "projects": {
+    "new": "New project",
+    "subtitle": "Group related tasks and goals.",
+    "filterLabel": "Filter projects by status",
+    "tabsLabel": "Project sections",
+    "backToProjects": "All projects",
+    "status": {
+      "active": "Active",
+      "archived": "Archived"
+    },
+    "archived": "Project archived",
+    "restored": "Project restored",
+    "deleted": "Project deleted",
+    "counts": "{open} open · {done} done",
+    "noDeadline": "No deadline",
+    "progressLabel": "Completed share",
+    "empty": {
+      "title": "No projects yet",
+      "description": "Projects hold the tasks and goals that belong together.",
+      "archivedTitle": "No archived projects",
+      "archivedDescription": "Archived projects show up here."
+    },
+    "actions": {
+      "archive": "Archive",
+      "unarchive": "Restore from archive"
+    },
+    "delete": {
+      "title": "Delete “{name}”?",
+      "message": "Its tasks are kept and moved out of this project."
+    },
+    "form": {
+      "createTitle": "New project",
+      "editTitle": "Edit project",
+      "name": "Name",
+      "namePlaceholder": "e.g. Thesis",
+      "description": "Description",
+      "color": "Color",
+      "errors": {
+        "REQUIRED": "Give the project a name.",
+        "INVALID": "Check the value and try again."
+      }
+    },
+    "colors": {
+      "indigo": "Indigo",
+      "sky": "Sky",
+      "emerald": "Emerald",
+      "amber": "Amber",
+      "red": "Red",
+      "pink": "Pink",
+      "violet": "Violet",
+      "slate": "Slate"
+    },
+    "tabs": {
+      "tasks": "Tasks",
+      "goals": "Goals",
+      "overview": "Overview"
+    },
+    "tasks": {
+      "add": "Add task",
+      "empty": "No tasks in this project",
+      "emptyHint": "Add a task to start planning."
+    },
+    "goals": {
+      "empty": "No goals in this project",
+      "emptyHint": "You can link a goal to a project when you create it."
+    },
+    "overview": {
+      "open": "Open tasks",
+      "completed": "Completed",
+      "overdue": "Overdue",
+      "nextDeadline": "Next deadline",
+      "upcoming": "Upcoming deadlines",
+      "upcomingEmpty": "No open deadlines"
+    }
+  }
+}

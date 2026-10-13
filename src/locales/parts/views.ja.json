@@ -1,0 +1,195 @@
+{
+  "calendar": {
+    "title": "カレンダー",
+    "navLabel": "カレンダーの移動",
+    "viewLabel": "表示の切り替え",
+    "legendLabel": "凡例",
+    "agendaLabel": "予定一覧",
+    "prev": "前へ",
+    "next": "次へ",
+    "today": "今日",
+    "views": {
+      "month": "月",
+      "week": "週",
+      "day": "日",
+      "agenda": "予定一覧"
+    },
+    "legend": {
+      "exact": "時刻つきの締め切り",
+      "date": "日付のみの締め切り",
+      "goal": "目標の期日",
+      "checkpoint": "チェックポイント",
+      "scheduled": "予定日"
+    },
+    "kind": {
+      "exact": "時刻指定",
+      "date": "日付のみ",
+      "approximate": "おおよそ",
+      "scheduled": "予定",
+      "checkpoint": "チェックポイント",
+      "goal": "目標の期日"
+    },
+    "allDay": "終日",
+    "overdue": "期限切れ",
+    "noItems": "予定はありません",
+    "noItemsHint": "この期間の締め切り、目標の期日、チェックポイントがここに表示されます。",
+    "moveDeadlineTitle": "締め切りを移動しますか？",
+    "moveDeadlineMessage": "「{title}」を{date}に移動しますか？ 締め切りは厳密なため、新しい日付をご確認ください。",
+    "moveDeadlineConfirm": "締め切りを移動"
+  },
+  "timeline": {
+    "title": "タイムライン",
+    "subtitle": "締め切り、タスク、チェックポイント、目標の期日を日付順に表示します。（30日前から120日後まで）",
+    "viewLabel": "表示の切り替え",
+    "views": {
+      "timeline": "タイムライン",
+      "gantt": "ガントチャート"
+    },
+    "listLabel": "タイムラインの項目",
+    "today": "今日",
+    "overdue": "期限切れ",
+    "empty": "この期間に予定はありません",
+    "emptyHint": "締め切りやチェックポイントの日付を設定すると、ここに表示されます。",
+    "noItemsDay": "この日の項目はありません",
+    "checkpointPending": "未完了",
+    "kind": {
+      "deadline": "締め切り",
+      "task": "タスク",
+      "checkpoint": "チェックポイント",
+      "goal": "目標の期日"
+    },
+    "filters": {
+      "project": "プロジェクト",
+      "status": "状態",
+      "priority": "優先度",
+      "kind": "表示対象",
+      "allProjects": "すべてのプロジェクト",
+      "allStatuses": "すべての状態",
+      "allPriorities": "すべての優先度",
+      "kindAll": "すべて",
+      "kindDeadlines": "締め切りのみ",
+      "showDone": "完了したチェックポイントを表示"
+    }
+  },
+  "gantt": {
+    "regionLabel": "ガントチャート。横にスクロールして日付を確認できます。",
+    "task": "タスク",
+    "noProject": "プロジェクトなし",
+    "needWider": "ガントチャートには広い画面が必要なため、タイムラインを表示しています。",
+    "empty": "この期間に日付のあるタスクはありません",
+    "emptyHint": "30日前から120日後までに締め切りがあるタスクがバーで表示されます。",
+    "tip": "{title}：{start} から {end}、進捗 {progress}%{blocked}",
+    "blocked": "未完了の依存タスクによりブロック中",
+    "deadlineMarker": "締め切り {date}",
+    "checkpointTip": "{title}：目標日 {date}、{status}"
+  },
+  "analytics": {
+    "title": "分析",
+    "subtitle": "選択した期間の完了状況、期限の遵守、作業量を確認できます。",
+    "rangeLabel": "期間",
+    "range": {
+      "7": "7日",
+      "30": "30日",
+      "90": "90日",
+      "365": "1年"
+    },
+    "metric": {
+      "active": "進行中のタスク",
+      "completed": "完了",
+      "completionRate": "完了率",
+      "onTimeRate": "期限内完了率",
+      "overdue": "期限切れ",
+      "checkpoints": "完了したチェックポイント",
+      "effort": "実績作業時間",
+      "consistency": "継続性"
+    },
+    "hint": {
+      "openDeadlines": "進行中の締め切り {n} 件",
+      "allTime": "累計完了 {n} 件",
+      "sample": "締め切り {n} 件を基に算出",
+      "effort": "見積もり {est}",
+      "activeDays": "直近28日のうち {n} 日に活動"
+    },
+    "noSample": "まだ十分なデータがありません",
+    "infoLabel": "{metric}について",
+    "def": {
+      "active": "完了もアーカイブもされていない進行中のタスクです。",
+      "completed": "選択した期間内に完了したタスクです。",
+      "completionRate": "完了数 ÷（完了数＋進行中）。期間末までに作成されたタスクが対象で、アーカイブ済みは除外します。",
+      "onTimeRate": "確定した締め切りがある完了タスクのうち、締め切り以前に完了した割合です。締め切りのないタスクは除外します。データがない場合は「—」を表示します。",
+      "overdue": "締め切りを過ぎた進行中のタスクです。",
+      "checkpoints": "選択した期間内に完了したチェックポイントです。",
+      "effort": "期間内に完了し、見積もりがあるタスクの実績時間の合計です。カードの補足は同じタスクの見積もり時間です。",
+      "consistency": "直近28日のうち、何らかの活動が記録された日数の割合です。"
+    },
+    "series": {
+      "tasks": "タスク",
+      "checkpoints": "チェックポイント",
+      "strict": "締め切り（厳守）",
+      "others": "その他の期日",
+      "estimated": "見積もり",
+      "actual": "実績",
+      "onTime": "期限内",
+      "late": "期限後"
+    },
+    "axis": {
+      "hours": "時間",
+      "daysEarly": "目標日までの日数（マイナスは遅れ）"
+    },
+    "tip": {
+      "early": "目標日の{days}日前に完了",
+      "late": "目標日の{days}日後に完了"
+    },
+    "charts": {
+      "daily": {
+        "title": "日別の完了数",
+        "desc": "直近30日間に日ごとに完了したタスクとチェックポイントです。"
+      },
+      "weekly": {
+        "title": "週別の完了数",
+        "desc": "直近12週間で週ごとに完了したタスクとチェックポイントです。"
+      },
+      "distribution": {
+        "title": "今後の締め切り",
+        "desc": "今後8週間について、締め切りの週ごとの未完了項目です。期限切れは別に集計しています。"
+      },
+      "goals": {
+        "title": "目標の進捗",
+        "desc": "進行中の目標の現在の進捗（0〜100%）です。"
+      },
+      "heatmap": {
+        "title": "活動カレンダー",
+        "desc": "直近{days}日間の日ごとの完了と進捗の記録です。"
+      },
+      "effort": {
+        "title": "予定と実績の作業時間",
+        "desc": "週ごとに完了したタスクの見積もりと実績の時間です。"
+      },
+      "scatter": {
+        "title": "チェックポイントの完了タイミング",
+        "desc": "完了したチェックポイントを目標日と比べたものです。ゼロより上は前倒しで完了したことを示します。"
+      }
+    },
+    "empty": {
+      "title": "まだデータがありません",
+      "daily": "直近30日間に完了した項目はありません。",
+      "weekly": "直近12週間に完了した項目はありません。",
+      "distribution": "今後8週間に未完了の締め切りはありません。",
+      "goals": "目標はまだありません。",
+      "heatmap": "この期間に記録された活動はありません。",
+      "effort": "見積もりのあるタスクの完了はまだありません。",
+      "scatter": "目標日のあるチェックポイントの完了はまだありません。"
+    },
+    "overdueCallout": "期限切れ {n} 件",
+    "a11y": {
+      "daily": "日別の完了数。直近30日間でタスク {tasks} 件、チェックポイント {checkpoints} 件。",
+      "weekly": "週別の完了数。直近12週間でタスク {tasks} 件、チェックポイント {checkpoints} 件。",
+      "distribution": "今後の締め切り。今後8週間で未完了 {count} 件、期限切れ {overdue} 件。",
+      "goals": "{count} 件の目標の進捗。",
+      "heatmap": "{days} 日間の活動カレンダー。活動があった日は {active} 日。",
+      "effort": "{count} 週間の予定と実績の作業時間。",
+      "scatter": "チェックポイントの完了タイミング。{count} 件中、期限後に完了したものは {late} 件。"
+    },
+    "footnote": "すべての統計は保存されたデータから計算しています。AI がこれらの数値を変更することはありません。"
+  }
+}

@@ -1,0 +1,346 @@
+@import '@fontsource-variable/inter';
+@import 'tailwindcss';
+
+/* Dark mode follows the .dark class on <html> (and matches the element itself). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ------------------------------------------------------------------------- */
+/* Design tokens. Components only reference these semantic tokens.            */
+/* ------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+  --bg: oklch(0.985 0.002 264);
+  --bg-subtle: oklch(0.97 0.004 264);
+  --surface: oklch(1 0 0);
+  --surface-raised: oklch(1 0 0);
+  --surface-sunken: oklch(0.965 0.005 264);
+  --surface-hover: oklch(0.955 0.006 264);
+  --overlay: oklch(0.2 0.02 264 / 0.38);
+
+  --text: oklch(0.22 0.02 264);
+  --text-muted: oklch(0.47 0.02 264);
+  --text-subtle: oklch(0.6 0.015 264);
+  --text-inverse: oklch(0.99 0 0);
+
+  --border: oklch(0.915 0.006 264);
+  --border-strong: oklch(0.86 0.01 264);
+
+  --primary: oklch(0.52 0.2 272);
+  --primary-hover: oklch(0.47 0.2 272);
+  --primary-soft: oklch(0.955 0.03 272);
+  --primary-softer: oklch(0.975 0.015 272);
+  --primary-text: oklch(0.45 0.19 272);
+  --on-primary: oklch(0.99 0 0);
+
+  --secondary: oklch(0.6 0.12 200);
+  --secondary-soft: oklch(0.95 0.03 200);
+
+  --success: oklch(0.6 0.14 155);
+  --success-soft: oklch(0.955 0.04 155);
+  --success-text: oklch(0.45 0.12 155);
+  --warning: oklch(0.74 0.15 70);
+  --warning-soft: oklch(0.965 0.045 85);
+  --warning-text: oklch(0.5 0.12 60);
+  --danger: oklch(0.58 0.2 25);
+  --danger-soft: oklch(0.96 0.03 25);
+  --danger-text: oklch(0.5 0.19 25);
+  --info: oklch(0.6 0.13 240);
+  --info-soft: oklch(0.955 0.03 240);
+
+  --ai: oklch(0.56 0.19 300);
+  --ai-soft: oklch(0.96 0.03 300);
+
+  --focus-ring: oklch(0.6 0.2 272 / 0.45);
+
+  --shadow-xs: 0 1px 1px oklch(0.2 0.02 264 / 0.04);
+  --shadow-sm: 0 1px 2px oklch(0.2 0.02 264 / 0.06), 0 1px 1px oklch(0.2 0.02 264 / 0.03);
+  --shadow-md: 0 4px 12px -2px oklch(0.2 0.02 264 / 0.08), 0 2px 4px -2px oklch(0.2 0.02 264 / 0.05);
+  --shadow-lg: 0 16px 40px -12px oklch(0.2 0.03 264 / 0.22), 0 4px 10px -4px oklch(0.2 0.02 264 / 0.08);
+
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 140ms;
+  --dur: 220ms;
+  --dur-slow: 380ms;
+
+  --sidebar-w: 248px;
+  --topbar-h: 56px;
+}
+
+.dark {
+  color-scheme: dark;
+  --bg: oklch(0.17 0.012 264);
+  --bg-subtle: oklch(0.19 0.012 264);
+  --surface: oklch(0.205 0.013 264);
+  --surface-raised: oklch(0.235 0.014 264);
+  --surface-sunken: oklch(0.18 0.012 264);
+  --surface-hover: oklch(0.255 0.015 264);
+  --overlay: oklch(0.05 0.01 264 / 0.6);
+
+  --text: oklch(0.94 0.006 264);
+  --text-muted: oklch(0.72 0.012 264);
+  --text-subtle: oklch(0.58 0.012 264);
+  --text-inverse: oklch(0.16 0.01 264);
+
+  --border: oklch(0.29 0.014 264);
+  --border-strong: oklch(0.36 0.016 264);
+
+  --primary: oklch(0.66 0.17 272);
+  --primary-hover: oklch(0.72 0.16 272);
+  --primary-soft: oklch(0.3 0.07 272);
+  --primary-softer: oklch(0.25 0.04 272);
+  --primary-text: oklch(0.78 0.13 272);
+  --on-primary: oklch(0.15 0.02 272);
+
+  --secondary: oklch(0.72 0.11 200);
+  --secondary-soft: oklch(0.3 0.05 200);
+
+  --success: oklch(0.7 0.14 155);
+  --success-soft: oklch(0.3 0.06 155);
+  --success-text: oklch(0.8 0.13 155);
+  --warning: oklch(0.8 0.14 75);
+  --warning-soft: oklch(0.32 0.06 75);
+  --warning-text: oklch(0.85 0.13 80);
+  --danger: oklch(0.68 0.18 25);
+  --danger-soft: oklch(0.31 0.07 25);
+  --danger-text: oklch(0.8 0.13 25);
+  --info: oklch(0.7 0.12 240);
+  --info-soft: oklch(0.3 0.05 240);
+
+  --ai: oklch(0.72 0.15 300);
+  --ai-soft: oklch(0.3 0.07 300);
+
+  --focus-ring: oklch(0.7 0.16 272 / 0.5);
+
+  --shadow-xs: 0 1px 1px oklch(0 0 0 / 0.2);
+  --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.3);
+  --shadow-md: 0 6px 16px -4px oklch(0 0 0 / 0.45);
+  --shadow-lg: 0 20px 48px -12px oklch(0 0 0 / 0.6);
+}
+
+/* Map tokens into Tailwind utilities (bg-surface, text-muted, border-border, ...). */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-surface-hover: var(--surface-hover);
+  --color-overlay: var(--overlay);
+  --color-fg: var(--text);
+  --color-muted: var(--text-muted);
+  --color-subtle: var(--text-subtle);
+  --color-inverse: var(--text-inverse);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-softer: var(--primary-softer);
+  --color-primary-text: var(--primary-text);
+  --color-on-primary: var(--on-primary);
+  --color-secondary: var(--secondary);
+  --color-secondary-soft: var(--secondary-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-success-text: var(--success-text);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-text: var(--warning-text);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-text: var(--danger-text);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-ai: var(--ai);
+  --color-ai-soft: var(--ai-soft);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+
+  --font-sans: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Meiryo', 'Noto Sans JP', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'JetBrains Mono', Menlo, monospace;
+
+  --ease-out-expo: var(--ease-out);
+  --ease-spring: var(--ease-spring);
+
+  --animate-fade-in: fade-in var(--dur) var(--ease-out) both;
+  --animate-fade-up: fade-up var(--dur-slow) var(--ease-out) both;
+  --animate-scale-in: scale-in var(--dur) var(--ease-out) both;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+  --animate-pop: pop 420ms var(--ease-spring) both;
+  --animate-pulse-ring: pulse-ring 2.2s var(--ease-out) infinite;
+}
+
+@keyframes fade-in {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px) }
+  to { opacity: 1; transform: none }
+}
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.96) }
+  to { opacity: 1; transform: none }
+}
+@keyframes shimmer {
+  from { background-position: -200% 0 }
+  to { background-position: 200% 0 }
+}
+@keyframes pop {
+  0% { transform: scale(0.6) }
+  60% { transform: scale(1.12) }
+  100% { transform: scale(1) }
+}
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--danger) 45%, transparent) }
+  70% { box-shadow: 0 0 0 8px transparent }
+  100% { box-shadow: 0 0 0 0 transparent }
+}
+
+/* ------------------------------------------------------------------------- */
+/* Base                                                                       */
+/* ------------------------------------------------------------------------- */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'cv11', 'ss01', 'ss03';
+  }
+  html[lang='ja'] {
+    font-feature-settings: 'palt' 0;
+    line-height: 1.6;
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100dvh;
+  }
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  ::selection {
+    background: color-mix(in oklch, var(--primary) 22%, transparent);
+  }
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ------------------------------------------------------------------------- */
+/* Shared motion helpers used by <Transition name="..."> and TransitionGroup. */
+/* ------------------------------------------------------------------------- */
+.page-enter-active { transition: opacity var(--dur) var(--ease-out), transform var(--dur-slow) var(--ease-out) }
+.page-leave-active { transition: opacity var(--dur-fast) ease-in }
+.page-enter-from { opacity: 0; transform: translateY(6px) }
+.page-leave-to { opacity: 0 }
+
+.fade-enter-active, .fade-leave-active { transition: opacity var(--dur) var(--ease-out) }
+.fade-enter-from, .fade-leave-to { opacity: 0 }
+
+.pop-enter-active { transition: opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-spring) }
+.pop-leave-active { transition: opacity var(--dur-fast) ease-in, transform var(--dur-fast) ease-in }
+.pop-enter-from, .pop-leave-to { opacity: 0; transform: scale(0.96) translateY(-4px) }
+
+/* Lists: items slide in, collapse out, and siblings glide into place. */
+.list-move { transition: transform var(--dur-slow) var(--ease-out) }
+.list-enter-active { transition: opacity var(--dur) var(--ease-out), transform var(--dur-slow) var(--ease-out) }
+.list-leave-active { transition: opacity var(--dur-fast) ease-in, transform var(--dur-fast) ease-in; position: absolute; left: 0; right: 0 }
+.list-enter-from { opacity: 0; transform: translateY(6px) }
+.list-leave-to { opacity: 0; transform: translateX(12px) }
+
+/* Staggered reveal: set style="--i: n" on children of .stagger. */
+.stagger > * { animation: fade-up var(--dur-slow) var(--ease-out) both; animation-delay: calc(var(--i, 0) * 40ms) }
+
+.skeleton {
+  background: linear-gradient(90deg, var(--surface-sunken) 25%, var(--surface-hover) 50%, var(--surface-sunken) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* Reka UI data-state animations for overlays. */
+.overlay-anim[data-state='open'] { animation: fade-in var(--dur) var(--ease-out) }
+.overlay-anim[data-state='closed'] { animation: fade-in var(--dur-fast) ease-in reverse }
+.dialog-anim[data-state='open'] { animation: scale-in var(--dur) var(--ease-out) }
+.dialog-anim[data-state='closed'] { animation: scale-in var(--dur-fast) ease-in reverse }
+.drawer-right[data-state='open'] { animation: drawer-in-right var(--dur-slow) var(--ease-out) }
+.drawer-right[data-state='closed'] { animation: drawer-in-right var(--dur) ease-in reverse }
+.sheet-bottom[data-state='open'] { animation: sheet-in-bottom var(--dur-slow) var(--ease-out) }
+.sheet-bottom[data-state='closed'] { animation: sheet-in-bottom var(--dur) ease-in reverse }
+.menu-anim[data-state='open'] { animation: menu-in var(--dur-fast) var(--ease-out) }
+.menu-anim[data-state='closed'] { animation: fade-in 100ms ease-in reverse }
+@keyframes drawer-in-right { from { transform: translateX(100%) } to { transform: none } }
+@keyframes sheet-in-bottom { from { transform: translateY(100%) } to { transform: none } }
+@keyframes menu-in { from { opacity: 0; transform: translateY(-4px) scale(0.98) } to { opacity: 1; transform: none } }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* FullCalendar v7 classic theme mapped onto TickPoint tokens (light + dark follow automatically).
+   html:root outranks the palette stylesheet, which is loaded later with :root specificity. */
+html:root,
+html.dark {
+  --fc-classic-button: var(--surface);
+  --fc-classic-button-border: var(--border);
+  --fc-classic-button-strong: var(--surface-hover);
+  --fc-classic-button-strong-border: var(--border-strong);
+  --fc-classic-button-outline: var(--focus-ring);
+  --fc-classic-button-foreground: var(--text);
+  --fc-classic-primary: var(--primary);
+  --fc-classic-primary-foreground: var(--on-primary);
+  --fc-classic-highlight: color-mix(in oklch, var(--primary) 12%, transparent);
+  --fc-classic-today: var(--primary-softer);
+  --fc-classic-now: var(--danger);
+  --fc-classic-background: var(--surface);
+  --fc-classic-faint: var(--bg-subtle);
+  --fc-classic-muted: var(--surface-sunken);
+  --fc-classic-strong: var(--surface-hover);
+  --fc-classic-foreground: var(--text);
+  --fc-classic-faint-foreground: var(--text-subtle);
+  --fc-classic-muted-foreground: var(--text-muted);
+  --fc-classic-border: var(--border);
+  --fc-classic-strong-border: var(--border-strong);
+  --fc-classic-ring-color: var(--focus-ring);
+}
+.tp-calendar { font-size: 13px }

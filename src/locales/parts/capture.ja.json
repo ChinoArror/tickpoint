@@ -1,0 +1,343 @@
+{
+  "ai": {
+    "unconfirmed": "AI の下書き（未確認）",
+    "generated": "AI が生成",
+    "disclaimer": "AI は誤りを含むことがあります。利用する前に内容を確認してください。",
+    "advisory": "{value}（参考値）",
+    "certainty": {
+      "explicit": "明記",
+      "inferred": "推測"
+    },
+    "evidence": "根拠",
+    "showInSource": "原文で表示",
+    "evidenceMissing": "原文に根拠が見つかりません",
+    "summary": "AI の要約",
+    "reasoning": "AI の理由"
+  },
+  "capture": {
+    "title": "スマートキャプチャ",
+    "progress": "キャプチャの進捗",
+    "steps": {
+      "paste": "貼り付け",
+      "analyze": "解析",
+      "review": "確認",
+      "confirm": "確定",
+      "next": "次の手順"
+    },
+    "input": {
+      "heading": "元のテキストを貼り付け",
+      "lead": "お知らせ、メール、シラバスなど、日付や要件を含むテキストを貼り付けてください。",
+      "label": "元のテキスト",
+      "placeholder": "ここに全文を貼り付けてください",
+      "counter": "{count} / {max} 文字",
+      "tokens": "約 {n} トークン",
+      "tooShort": "{min} 文字以上が必要です。",
+      "tooLong": "{max} 文字以内に短くしてください。",
+      "details": "元の情報",
+      "sourceTitle": "タイトル",
+      "sourceUrl": "リンク",
+      "sourceUrlHint": "任意。http または https のリンクのみ。",
+      "invalidUrl": "有効な http または https のアドレスを入力してください。",
+      "sourceDate": "元の日付",
+      "sourceDateHint": "わかっていれば、元の情報が公開された日付。",
+      "context": "補足",
+      "contextHint": "役割や準備している内容など、参考になることがあれば。",
+      "project": "プロジェクト",
+      "noProject": "プロジェクトなし",
+      "privacy": "テキストは解析のため Google Gemini に送信されます。確定するまでタスクには何も追加されません。",
+      "analyze": "AI で解析",
+      "error": "解析が完了しませんでした",
+      "retry": "もう一度試す",
+      "aiOffTitle": "AI 機能はオフになっています",
+      "aiOffDescription": "元のテキストを解析するには、設定で AI をオンにしてください。",
+      "aiOffAction": "AI の設定を開く"
+    },
+    "analyzing": {
+      "title": "テキストを解析しています",
+      "m0": "締め切りを探しています…",
+      "m1": "タイムゾーンを確認しています…",
+      "m2": "要件を集めています…",
+      "m3": "根拠を照合しています…",
+      "cancel": "キャンセル",
+      "note": "通常は 1 分以内に終わります。まだ何も保存されていません。"
+    },
+    "review": {
+      "notFound": "この下書きが見つかりませんでした。",
+      "loading": "下書きを読み込んでいます…",
+      "confirmedNotice": "この下書きは確定済みです。",
+      "openCreated": "作成された項目を開く",
+      "rejectedNotice": "この下書きは却下されたため、確定できません。",
+      "startOver": "最初からやり直す",
+      "banner": "すべての項目を確認してください。確定するまで保存されません。",
+      "tabs": {
+        "label": "表示するパネル",
+        "extracted": "抽出結果",
+        "source": "元のテキスト"
+      },
+      "sourcePanel": "元のテキスト",
+      "sourceDeleted": "元のテキストは保存されていないか、削除されています。",
+      "extractedPanel": "抽出された情報",
+      "sections": {
+        "summary": "概要",
+        "deadlines": "締め切り",
+        "ambiguities": "曖昧な点と不足している情報",
+        "location": "場所",
+        "submission": "提出",
+        "deliverables": "成果物",
+        "requirements": "要件",
+        "rewards": "報酬",
+        "suggestions": "提案されたチェックポイント",
+        "warnings": "注意",
+        "options": "オプション"
+      },
+      "summaryFields": {
+        "title": "タイトル",
+        "category": "カテゴリ",
+        "organization": "組織",
+        "summary": "要約",
+        "sourceLanguage": "元の言語",
+        "recordKind": "主なレコードの種類",
+        "kinds": {
+          "deadline": "締め切り",
+          "task": "タスク",
+          "goal": "目標"
+        }
+      },
+      "deadlines": {
+        "empty": "締め切りは見つかりませんでした。必要であれば手動で追加してください。",
+        "add": "締め切りを追加",
+        "label": "ラベル",
+        "labelPlaceholder": "何の締め切りか",
+        "kind": "種類",
+        "main": "メインの締め切り",
+        "createAs": "作成方法",
+        "createAsOptions": {
+          "deadline": "別の締め切りとして作成",
+          "checkpoint": "メインのチェックポイントとして作成",
+          "skip": "スキップ"
+        },
+        "timeZoneMissing": "元のテキストにタイムゾーンが書かれていません。確定する前に選んでください。",
+        "remove": "締め切りを削除",
+        "removed": "削除済み",
+        "undo": "元に戻す",
+        "issues": "メモ"
+      },
+      "ambiguities": {
+        "hint": "確認したら項目ごとにチェックしてください。自動では何も変わりません。",
+        "reviewed": "確認済み",
+        "remaining": "あと {n} 件確認",
+        "allReviewed": "すべて確認済み",
+        "options": "候補",
+        "field": "項目: {field}"
+      },
+      "list": {
+        "add": "追加",
+        "include": "含める",
+        "remove": "削除",
+        "type": "種類",
+        "text": "内容",
+        "empty": "まだ項目がありません。",
+        "addPlaceholder": "新しい項目"
+      },
+      "location": {
+        "physical": "住所",
+        "building": "建物",
+        "room": "部屋",
+        "campus": "キャンパス",
+        "online": "オンラインのリンク",
+        "contact": "連絡先",
+        "empty": "場所は見つかりませんでした。"
+      },
+      "submission": {
+        "method": "提出方法",
+        "platform": "提出先の仕組み",
+        "url": "リンク",
+        "destination": "提出先",
+        "fileFormats": "ファイル形式",
+        "fileFormatsHint": "Enter で形式を追加します。",
+        "fileFormatsPlaceholder": "例: PDF",
+        "naming": "ファイル名",
+        "sizeLimit": "容量制限",
+        "copies": "部数",
+        "conditions": "条件",
+        "urlInvalid": "有効な http または https のアドレスではないため、保存されません。",
+        "empty": "提出に関する情報は見つかりませんでした。"
+      },
+      "suggestions": {
+        "hint": "任意の提案です。含めない限り作成されません。",
+        "include": "含める",
+        "title": "タイトル",
+        "criteria": "完了の条件…",
+        "targetDate": "目標日",
+        "minutes": "見積もり時間（分）"
+      },
+      "options": {
+        "saveSource": "このレコードと一緒に元のテキストを保存",
+        "saveSourceHint": "後から読めるように保存します。いつでも削除できます。",
+        "reminders": "リマインダー",
+        "remindersHint": "自動では設定されません。必要なものだけ選んでください。",
+        "project": "プロジェクト",
+        "presets": {
+          "7d": "7 日前",
+          "3d": "3 日前",
+          "1d": "1 日前",
+          "12h": "12 時間前",
+          "3h": "3 時間前",
+          "1h": "1 時間前",
+          "30m": "30 分前",
+          "15m": "15 分前",
+          "5m": "5 分前"
+        }
+      },
+      "footer": {
+        "reject": "下書きを却下",
+        "rejectTitle": "この下書きを却下しますか？",
+        "rejectMessage": "抽出された情報は破棄され、何も作成されません。",
+        "rejectConfirm": "却下する",
+        "rejected": "下書きを却下しました。",
+        "confirm": "確定して作成",
+        "blocked": "あと {n} 件の確認が必要です",
+        "errorsTitle": "確定する前に次を直してください"
+      },
+      "validation": {
+        "timeZone": "時刻が指定された締め切りには、タイムゾーンを選んでください。",
+        "title": "レコードのタイトルを入力してください。",
+        "generic": "一部の内容が正しくありません。強調表示された項目を確認してください。"
+      },
+      "types": {
+        "requirement": {
+          "mandatory": "必須",
+          "optional": "任意",
+          "criteria": "判定基準",
+          "restriction": "制限",
+          "eligibility": "応募資格",
+          "prerequisite": "前提条件",
+          "material": "必要な資料"
+        },
+        "reward": {
+          "monetary": "金銭",
+          "prize": "賞品",
+          "certificate": "証明書",
+          "credit": "単位・ポイント",
+          "recognition": "表彰",
+          "other": "その他"
+        }
+      }
+    },
+    "done": {
+      "title": "作成しました",
+      "summary": "締め切り {deadlines} 件とチェックポイント {checkpoints} 件を作成しました。",
+      "sourceSaved": "元のテキストを保存しました",
+      "sourceNotSaved": "元のテキストは保存していません",
+      "open": "開く",
+      "generate": "AI でチェックポイントを作成",
+      "generateHint": "AI が計画を提案します。追加する前に確認できます。",
+      "generating": "作成中…",
+      "another": "別の内容をキャプチャ"
+    }
+  },
+  "plan": {
+    "title": "チェックポイント計画",
+    "parent": "対象: {title}",
+    "parentTask": "タスク",
+    "parentGoal": "目標",
+    "parentLink": "{kind} に戻る",
+    "readOnly": "この計画はもう保留中ではないため、閲覧のみできます。",
+    "feasibility": {
+      "feasible": "実行可能",
+      "notFeasible": "このままでは実行できません",
+      "planned": "予定の合計",
+      "available": "利用可能な時間",
+      "noAvailability": "利用可能な時間が設定されていません。",
+      "conflicts": "競合",
+      "checks": "チェック結果"
+    },
+    "checks": {
+      "moved_from_past": "過去の日付から直近の実行可能な日付に移動しました",
+      "after_deadline": "締め切りの後に予定されています",
+      "invalid_date": "日付が正しくありません",
+      "dependency_dropped": "依存関係の一部を外しました",
+      "dependency_cycle": "依存関係が循環しています",
+      "dependency_order": "後の日程のチェックポイントに依存しています",
+      "insufficient_time": "利用可能な時間が足りません",
+      "start_after_target": "目標日の後に開始します"
+    },
+    "list": {
+      "title": "チェックポイント",
+      "add": "チェックポイントを追加",
+      "empty": "まだチェックポイントがありません。追加するか、AI で再生成してください。",
+      "reorder": "チェックポイント {n} の順番を変更",
+      "select": "チェックポイント {n} を再生成の対象にする",
+      "remove": "チェックポイント {n} を削除"
+    },
+    "card": {
+      "title": "タイトル",
+      "criteria": "完了の条件…",
+      "start": "開始日",
+      "target": "目標日",
+      "minutes": "見積もり時間（分）",
+      "priority": "優先度",
+      "dependsOn": "依存先",
+      "dependsOnEmpty": "ほかのチェックポイントはまだありません。",
+      "reminder": "リマインダー",
+      "noReminder": "リマインダーなし",
+      "fromSource": "元のテキストの要件から",
+      "suggestion": "提案",
+      "edited": "編集済み",
+      "titleRequired": "変更を保存するにはタイトルを入力してください。"
+    },
+    "save": {
+      "saving": "保存中…",
+      "saved": "保存しました",
+      "error": "変更を保存できませんでした。"
+    },
+    "regenerate": {
+      "selected": "{n} 件選択中",
+      "instructions": "指示（任意）",
+      "instructionsPlaceholder": "例: 手順をもっと細かくする",
+      "button": "選択したものを再生成（{n}）",
+      "overwriteTitle": "編集内容を上書きしますか？",
+      "overwriteMessage": "次のチェックポイントはあなたが編集しています: {titles}。再生成すると編集内容は置き換わります。",
+      "overwriteConfirm": "上書きする",
+      "done": "チェックポイントを再生成しました。",
+      "clear": "選択を解除"
+    },
+    "footer": {
+      "discard": "計画を破棄",
+      "discardTitle": "この計画を破棄しますか？",
+      "discardMessage": "下書きのチェックポイントは削除されます。タスクには何も追加されていません。",
+      "discardConfirm": "破棄する",
+      "discarded": "計画を破棄しました。",
+      "approve": "承認して {n} 件のチェックポイントを追加",
+      "approveBlocked": "すべてのチェックポイントにタイトルが必要です。",
+      "approved": "チェックポイント {n} 件を追加しました。",
+      "goTo": "開く"
+    },
+    "loadError": "この計画を読み込めませんでした。"
+  },
+  "source": {
+    "title": "元のテキスト",
+    "untitled": "無題の元情報",
+    "originalLink": "元のリンク",
+    "sourceDate": "元の日付",
+    "linked": "関連するレコード",
+    "linkedEmpty": "どのレコードにも関連付けられていません。",
+    "content": "元のテキスト",
+    "chars": "{n} 文字",
+    "deleted": "元のテキストは削除されました。",
+    "deletedHint": "この元情報は残りますが、テキストは保存されていません。",
+    "copy": "テキストをコピー",
+    "copied": "コピーしました",
+    "deleteContent": "元のテキストを削除",
+    "deleteContentTitle": "元のテキストを削除しますか？",
+    "deleteContentMessage": "保存されているテキストのみ削除します。関連するレコードはそのままです。",
+    "deleteContentDone": "元のテキストを削除しました。",
+    "deleteSource": "元情報を削除",
+    "deleteSourceTitle": "この元情報を削除しますか？",
+    "deleteSourceMessage": "元情報と保存されているテキストを削除します。関連するレコードは残ります。",
+    "deleteSourceDone": "元情報を削除しました。",
+    "notFound": "この元情報はもう存在しません。",
+    "back": "戻る",
+    "created": "保存日時"
+  }
+}

@@ -1,0 +1,343 @@
+{
+  "ai": {
+    "unconfirmed": "AI draft · unconfirmed",
+    "generated": "AI-generated",
+    "disclaimer": "AI can make mistakes. Review everything before you rely on it.",
+    "advisory": "{value} advisory",
+    "certainty": {
+      "explicit": "Stated",
+      "inferred": "Interpreted"
+    },
+    "evidence": "Evidence",
+    "showInSource": "Show in source",
+    "evidenceMissing": "Evidence not found in source",
+    "summary": "AI summary",
+    "reasoning": "AI reasoning"
+  },
+  "capture": {
+    "title": "Smart Capture",
+    "progress": "Capture progress",
+    "steps": {
+      "paste": "Paste",
+      "analyze": "Analyze",
+      "review": "Review",
+      "confirm": "Confirm",
+      "next": "Next steps"
+    },
+    "input": {
+      "heading": "Paste the source text",
+      "lead": "An announcement, email, syllabus or any text with dates and requirements.",
+      "label": "Source text",
+      "placeholder": "Paste the full text here",
+      "counter": "{count} / {max} characters",
+      "tokens": "About {n} tokens",
+      "tooShort": "At least {min} characters are needed.",
+      "tooLong": "Shorten the text to {max} characters or fewer.",
+      "details": "Source details",
+      "sourceTitle": "Title",
+      "sourceUrl": "Link",
+      "sourceUrlHint": "Optional. Only http or https links.",
+      "invalidUrl": "Enter a valid http or https address.",
+      "sourceDate": "Source date",
+      "sourceDateHint": "When the source was published, if known.",
+      "context": "Context",
+      "contextHint": "Anything that helps, such as your role or what you are preparing.",
+      "project": "Project",
+      "noProject": "No project",
+      "privacy": "Your text is sent to Google Gemini for analysis. Nothing is added to your tasks until you confirm.",
+      "analyze": "Analyze with AI",
+      "error": "Analysis did not finish",
+      "retry": "Try again",
+      "aiOffTitle": "AI features are turned off",
+      "aiOffDescription": "Turn on AI in Settings to analyze source text.",
+      "aiOffAction": "Open AI settings"
+    },
+    "analyzing": {
+      "title": "Analyzing your text",
+      "m0": "Finding deadlines…",
+      "m1": "Checking time zones…",
+      "m2": "Collecting requirements…",
+      "m3": "Verifying evidence…",
+      "cancel": "Cancel",
+      "note": "This usually takes under a minute. Nothing is saved yet."
+    },
+    "review": {
+      "notFound": "This draft could not be found.",
+      "loading": "Loading the draft…",
+      "confirmedNotice": "This draft was already confirmed.",
+      "openCreated": "Open the created item",
+      "rejectedNotice": "This draft was rejected, so it can no longer be confirmed.",
+      "startOver": "Start over",
+      "banner": "Review every field. Nothing is saved until you confirm.",
+      "tabs": {
+        "label": "Choose a panel",
+        "extracted": "Extracted",
+        "source": "Source"
+      },
+      "sourcePanel": "Original source",
+      "sourceDeleted": "The original text was not saved or has been deleted.",
+      "extractedPanel": "Extracted information",
+      "sections": {
+        "summary": "Summary",
+        "deadlines": "Deadlines",
+        "ambiguities": "Ambiguities and missing information",
+        "location": "Location",
+        "submission": "Submission",
+        "deliverables": "Deliverables",
+        "requirements": "Requirements",
+        "rewards": "Rewards",
+        "suggestions": "Suggested checkpoints",
+        "warnings": "Warnings",
+        "options": "Options"
+      },
+      "summaryFields": {
+        "title": "Title",
+        "category": "Category",
+        "organization": "Organization",
+        "summary": "Summary",
+        "sourceLanguage": "Source language",
+        "recordKind": "Primary record type",
+        "kinds": {
+          "deadline": "Deadline",
+          "task": "Task",
+          "goal": "Goal"
+        }
+      },
+      "deadlines": {
+        "empty": "No deadlines were found. Add one manually if needed.",
+        "add": "Add deadline",
+        "label": "Label",
+        "labelPlaceholder": "What is due",
+        "kind": "Kind",
+        "main": "Main deadline",
+        "createAs": "Create as",
+        "createAsOptions": {
+          "deadline": "Separate deadline",
+          "checkpoint": "Checkpoint of main record",
+          "skip": "Skip"
+        },
+        "timeZoneMissing": "Time zone not stated in the source. Choose one before confirming.",
+        "remove": "Remove deadline",
+        "removed": "Removed",
+        "undo": "Undo",
+        "issues": "Notes"
+      },
+      "ambiguities": {
+        "hint": "Mark each item once you have checked it. Nothing changes automatically.",
+        "reviewed": "Reviewed",
+        "remaining": "{n} left to review",
+        "allReviewed": "All items reviewed",
+        "options": "Options mentioned",
+        "field": "Field: {field}"
+      },
+      "list": {
+        "add": "Add",
+        "include": "Include",
+        "remove": "Remove",
+        "type": "Type",
+        "text": "Text",
+        "empty": "Nothing here yet.",
+        "addPlaceholder": "New item"
+      },
+      "location": {
+        "physical": "Address",
+        "building": "Building",
+        "room": "Room",
+        "campus": "Campus",
+        "online": "Online link",
+        "contact": "Contact",
+        "empty": "No location was found."
+      },
+      "submission": {
+        "method": "Method",
+        "platform": "Platform",
+        "url": "Link",
+        "destination": "Destination",
+        "fileFormats": "File formats",
+        "fileFormatsHint": "Press Enter to add a format.",
+        "fileFormatsPlaceholder": "e.g. PDF",
+        "naming": "File naming",
+        "sizeLimit": "Size limit",
+        "copies": "Copies",
+        "conditions": "Conditions",
+        "urlInvalid": "This link is not a valid http or https address, so it will not be saved.",
+        "empty": "No submission details were found."
+      },
+      "suggestions": {
+        "hint": "Optional suggestion. Not created unless you include it.",
+        "include": "Include",
+        "title": "Title",
+        "criteria": "Done when…",
+        "targetDate": "Target date",
+        "minutes": "Estimated minutes"
+      },
+      "options": {
+        "saveSource": "Save original text with this record",
+        "saveSourceHint": "Keeps the text so you can read it later. You can delete it at any time.",
+        "reminders": "Reminders",
+        "remindersHint": "Nothing is scheduled automatically. Choose any you want.",
+        "project": "Project",
+        "presets": {
+          "7d": "7 days before",
+          "3d": "3 days before",
+          "1d": "1 day before",
+          "12h": "12 hours before",
+          "3h": "3 hours before",
+          "1h": "1 hour before",
+          "30m": "30 minutes before",
+          "15m": "15 minutes before",
+          "5m": "5 minutes before"
+        }
+      },
+      "footer": {
+        "reject": "Reject draft",
+        "rejectTitle": "Reject this draft?",
+        "rejectMessage": "The extracted information is discarded and nothing is created.",
+        "rejectConfirm": "Reject",
+        "rejected": "Draft rejected.",
+        "confirm": "Confirm & create",
+        "blocked": "Review {n} more item(s) to continue",
+        "errorsTitle": "Fix these before confirming"
+      },
+      "validation": {
+        "timeZone": "Choose a time zone for each exact deadline.",
+        "title": "Give the record a title.",
+        "generic": "Some details are not valid. Check the highlighted fields."
+      },
+      "types": {
+        "requirement": {
+          "mandatory": "Mandatory",
+          "optional": "Optional",
+          "criteria": "Criteria",
+          "restriction": "Restriction",
+          "eligibility": "Eligibility",
+          "prerequisite": "Prerequisite",
+          "material": "Material"
+        },
+        "reward": {
+          "monetary": "Monetary",
+          "prize": "Prize",
+          "certificate": "Certificate",
+          "credit": "Credit",
+          "recognition": "Recognition",
+          "other": "Other"
+        }
+      }
+    },
+    "done": {
+      "title": "Created",
+      "summary": "Created {deadlines} deadline(s) and {checkpoints} checkpoint(s).",
+      "sourceSaved": "Original text saved with this record",
+      "sourceNotSaved": "Original text was not saved",
+      "open": "Open",
+      "generate": "Generate checkpoints with AI",
+      "generateHint": "AI proposes a plan. You review it before anything is added.",
+      "generating": "Generating…",
+      "another": "Capture another"
+    }
+  },
+  "plan": {
+    "title": "Checkpoint plan",
+    "parent": "For {title}",
+    "parentTask": "Task",
+    "parentGoal": "Goal",
+    "parentLink": "Back to {kind}",
+    "readOnly": "This plan is no longer pending, so it can only be viewed.",
+    "feasibility": {
+      "feasible": "Feasible",
+      "notFeasible": "Not feasible as planned",
+      "planned": "Planned",
+      "available": "Available",
+      "noAvailability": "No available time is set.",
+      "conflicts": "Conflicts",
+      "checks": "Checks"
+    },
+    "checks": {
+      "moved_from_past": "Moved from the past to the nearest feasible date",
+      "after_deadline": "Scheduled after the deadline",
+      "invalid_date": "Date is not valid",
+      "dependency_dropped": "A dependency was dropped",
+      "dependency_cycle": "Dependencies form a cycle",
+      "dependency_order": "Depends on a checkpoint scheduled later",
+      "insufficient_time": "Not enough available time",
+      "start_after_target": "Starts after its target date"
+    },
+    "list": {
+      "title": "Checkpoints",
+      "add": "Add checkpoint",
+      "empty": "No checkpoints yet. Add one or regenerate with AI.",
+      "reorder": "Reorder checkpoint {n}",
+      "select": "Select checkpoint {n} for regeneration",
+      "remove": "Remove checkpoint {n}"
+    },
+    "card": {
+      "title": "Title",
+      "criteria": "Done when…",
+      "start": "Start date",
+      "target": "Target date",
+      "minutes": "Estimated minutes",
+      "priority": "Priority",
+      "dependsOn": "Depends on",
+      "dependsOnEmpty": "No other checkpoints yet.",
+      "reminder": "Reminder",
+      "noReminder": "No reminder",
+      "fromSource": "From source requirement",
+      "suggestion": "Suggestion",
+      "edited": "Edited",
+      "titleRequired": "Give this checkpoint a title to save changes."
+    },
+    "save": {
+      "saving": "Saving…",
+      "saved": "Saved",
+      "error": "Changes could not be saved."
+    },
+    "regenerate": {
+      "selected": "{n} selected",
+      "instructions": "Instructions (optional)",
+      "instructionsPlaceholder": "e.g. make the steps smaller",
+      "button": "Regenerate selected ({n})",
+      "overwriteTitle": "Overwrite your edits?",
+      "overwriteMessage": "You edited these checkpoints: {titles}. Regenerating replaces your edits.",
+      "overwriteConfirm": "Overwrite",
+      "done": "Checkpoints regenerated.",
+      "clear": "Clear selection"
+    },
+    "footer": {
+      "discard": "Discard plan",
+      "discardTitle": "Discard this plan?",
+      "discardMessage": "The draft checkpoints are deleted. Nothing has been added to your task.",
+      "discardConfirm": "Discard",
+      "discarded": "Plan discarded.",
+      "approve": "Approve & add {n} checkpoint(s)",
+      "approveBlocked": "Every checkpoint needs a title.",
+      "approved": "Added {n} checkpoint(s).",
+      "goTo": "Open"
+    },
+    "loadError": "This plan could not be loaded."
+  },
+  "source": {
+    "title": "Source",
+    "untitled": "Untitled source",
+    "originalLink": "Original link",
+    "sourceDate": "Source date",
+    "linked": "Linked records",
+    "linkedEmpty": "Not linked to any record.",
+    "content": "Original text",
+    "chars": "{n} characters",
+    "deleted": "The original text was deleted.",
+    "deletedHint": "This source is kept, but its text is no longer stored.",
+    "copy": "Copy text",
+    "copied": "Copied",
+    "deleteContent": "Delete original text",
+    "deleteContentTitle": "Delete the original text?",
+    "deleteContentMessage": "Only the stored text is removed. Linked records stay as they are.",
+    "deleteContentDone": "Original text deleted.",
+    "deleteSource": "Delete source",
+    "deleteSourceTitle": "Delete this source?",
+    "deleteSourceMessage": "The source and its stored text are removed. Linked records stay.",
+    "deleteSourceDone": "Source deleted.",
+    "notFound": "This source no longer exists.",
+    "back": "Back",
+    "created": "Saved"
+  }
+}

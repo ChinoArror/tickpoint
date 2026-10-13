@@ -1,0 +1,279 @@
+{
+  "goals": {
+    "model": {
+      "binary": {
+        "label": "達成・未達成",
+        "hint": "完了したら「達成」にします。"
+      },
+      "percentage": {
+        "label": "パーセント",
+        "hint": "0〜100%で進み具合を記録します。"
+      },
+      "quantity": {
+        "label": "数量",
+        "hint": "読んだページ数など、数えられる単位で進捗を記録します。"
+      },
+      "time": {
+        "label": "時間",
+        "hint": "かかった時間の合計で進捗を記録します。"
+      },
+      "checkpoint": {
+        "label": "チェックポイント",
+        "hint": "完了したチェックポイントの割合で進捗が決まります。"
+      },
+      "weighted": {
+        "label": "重み付きチェックポイント",
+        "hint": "チェックポイントごとの重みに応じて進捗が決まります。"
+      }
+    },
+    "reviewFrequency": {
+      "none": "振り返りなし",
+      "daily": "毎日",
+      "weekly": "毎週",
+      "biweekly": "隔週",
+      "monthly": "毎月"
+    }
+  },
+  "goalPage": {
+    "subtitle": "記録した進捗で測る、中長期の目標です。",
+    "filterLabel": "ステータスで目標を絞り込む",
+    "status": {
+      "active": "進行中",
+      "paused": "一時停止",
+      "completed": "完了",
+      "archived": "アーカイブ"
+    },
+    "statusUpdated": "目標を更新しました",
+    "backToGoals": "目標一覧",
+    "progressBarLabel": "進捗",
+    "noTargetDate": "締め切りなし",
+    "consistencyLabel": "直近28日のうち{n}日で活動",
+    "empty": {
+      "title": "進行中の目標はまだありません",
+      "description": "目標には締め切りがあってもなくても大丈夫です。測れることから始めましょう。",
+      "startBlank": "白紙から作成"
+    },
+    "emptyByStatus": {
+      "title": "{status}の目標はありません",
+      "paused": "一時停止中の目標がここに表示されます。",
+      "completed": "完了した目標がここに表示されます。",
+      "archived": "アーカイブした目標がここに表示されます。"
+    },
+    "examples": {
+      "heading": "例から始める",
+      "books": "本を10冊読む",
+      "booksUnit": "冊",
+      "study": "学習を40時間行う",
+      "vue": "Vue開発を学ぶ"
+    },
+    "progress": {
+      "quantity": "{current} / {target}{unit}",
+      "percent": "{value}%",
+      "byCheckpoints": "チェックポイント {percent} 完了",
+      "binaryDone": "達成",
+      "binaryOpen": "未達成"
+    },
+    "health": {
+      "title": "状況",
+      "actual": "現在の進捗",
+      "expected": "今日時点の予定",
+      "deviation": "予定との差",
+      "points": "pt",
+      "aheadShort": "前倒し",
+      "behindShort": "遅れ",
+      "projection": "完了の見込み",
+      "projectionHint": "直近28日の進捗から推定した日付です。目安であり、確約ではありません。",
+      "noProjection": "直近の進捗が少なく、日付を予測できません",
+      "targetDate": "締め切り: {date}",
+      "expectedMarkerHint": "マーカーは、予定どおりに進んでいれば到達しているはずの位置です。",
+      "activeDays": "活動した日数（直近28日）",
+      "noTargetHint": "締め切りがないため予定と比較できません。代わりに直近の継続状況を表示しています。"
+    },
+    "ai": {
+      "analysisTitle": "AI分析",
+      "unconfirmed": "AI生成・未確定",
+      "analyze": "進捗を分析",
+      "suggestions": "提案",
+      "cautions": "注意点",
+      "notice": "この分析はAIによる下書きです。上の数値は記録から計算されています。"
+    },
+    "checkpoints": {
+      "title": "チェックポイント",
+      "generate": "AIでチェックポイントを作成"
+    },
+    "history": {
+      "title": "進捗の履歴",
+      "chartLabel": "進捗値の推移を示す折れ線グラフ",
+      "notEnough": "グラフには進捗の記録が2件以上必要です。",
+      "entries": "記録",
+      "empty": "まだ進捗は記録されていません。"
+    },
+    "tasks": {
+      "title": "関連タスク",
+      "add": "タスクを追加",
+      "empty": "関連タスクはまだありません",
+      "emptyHint": "この目標に紐づけたタスクがここに表示されます。"
+    },
+    "details": {
+      "title": "詳細",
+      "successCriteria": "達成の基準",
+      "weeklyEffort": "週あたりの取り組み",
+      "reviewFrequency": "振り返り",
+      "estimated": "見積もり時間",
+      "actual": "記録した時間",
+      "targetDate": "締め切り"
+    },
+    "activity": {
+      "title": "アクティビティ",
+      "empty": "まだアクティビティはありません。"
+    },
+    "delete": {
+      "title": "「{title}」を削除しますか？",
+      "message": "目標はゴミ箱に移動します。直後であれば元に戻せます。"
+    },
+    "actions": {
+      "pause": "一時停止",
+      "resume": "再開",
+      "complete": "完了にする",
+      "reopen": "完了を取り消す",
+      "archive": "アーカイブ",
+      "unarchive": "アーカイブから戻す"
+    }
+  },
+  "goalForm": {
+    "createTitle": "新しい目標",
+    "editTitle": "目標を編集",
+    "description": "進捗の測り方を選びます。あとから変更できます。",
+    "title": "タイトル",
+    "titlePlaceholder": "例: 今年中に本を10冊読む",
+    "descriptionLabel": "説明",
+    "progressModel": "進捗の測り方",
+    "targetQuantity": "目標の数量",
+    "targetHours": "目標時間",
+    "unit": "単位",
+    "unitPlaceholder": "ページ",
+    "unitFixedHint": "時間の目標は時間（h）で測ります。",
+    "unitHours": "h",
+    "currentValue": "現在の値",
+    "currentPercent": "現在の進捗（%）",
+    "percentHint": "0〜100",
+    "targetDate": "締め切り",
+    "targetDateHint": "任意です。目標に締め切りは必須ではありません。",
+    "clearDate": "日付を消す",
+    "weeklyEffort": "週あたりの取り組み（時間）",
+    "estimatedEffort": "見積もりの合計時間",
+    "reviewFrequency": "振り返りの頻度",
+    "project": "プロジェクト",
+    "noProject": "プロジェクトなし",
+    "successCriteria": "達成の基準",
+    "successCriteriaPlaceholder": "何ができたら完了とみなしますか？",
+    "errors": {
+      "REQUIRED": "入力してください。",
+      "OUT_OF_RANGE": "範囲外の値です。",
+      "INVALID": "正しい値を入力してください。"
+    }
+  },
+  "progressLog": {
+    "title": "進捗を記録",
+    "add": "追加",
+    "addHint": "現在の値に加算します。",
+    "addPlaceholder": "例: 20",
+    "setTo": "または合計を設定",
+    "setToHint": "現在の値を置き換えます。どちらか一方を入力してください。",
+    "setToPlaceholder": "例: 120",
+    "percent": "進捗",
+    "markAchieved": "達成にする",
+    "fromCheckpoints": "この目標の進捗はチェックポイントから決まります。時間やメモは記録できます。",
+    "minutes": "かかった時間（分）",
+    "minutesPlaceholder": "例: 30",
+    "note": "メモ",
+    "notePlaceholder": "何をしましたか？",
+    "submit": "進捗を記録",
+    "logged": "進捗を記録しました",
+    "deleted": "記録を削除しました",
+    "deleteEntry": "記録を削除",
+    "delete": {
+      "title": "この記録を削除しますか？",
+      "message": "履歴から進捗の値が削除されます。"
+    },
+    "errors": {
+      "valueOrDelta": "「追加」と「または合計を設定」は、どちらか一方だけ入力してください。",
+      "invalid": "数値を正しく入力してください。"
+    }
+  },
+  "projects": {
+    "new": "新しいプロジェクト",
+    "subtitle": "関連するタスクや目標をまとめます。",
+    "filterLabel": "ステータスでプロジェクトを絞り込む",
+    "tabsLabel": "プロジェクトの表示切り替え",
+    "backToProjects": "プロジェクト一覧",
+    "status": {
+      "active": "進行中",
+      "archived": "アーカイブ"
+    },
+    "archived": "プロジェクトをアーカイブしました",
+    "restored": "プロジェクトを戻しました",
+    "deleted": "プロジェクトを削除しました",
+    "counts": "未完了 {open} · 完了 {done}",
+    "noDeadline": "締め切りなし",
+    "progressLabel": "完了の割合",
+    "empty": {
+      "title": "プロジェクトはまだありません",
+      "description": "関連するタスクや目標を、プロジェクトにまとめられます。",
+      "archivedTitle": "アーカイブ済みのプロジェクトはありません",
+      "archivedDescription": "アーカイブしたプロジェクトがここに表示されます。"
+    },
+    "actions": {
+      "archive": "アーカイブ",
+      "unarchive": "アーカイブから戻す"
+    },
+    "delete": {
+      "title": "「{name}」を削除しますか？",
+      "message": "タスクは残り、このプロジェクトから外れます。"
+    },
+    "form": {
+      "createTitle": "新しいプロジェクト",
+      "editTitle": "プロジェクトを編集",
+      "name": "名前",
+      "namePlaceholder": "例: 卒業論文",
+      "description": "説明",
+      "color": "色",
+      "errors": {
+        "REQUIRED": "名前を入力してください。",
+        "INVALID": "入力内容を確認してください。"
+      }
+    },
+    "colors": {
+      "indigo": "インディゴ",
+      "sky": "スカイ",
+      "emerald": "エメラルド",
+      "amber": "アンバー",
+      "red": "レッド",
+      "pink": "ピンク",
+      "violet": "バイオレット",
+      "slate": "スレート"
+    },
+    "tabs": {
+      "tasks": "タスク",
+      "goals": "目標",
+      "overview": "概要"
+    },
+    "tasks": {
+      "add": "タスクを追加",
+      "empty": "このプロジェクトのタスクはありません",
+      "emptyHint": "タスクを追加して計画を始めましょう。"
+    },
+    "goals": {
+      "empty": "このプロジェクトの目標はありません",
+      "emptyHint": "目標は作成時にプロジェクトへ紐づけられます。"
+    },
+    "overview": {
+      "open": "未完了のタスク",
+      "completed": "完了",
+      "overdue": "期限切れ",
+      "nextDeadline": "次の締め切り",
+      "upcoming": "近い締め切り",
+      "upcomingEmpty": "未完了の締め切りはありません"
+    }
+  }
+}

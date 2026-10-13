@@ -1,0 +1,436 @@
+{
+  "taskList": {
+    "mode": {
+      "label": "表示切替",
+      "list": "リスト",
+      "board": "ボード"
+    },
+    "filters": {
+      "priority": "優先度",
+      "allPriorities": "すべての優先度",
+      "project": "プロジェクト",
+      "allProjects": "すべてのプロジェクト",
+      "kind": "種類",
+      "kindAll": "すべて",
+      "kindTask": "タスク",
+      "kindDeadline": "締め切り"
+    },
+    "sections": {
+      "overdue": "期限切れ"
+    },
+    "add": {
+      "label": "新しいタスクの名前",
+      "placeholder": "タスクを入力して Enter",
+      "submit": "タスクを追加"
+    },
+    "loadMore": "さらに読み込む",
+    "loadingMore": "読み込み中…",
+    "empty": {
+      "inbox": {
+        "title": "受信トレイは空です",
+        "description": "思いついたことをすぐ書き留めましょう。予定や詳細は後から決められます。",
+        "action": "新しいタスク"
+      },
+      "today": {
+        "title": "今日の予定はありません",
+        "description": "今日の予定を追加するか、受信トレイからタスクを移動しましょう。",
+        "action": "今日のタスクを追加"
+      },
+      "upcoming": {
+        "title": "近日のタスクはありません",
+        "description": "期限日や予定日が設定されたタスクがここに表示されます。",
+        "action": "新しいタスク"
+      },
+      "deadlines": {
+        "title": "締め切りはまだありません",
+        "description": "締め切りには正確な時刻、リアルタイムのカウントダウン、リスク判定が付きます。",
+        "action": "新しい締め切り"
+      },
+      "completed": {
+        "title": "完了したタスクはまだありません",
+        "description": "完了したタスクがここにまとまります。"
+      },
+      "archived": {
+        "title": "アーカイブはありません",
+        "description": "アーカイブしたタスクは一覧から外れますが、削除されることはありません。"
+      }
+    },
+    "menu": {
+      "open": "開く",
+      "duplicate": "複製",
+      "pause": "一時停止",
+      "resume": "再開",
+      "archive": "アーカイブ",
+      "unarchive": "アーカイブを解除",
+      "delete": "削除",
+      "moveTo": "移動先"
+    },
+    "confirmDelete": {
+      "title": "「{title}」を削除しますか？",
+      "message": "サブタスクも一緒に削除されます。直後であれば元に戻せます。",
+      "confirm": "削除"
+    },
+    "toast": {
+      "added": "タスクを追加しました",
+      "paused": "一時停止しました",
+      "resumed": "再開しました",
+      "archived": "アーカイブしました",
+      "unarchived": "アーカイブを解除しました",
+      "moved": "{status}に移動しました"
+    },
+    "errorTitle": "タスクを読み込めませんでした",
+    "count": "{n}件"
+  },
+  "board": {
+    "dropHere": "ここにタスクをドロップ",
+    "count": "{n}件"
+  },
+  "quickAdd": {
+    "title": "クイック追加",
+    "description": "今すぐ書き留めましょう。詳細は後で構いません。",
+    "titleLabel": "タイトル",
+    "titlePlaceholder": "何をする必要がありますか？",
+    "kindLabel": "種類",
+    "kinds": {
+      "task": "タスク",
+      "deadline": "締め切り"
+    },
+    "due": "期限",
+    "dueHintDeadline": "締め切りには正確な日付と時刻が必要です。",
+    "dueHintTask": "任意です。日付のみ指定するか、空欄のままにできます。",
+    "priority": "優先度",
+    "project": "プロジェクト",
+    "noProject": "プロジェクトなし",
+    "addDetails": "詳細を追加",
+    "hideDetails": "詳細を隠す",
+    "descriptionLabel": "説明",
+    "descriptionPlaceholder": "背景、リンク、メモなど…",
+    "reminders": "リマインダー",
+    "remindersHint": "期限の前に通知します。",
+    "remindersNeedDue": "リマインダーを追加するには期限を設定してください。",
+    "submit": "作成",
+    "shortcut": "Ctrl/⌘ + Enter で作成",
+    "created": "「{title}」を追加しました",
+    "open": "開く",
+    "errors": {
+      "REQUIRED": "入力が必要です。",
+      "INVALID_DATE": "正しい日付を入力してください。",
+      "INVALID_TIME": "09:30 のような時刻を入力してください。",
+      "INVALID_TIME_ZONE": "有効なタイムゾーンを選んでください。",
+      "TIME_REQUIRES_EXACT": "時刻は正確な締め切りの場合のみ指定できます。",
+      "INVALID_URL": "有効なリンクを入力してください。",
+      "deadlineNeedsDue": "締め切りには正確な日付と時刻が必要です。",
+      "generic": "この項目を確認してください。"
+    }
+  },
+  "taskDetail": {
+    "loadFailed": "このタスクを読み込めませんでした。",
+    "notFound": "このタスクは存在しません。",
+    "openFullPage": "全画面で開く",
+    "titleLabel": "タスク名",
+    "untitled": "無題のタスク",
+    "saved": "保存しました",
+    "moreActions": "その他の操作",
+    "fields": {
+      "status": "ステータス",
+      "priority": "優先度",
+      "due": "締め切り",
+      "noDate": "日付なし",
+      "change": "変更",
+      "clearDate": "日付を消す",
+      "startDate": "開始日",
+      "scheduledDate": "予定日",
+      "project": "プロジェクト",
+      "noProject": "プロジェクトなし",
+      "estimate": "見積もり",
+      "actual": "実作業時間",
+      "progress": "進捗",
+      "minutesPlaceholder": "分"
+    },
+    "dueEdit": {
+      "title": "締め切りを変更",
+      "save": "締め切りを保存",
+      "clear": "締め切りを削除"
+    },
+    "progress": {
+      "expected": "今の時点では約{n}%が目安です",
+      "modeLabel": "進捗の算出方法",
+      "mode": {
+        "manual": "手動で設定",
+        "checkpoints": "チェックポイントから",
+        "subtasks": "サブタスクから"
+      },
+      "slider": "進捗率",
+      "autoCheckpoints": "チェックポイントの完了状況から算出しています。",
+      "autoSubtasks": "サブタスクの完了状況から算出しています。"
+    },
+    "risk": {
+      "title": "スケジュール確認",
+      "details": "詳細"
+    },
+    "actions": {
+      "duplicate": "複製",
+      "pause": "一時停止",
+      "resume": "再開",
+      "archive": "アーカイブ",
+      "unarchive": "アーカイブを解除",
+      "delete": "削除"
+    },
+    "addSection": "項目を追加",
+    "sections": {
+      "description": {
+        "title": "説明",
+        "placeholder": "このタスクの内容は？",
+        "empty": "説明はまだありません"
+      },
+      "checkpoints": {
+        "title": "チェックポイント",
+        "empty": "確認できる単位に分けてチェックポイントを作りましょう。"
+      },
+      "subtasks": {
+        "title": "サブタスク",
+        "empty": "サブタスクはありません",
+        "add": "サブタスクを追加",
+        "placeholder": "サブタスクを入力して Enter"
+      },
+      "dependencies": {
+        "title": "依存関係",
+        "blockedBy": "待機中",
+        "dependents": "ブロック先",
+        "searchPlaceholder": "依存先のタスクを検索…",
+        "searchEmpty": "一致するタスクはありません",
+        "add": "依存関係を追加",
+        "remove": "依存関係を削除",
+        "empty": "依存関係はありません"
+      },
+      "deliverables": {
+        "title": "提出物",
+        "placeholder": "提出物を追加",
+        "add": "追加",
+        "empty": "提出物は登録されていません"
+      },
+      "requirements": {
+        "title": "要件",
+        "placeholder": "要件を追加",
+        "type": "要件の種類",
+        "empty": "要件は登録されていません"
+      },
+      "rewards": {
+        "title": "特典",
+        "placeholder": "特典を追加",
+        "type": "特典の種類",
+        "empty": "特典は登録されていません"
+      },
+      "location": {
+        "title": "場所",
+        "empty": "場所は未設定です"
+      },
+      "submission": {
+        "title": "提出方法",
+        "empty": "提出方法の詳細はありません"
+      },
+      "reminders": {
+        "title": "リマインダー"
+      },
+      "attachments": {
+        "title": "添付ファイル",
+        "empty": "添付ファイルはありません"
+      },
+      "notes": {
+        "title": "メモ",
+        "placeholder": "自分用のメモ…",
+        "empty": "メモはありません"
+      },
+      "source": {
+        "title": "出典",
+        "empty": "出典はありません"
+      },
+      "history": {
+        "title": "履歴",
+        "empty": "変更履歴はまだありません",
+        "showAll": "すべて表示"
+      }
+    },
+    "requirementType": {
+      "mandatory": "必須",
+      "optional": "任意",
+      "criteria": "評価基準",
+      "restriction": "制限",
+      "eligibility": "応募資格",
+      "prerequisite": "前提条件",
+      "material": "必要な資料"
+    },
+    "rewardType": {
+      "monetary": "金銭",
+      "prize": "賞",
+      "certificate": "修了証",
+      "credit": "単位・ポイント",
+      "recognition": "表彰",
+      "other": "その他"
+    },
+    "location": {
+      "physical": "会場",
+      "building": "建物",
+      "room": "部屋",
+      "campus": "キャンパス",
+      "online": "オンラインURL",
+      "contact": "連絡先"
+    },
+    "submission": {
+      "method": "提出方法",
+      "platform": "提出先システム",
+      "url": "提出用リンク",
+      "destination": "提出先",
+      "fileFormats": "ファイル形式",
+      "fileFormatsHint": "カンマで区切ってください。",
+      "naming": "ファイル名の規則",
+      "sizeLimit": "サイズ上限",
+      "copies": "提出部数",
+      "conditions": "条件"
+    },
+    "attachments": {
+      "upload": "ファイルを添付",
+      "uploading": "アップロード中…",
+      "download": "{name}をダウンロード",
+      "remove": "{name}を削除",
+      "removeConfirm": "「{name}」を削除しますか？",
+      "kb": "{n} KB",
+      "mb": "{n} MB"
+    },
+    "source": {
+      "date": "出典の日付",
+      "open": "出典のリンクを開く",
+      "view": "出典を見る"
+    },
+    "ai": {
+      "title": "AIアシスト",
+      "hint": "AIの出力は下書きです。締め切りや計測値は変更されません。",
+      "generate": "チェックポイントを生成",
+      "generating": "生成中…",
+      "analyze": "分析する",
+      "analyzing": "分析中…",
+      "resultLabel": "AI生成・未確認",
+      "suggestions": "提案",
+      "cautions": "注意点",
+      "dismiss": "分析結果を閉じる",
+      "disabled": "AI機能は設定でオフになっています。"
+    }
+  },
+  "history": {
+    "action": {
+      "created": "作成",
+      "updated": "更新",
+      "completed": "完了",
+      "reopened": "完了を取り消し",
+      "paused": "一時停止",
+      "resumed": "再開",
+      "archived": "アーカイブ",
+      "unarchived": "アーカイブ解除",
+      "status_changed": "ステータスを変更",
+      "deadline_changed": "締め切りを変更",
+      "progress_updated": "進捗を更新",
+      "estimate_revised": "見積もりを修正",
+      "moved": "移動",
+      "duplicated": "複製",
+      "deleted": "削除",
+      "restored": "復元",
+      "dependency_added": "依存関係を追加",
+      "dependency_removed": "依存関係を削除",
+      "checkpoint_added": "チェックポイントを追加",
+      "checkpoint_completed": "チェックポイントを完了",
+      "checkpoint_reopened": "チェックポイントを再開",
+      "reminder_added": "リマインダーを追加",
+      "reminder_modified": "リマインダーを変更",
+      "reminder_removed": "リマインダーを削除",
+      "ai_plan_confirmed": "AIの計画を確定"
+    },
+    "actor": {
+      "ai_confirmed": "AI確定"
+    }
+  },
+  "checkpointList": {
+    "title": "チェックポイント",
+    "progress": "{total}件中{done}件完了",
+    "empty": "チェックポイントはまだありません",
+    "add": "チェックポイントを追加",
+    "addPlaceholder": "チェックポイントを入力して Enter",
+    "showCompleted": "完了済みを表示",
+    "dragHandle": "「{title}」の順番を変更",
+    "edit": "「{title}」を編集",
+    "delete": "チェックポイントを削除",
+    "after": "{title}の後",
+    "origin": {
+      "ai": "AI",
+      "hint": "AIが提案し、あなたが確認したものです"
+    },
+    "fields": {
+      "title": "タイトル",
+      "description": "メモ",
+      "completionCriteria": "完了の条件",
+      "startDate": "開始",
+      "targetDate": "目標日",
+      "estimatedMinutes": "見積もり（分）",
+      "weight": "重み",
+      "weightHint": "目標の進捗に反映されます。",
+      "priority": "優先度",
+      "dependsOn": "依存先"
+    },
+    "noSiblings": "依存先にできる他のチェックポイントはありません。",
+    "invalidRange": "目標日が開始日より前になっています。"
+  },
+  "reminders": {
+    "title": "リマインダー",
+    "empty": "リマインダーはまだありません",
+    "add": "リマインダーを追加",
+    "presetsHeading": "締め切りの前に",
+    "customOffset": "時間を指定",
+    "atTime": "日時を指定",
+    "presets": {
+      "7d": "7日前",
+      "3d": "3日前",
+      "1d": "1日前",
+      "12h": "12時間前",
+      "3h": "3時間前",
+      "1h": "1時間前",
+      "30m": "30分前",
+      "15m": "15分前",
+      "5m": "5分前"
+    },
+    "before": "{when}前",
+    "at": "{when}",
+    "amount": "数値",
+    "unitLabel": "単位",
+    "unit": {
+      "minutes": "分",
+      "hours": "時間",
+      "days": "日"
+    },
+    "dateTime": "日時",
+    "channels": "通知方法",
+    "channel": {
+      "in_app": "アプリ内",
+      "push": "プッシュ",
+      "email": "メール"
+    },
+    "next": "次回: {when}",
+    "noNext": "予定はありません",
+    "enabled": "オン",
+    "enabledLabel": "リマインダーを有効にする",
+    "remove": "リマインダーを削除",
+    "removeConfirm": "このリマインダーを削除しますか？",
+    "noDue": "締め切りを設定すると、その前にリマインダーを使えます。",
+    "noChannel": "通知方法を1つ以上選んでください。",
+    "invalidTime": "正しい日時を選んでください。",
+    "invalidAmount": "0以上の数値を入力してください。",
+    "confirmAdd": "追加",
+    "jobStatus": {
+      "pending": "予定",
+      "claimed": "予定",
+      "sending": "送信中",
+      "sent": "送信済み",
+      "retryable_failure": "再試行中",
+      "permanent_failure": "失敗",
+      "cancelled": "取り消し"
+    }
+  }
+}

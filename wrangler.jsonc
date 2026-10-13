@@ -1,0 +1,49 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tickpoint",
+  "main": "src/server/index.ts",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [{ "pattern": "point.aryuki.com", "custom_domain": true }],
+
+  // Vue SPA built by Vite. Only API routes reach the Worker first; every other
+  // navigation (including the /sso-callback route) is served by the SPA fallback,
+  // so callback URLs carrying a JWT never hit Worker request logs.
+  "assets": {
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "tickpoint-db",
+      "database_id": "d2c26b00-5c89-49ba-af32-e81a45fc5bb5",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "r2_buckets": [{ "binding": "FILES", "bucket_name": "tickpoint-save" }],
+
+  // Reminder dispatch every minute; housekeeping once a day.
+  "triggers": { "crons": ["* * * * *", "17 3 * * *"] },
+
+  "observability": { "enabled": true, "head_sampling_rate": 1 },
+
+  // Non-secret configuration. Secrets (AUTH_APP_SECRET, GEMINI_API_KEY,
+  // VAPID_PRIVATE_KEY, RESEND_API_KEY) are set with `wrangler secret put`.
+  "vars": {
+    "APP_ENV": "production",
+    "APP_ORIGIN": "https://point.aryuki.com",
+    "AUTH_BASE_URL": "https://accounts.aryuki.com",
+    "AUTH_APP_ID": "tickpoint",
+    "AUTH_CALLBACK_URL": "https://point.aryuki.com/sso-callback",
+    "GEMINI_MODEL": "gemini-3.8-flash",
+    "VAPID_PUBLIC_KEY": "BLMhbqV2IRkW9FNjctoZ1S_nKLD22QdM0fzstywts0ROc8r55jKAGFjA9a2UjnHhwLUausnCs35A77b6VL5yOD8",
+    "VAPID_SUBJECT": "mailto:noreply@aryuki.com",
+    "EMAIL_PROVIDER": "none",
+    "EMAIL_FROM": "TickPoint <noreply@aryuki.com>"
+  }
+}

@@ -1,0 +1,367 @@
+{
+  "settingsPage": {
+    "navLabel": "設定のセクション",
+    "sections": {
+      "general": "一般",
+      "tasks": "タスク",
+      "notifications": "通知",
+      "ai": "AI",
+      "account": "アカウント",
+      "data": "データ"
+    },
+    "general": {
+      "title": "一般",
+      "subtitle": "言語、時刻、外観。",
+      "language": "言語",
+      "languageHint": "TickPoint の画面とメールで使う言語です。",
+      "timeZone": "タイムゾーン",
+      "timeZoneHint": "締め切りとリマインダーは、このタイムゾーンで表示されます。",
+      "timeZoneSearch": "タイムゾーンを検索",
+      "zonePreview": "この地域の現在時刻: {time}",
+      "dateFormat": "日付の形式",
+      "dateFormatHint": "アプリ全体で日付を表示する形式です。",
+      "dateFormats": {
+        "auto": "自動（言語に合わせる）",
+        "ymd": "年/月/日",
+        "mdy": "月/日/年",
+        "dmy": "日/月/年"
+      },
+      "timeFormat": "時刻の形式",
+      "timeFormatHint": "12時間表示または24時間表示です。",
+      "timeFormats": {
+        "auto": "自動（言語に合わせる）",
+        "h12": "12時間表示",
+        "h24": "24時間表示"
+      },
+      "theme": "テーマ",
+      "themeHint": "端末の設定に従うか、ライトまたはダークを選びます。",
+      "weekStart": "週の始まり",
+      "weekStartHint": "カレンダーと週表示で使われます。",
+      "weekdays": {
+        "0": "日曜日",
+        "1": "月曜日",
+        "6": "土曜日"
+      }
+    },
+    "tasks": {
+      "title": "タスク",
+      "subtitle": "新しいタスクと締め切りの初期値です。",
+      "defaultPriority": "初期の優先度",
+      "defaultPriorityHint": "別に選ばない限り、新しいタスクに適用されます。",
+      "defaultView": "初期表示",
+      "defaultViewHint": "タスク一覧を開いたときに表示される形式です。",
+      "views": {
+        "list": "リスト",
+        "board": "ボード",
+        "calendar": "カレンダー",
+        "timeline": "タイムライン"
+      },
+      "reminders": "初期のリマインダー",
+      "remindersHint": "新しい締め切りに自動で追加されます。複数選べます。",
+      "presets": {
+        "7d": "7日前",
+        "3d": "3日前",
+        "1d": "1日前",
+        "12h": "12時間前",
+        "3h": "3時間前",
+        "1h": "1時間前",
+        "30m": "30分前",
+        "15m": "15分前",
+        "5m": "5分前"
+      },
+      "estimate": "初期の見積もり時間",
+      "estimateHint": "空欄にすると見積もりを設定しません。",
+      "estimateInvalid": "0〜10,000 の整数（分）を入力するか、空欄にしてください。",
+      "minutes": "分",
+      "showCompletedCheckpoints": "完了したチェックポイントを表示",
+      "showCompletedCheckpointsHint": "終わったチェックポイントをタスク一覧に残します。"
+    },
+    "notifications": {
+      "title": "通知チャネル",
+      "subtitle": "TickPoint がリマインダーを送る方法です。",
+      "inApp": "アプリ内通知",
+      "inAppHint": "ベルのメニューと通知ページに表示されます。",
+      "push": "プッシュ通知",
+      "pushHint": "TickPoint を閉じていても、この端末に通知します。",
+      "pushResult": {
+        "denied": "TickPoint の通知がブロックされています。ブラウザの設定で許可してから、もう一度お試しください。",
+        "unsupported": "このブラウザはプッシュ通知に対応していません。",
+        "no_key": "このサーバーではまだプッシュ通知が設定されていません。",
+        "error": "この端末でプッシュ通知を有効にできませんでした。もう一度お試しください。"
+      },
+      "iosInstallNote": "iPhone/iPad でプッシュ通知を受け取るには、TickPoint をホーム画面に追加してください。",
+      "email": "メール",
+      "emailHint": "リマインダーをメールアドレスに送信します。",
+      "emailNotConfigured": "このサーバーではまだメール送信が設定されていません。",
+      "quietHours": "おやすみモード",
+      "quietHoursHint": "この時間帯は、プッシュとメールのリマインダーを保留します。アプリ内通知は届きます。",
+      "quietFrom": "開始",
+      "quietUntil": "終了",
+      "test": "テスト通知",
+      "testHint": "各チャネルでテストを送信し、届くかどうかを確認できます。",
+      "sendTest": "テスト通知を送る",
+      "testResults": "テスト結果",
+      "status": {
+        "sent": "送信済み",
+        "skipped": "スキップ",
+        "failed": "失敗",
+        "unknown": "不明"
+      },
+      "details": {
+        "not_subscribed": "この端末はプッシュ通知に登録されていません。",
+        "no_subscription": "プッシュ通知に登録された端末がありません。",
+        "disabled": "このチャネルはオフになっています。",
+        "quiet_hours": "おやすみモード中のため送信をスキップしました。",
+        "not_configured": "このサーバーでは設定されていません。",
+        "email_not_configured": "このサーバーではまだメール送信が設定されていません。",
+        "invalid_subscription": "この端末の登録が期限切れです。プッシュ通知をオフにしてから、もう一度オンにしてください。",
+        "provider_error": "配信サービスがエラーを返しました。",
+        "rate_limited": "最近、通知の送信回数が上限に達しました。",
+        "timeout": "配信がタイムアウトしました。"
+      },
+      "channels": {
+        "in_app": "アプリ内",
+        "push": "プッシュ",
+        "email": "メール"
+      },
+      "deliveries": "配信ログ",
+      "deliveriesHint": "リマインダーとテストの最近の配信履歴です。",
+      "deliveriesEmpty": "まだ配信履歴はありません。",
+      "logTime": "日時",
+      "logChannel": "チャネル",
+      "logStatus": "状態",
+      "logDetail": "詳細",
+      "devicesTitle": "登録済みの端末",
+      "devicesHint": "プッシュ通知を受け取るように登録されたブラウザと端末です。",
+      "devicesEmpty": "登録された端末はまだありません。",
+      "devices": {
+        "unknown": "不明な端末",
+        "added": "{date} に追加"
+      }
+    },
+    "ai": {
+      "title": "AI アシスト",
+      "subtitle": "スマートキャプチャと計画の提案です。",
+      "notConfigured": "このサーバーでは AI 機能が設定されていません。",
+      "enabled": "AI 機能",
+      "enabledHint": "オフにすると、TickPoint 内の AI 操作がすべて非表示になります。",
+      "saveSource": "元のテキストを初期設定で保存",
+      "saveSourceHint": "貼り付けたテキストをタスクと一緒に残し、後で確認できるようにします。いつでも削除できます。",
+      "hours": "1日の作業可能時間",
+      "hoursHint": "AI がスケジュールに合わせてチェックポイントを計画するときに使います。",
+      "hoursUnit": "時間",
+      "hoursInvalid": "0.5〜16 の範囲で、0.5 刻みの値を入力してください。",
+      "planningStyle": "計画のスタイル",
+      "planningStyleHint": "締め切りまでの作業を、どの日に配分するかの方針です。",
+      "styles": {
+        "balanced": "バランス型",
+        "front_loaded": "前倒し型",
+        "steady": "均等型"
+      },
+      "usageTitle": "利用状況",
+      "usageHint": "過去30日間のリクエスト数とトークン数です。",
+      "usageEmpty": "過去30日間の AI リクエストはありません。",
+      "operation": "操作",
+      "requests": "リクエスト",
+      "tokens": "トークン",
+      "recent": "最近の呼び出し",
+      "recentEmpty": "最近の呼び出しはありません。",
+      "when": "日時",
+      "status": "状態",
+      "operations": {
+        "extract": "スマートキャプチャ",
+        "plan": "チェックポイント計画",
+        "analyze": "分析",
+        "regenerate": "チェックポイントの再生成"
+      },
+      "privacyTitle": "データの扱い",
+      "privacyBody": "貼り付けたテキストは、「分析」や「生成」をクリックしたときだけ Google Gemini に送信されます。バックグラウンドで送信されることはありません。",
+      "privacyCredentials": "プロンプトには、パスワード、トークン、アカウントの認証情報は含まれません。",
+      "privacyDrafts": "AI の結果はすべて下書きです。確認して承認するまで、タスクには保存されません。",
+      "privacyDelete": "保存された元テキストと下書きは、元データまたは下書きのページからいつでも削除できます。"
+    },
+    "account": {
+      "title": "プロフィール",
+      "subtitle": "Aryuki Accounts のアカウントとセッションです。",
+      "name": "名前",
+      "email": "メール",
+      "role": "権限",
+      "roles": {
+        "admin": "管理者",
+        "user": "メンバー"
+      },
+      "identity": "アカウントの種類",
+      "identities": {
+        "user": "通常のアカウント",
+        "test": "テスト用アカウント"
+      },
+      "uuid": "ユーザー ID",
+      "copyUuid": "ユーザー ID をコピー",
+      "manage": "アカウントを管理",
+      "signOutTitle": "サインアウト",
+      "signOutSubtitle": "サインアウトには2つの方法があり、影響範囲が異なります。",
+      "signOutTickPointHint": "このブラウザの TickPoint セッションを終了します。Aryuki Accounts のサインインと他のアプリは有効なままです。",
+      "signOutEverywhereHint": "Aryuki Accounts の中央セッションを終了します。このブラウザの他の Aryuki アプリからもサインアウトされます。",
+      "everywhereConfirmTitle": "Aryuki Accounts からサインアウトしますか？",
+      "everywhereConfirm": "すべてからサインアウト"
+    }
+  },
+  "notificationsPanel": {
+    "unread": "未読",
+    "markAllRead": "すべて既読にする",
+    "emptyTitle": "新しい通知はありません",
+    "emptyHint": "リマインダーやテストメッセージがここに表示されます。",
+    "snoozed": "リマインダーを延期しました",
+    "snooze": {
+      "aria": "リマインダーを延期",
+      "heading": "延期する時間",
+      "15m": "15分",
+      "1h": "1時間",
+      "3h": "3時間",
+      "tomorrow": "明日まで"
+    }
+  },
+  "notificationsPage": {
+    "subtitle": "TickPoint からの通知を新しい順に表示します。",
+    "unreadOnly": "未読のみ",
+    "upcoming": "今後のリマインダー",
+    "upcomingEmpty": "予定されているリマインダーはありません。",
+    "history": "履歴",
+    "noUnread": "未読の通知はありません。",
+    "loadMore": "もっと読み込む"
+  },
+  "searchPalette": {
+    "title": "検索とコマンド",
+    "groups": {
+      "jump": "移動先",
+      "actions": "操作",
+      "tasks": "タスク",
+      "goals": "目標",
+      "projects": "プロジェクト"
+    },
+    "commands": {
+      "newTask": "新しいタスク",
+      "capture": "スマートキャプチャ"
+    },
+    "noResults": "「{q}」の検索結果はありません",
+    "hints": {
+      "navigate": "移動",
+      "open": "開く",
+      "close": "閉じる"
+    }
+  },
+  "more": {
+    "title": "その他",
+    "description": "TickPoint のその他のページです。"
+  },
+  "pwa": {
+    "newVersion": "新しいバージョンがあります",
+    "newVersionHint": "再読み込みすると最新版になります。",
+    "later": "あとで",
+    "reload": "再読み込み",
+    "installTitle": "TickPoint をインストール",
+    "installHint": "端末に追加すると、すぐに開けてオフラインでも使えます。",
+    "install": "アプリをインストール",
+    "notNow": "今はしない",
+    "dismiss": "閉じる",
+    "offlineReady": "TickPoint はオフラインで使えます"
+  },
+  "activity": {
+    "title": "アクティビティ",
+    "subtitle": "計画全体の変更履歴です。",
+    "emptyTitle": "アクティビティはまだありません",
+    "emptyHint": "タスク、目標、プロジェクトの変更がここに表示されます。",
+    "loadMore": "もっと読み込む",
+    "entity": {
+      "task": "タスク",
+      "deadline": "締め切り",
+      "goal": "目標",
+      "project": "プロジェクト",
+      "checkpoint": "チェックポイント",
+      "reminder": "リマインダー",
+      "source": "元データ",
+      "tag": "タグ",
+      "plan": "計画"
+    },
+    "actor": {
+      "ai_confirmed": "AI（確認済み）",
+      "import": "インポート",
+      "system": "システム"
+    }
+  },
+  "notFound": {
+    "title": "このページは見つかりません",
+    "description": "リンクが古いか、ページが移動した可能性があります。",
+    "backToOverview": "概要に戻る"
+  },
+  "dataTools": {
+    "export": {
+      "title": "エクスポート",
+      "subtitle": "データのコピーをダウンロードします。",
+      "json": "JSON をエクスポート",
+      "jsonHint": "保存された元テキストを含むすべてのデータです。",
+      "jsonNoSources": "元テキストを除いて JSON をエクスポート",
+      "jsonNoSourcesHint": "貼り付けた元テキストを含まない、軽いファイルです。",
+      "tasksCsv": "タスクを CSV でエクスポート",
+      "tasksCsvHint": "タスクごとに1行の表形式です。",
+      "progressCsv": "進捗を CSV でエクスポート",
+      "progressCsvHint": "進捗の記録と作業時間です。"
+    },
+    "import": {
+      "title": "インポート",
+      "subtitle": "TickPoint の JSON エクスポートから復元します。まずプレビューを確認し、承認するまでデータは変わりません。",
+      "choose": "JSON ファイルを選択",
+      "noFile": "ファイルが選択されていません",
+      "limit": "最大サイズは {max} です。",
+      "previewing": "ファイルを確認しています…",
+      "previewTitle": "プレビュー",
+      "samples": "タスクの例",
+      "skipDuplicates": "重複をスキップ",
+      "skipDuplicatesHint": "オンにすると、すでにあるデータは追加されず、そのまま残ります。",
+      "run": "インポート",
+      "resultTitle": "インポートが完了しました"
+    },
+    "importTooLarge": "そのファイルは {max} を超えています。",
+    "invalidJson": "そのファイルは有効な JSON ではありません。",
+    "imported": "インポートが完了しました",
+    "entities": {
+      "tasks": "タスク",
+      "goals": "目標",
+      "projects": "プロジェクト",
+      "tags": "タグ",
+      "checkpoints": "チェックポイント",
+      "progress": "進捗の記録",
+      "sources": "元データ",
+      "reminders": "リマインダー",
+      "duplicates": "重複",
+      "created": "作成",
+      "skipped": "スキップ",
+      "updated": "更新"
+    },
+    "sizeKb": "{n} KB",
+    "sizeMb": "{n} MB",
+    "backups": {
+      "title": "バックアップ",
+      "subtitle": "ある時点のデータのコピーを、サーバーに保存します。",
+      "create": "今すぐバックアップを作成",
+      "created": "バックアップを作成しました",
+      "empty": "バックアップはまだありません。",
+      "download": "ダウンロード",
+      "restore": "復元",
+      "restored": "バックアップを復元しました",
+      "restoreTitle": "このバックアップを復元しますか？",
+      "restoreMessage": "バックアップの内容は現在のデータにマージされます。すでに存在する項目はスキップされます。",
+      "deleteTitle": "このバックアップを削除しますか？",
+      "deleteMessage": "バックアップファイルはサーバーから削除されます。現在のデータには影響しません。",
+      "deleted": "バックアップを削除しました"
+    },
+    "danger": {
+      "title": "TickPoint のすべてのデータを削除",
+      "description": "タスク、目標、プロジェクト、メモ、バックアップ、履歴を TickPoint から完全に削除します。Aryuki Accounts のサインインには影響しません。",
+      "action": "すべてのデータを削除",
+      "message": "この操作は取り消せません。控えが必要な場合は、先にデータをエクスポートしてください。",
+      "confirm": "すべて削除",
+      "deleted": "TickPoint のすべてのデータを削除しました"
+    }
+  }
+}

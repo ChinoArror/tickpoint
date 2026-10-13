@@ -1,0 +1,337 @@
+{
+  "brand": {
+    "tagline": "すべての瞬間を、確かな前進に。",
+    "pitch": "お知らせやメール、漠然とした目標を、明確な締め切りと測れるチェックポイント、着実な進捗に変えます。",
+    "features": {
+      "capture": {
+        "title": "スマートキャプチャ",
+        "body": "長い文章を貼り付けるだけ。見つかった締め切り・提出物・条件を確認できます。"
+      },
+      "deadlines": {
+        "title": "あいまいさのない締め切り",
+        "body": "タイムゾーン付きの正確な日時、ライブのカウントダウン、正直なリスク表示。"
+      },
+      "checkpoints": {
+        "title": "測れるチェックポイント",
+        "body": "大きな作業を確認可能なステップに分解。保存前に必ずあなたが承認します。"
+      },
+      "goals": {
+        "title": "柔軟な目標",
+        "body": "数量・時間・マイルストーンで記録。期日があってもなくても大丈夫です。"
+      }
+    }
+  },
+  "common": {
+    "close": "閉じる",
+    "cancel": "キャンセル",
+    "confirm": "確定",
+    "save": "保存",
+    "saving": "保存中…",
+    "saved": "保存しました",
+    "delete": "削除",
+    "edit": "編集",
+    "add": "追加",
+    "remove": "取り除く",
+    "undo": "元に戻す",
+    "retry": "再試行",
+    "dismiss": "閉じる",
+    "viewAll": "すべて表示",
+    "moreActions": "その他の操作",
+    "loading": "読み込み中…",
+    "optional": "任意",
+    "none": "なし",
+    "back": "戻る",
+    "next": "次へ",
+    "done": "完了",
+    "create": "作成",
+    "apply": "適用",
+    "reset": "リセット",
+    "search": "検索",
+    "yes": "はい",
+    "no": "いいえ",
+    "or": "または",
+    "copy": "コピー",
+    "copied": "コピーしました",
+    "open": "開く",
+    "show": "表示",
+    "hide": "非表示",
+    "all": "すべて",
+    "untitled": "無題"
+  },
+  "a11y": {
+    "skipToContent": "本文へスキップ",
+    "mainNavigation": "メインナビゲーション",
+    "collapseSidebar": "サイドバーを折りたたむ",
+    "expandSidebar": "サイドバーを展開"
+  },
+  "nav": {
+    "overview": "概要",
+    "inbox": "インボックス",
+    "today": "今日",
+    "upcoming": "今後の予定",
+    "deadlines": "締め切り",
+    "goals": "目標",
+    "projects": "プロジェクト",
+    "calendar": "カレンダー",
+    "timeline": "タイムライン",
+    "analytics": "分析",
+    "capture": "スマートキャプチャ",
+    "settings": "設定",
+    "completed": "完了済み",
+    "archived": "アーカイブ",
+    "group": {
+      "plan": "計画",
+      "insight": "インサイト"
+    }
+  },
+  "mobileNav": {
+    "home": "ホーム",
+    "tasks": "タスク",
+    "calendar": "カレンダー",
+    "goals": "目標",
+    "more": "その他"
+  },
+  "actions": {
+    "quickAdd": "クイック追加",
+    "newTask": "新規タスク",
+    "newDeadline": "新しい締め切り"
+  },
+  "search": {
+    "open": "検索を開く",
+    "placeholder": "タスク・目標・プロジェクトを検索…",
+    "noResults": "「{q}」に一致する結果はありません",
+    "tasks": "タスク",
+    "goals": "目標",
+    "projects": "プロジェクト",
+    "hint": "入力して検索。Enter で開きます。"
+  },
+  "due": {
+    "unknown": "日付未定",
+    "approx": "{date}ごろ",
+    "sourceTime": "現地 {time} {zone}",
+    "precision": {
+      "exact": "日時を指定",
+      "date": "日付のみ",
+      "approximate": "おおよそ",
+      "unknown": "未定"
+    }
+  },
+  "dueEditor": {
+    "precisionLabel": "締め切りの精度",
+    "date": "締め切り日",
+    "time": "締め切り時刻",
+    "timeZone": "タイムゾーン",
+    "timeRequired": "正確な時刻を入力してください。TickPoint が時刻を推測することはありません。",
+    "localPreview": "あなたのタイムゾーンでは {time} です。",
+    "dateOnlyHint": "この日が終わった時点で期限切れになります。",
+    "approxHint": "並び替えにのみ使用し、「ごろ」と表示します。",
+    "chooseZone": "タイムゾーンを選択"
+  },
+  "countdown": {
+    "dhm": "{d}日 {h}時間 {m}分",
+    "hm": "{h}時間 {m}分",
+    "m": "{m}分",
+    "s": "{s}秒",
+    "remaining": "残り {time}",
+    "overdue": "{time} 超過",
+    "overdueSince": "期限切れ · {date}"
+  },
+  "duration": {
+    "hm": "{h}時間{m}分",
+    "h": "{h}時間",
+    "m": "{m}分"
+  },
+  "time": {
+    "today": "今日",
+    "tomorrow": "明日",
+    "yesterday": "昨日"
+  },
+  "theme": {
+    "system": "システム設定",
+    "light": "ライト",
+    "dark": "ダーク"
+  },
+  "priority": {
+    "none": "優先度なし",
+    "low": "低",
+    "medium": "中",
+    "high": "高",
+    "urgent": "緊急"
+  },
+  "status": {
+    "not_started": "未着手",
+    "in_progress": "進行中",
+    "paused": "一時停止",
+    "completed": "完了",
+    "archived": "アーカイブ済み"
+  },
+  "risk": {
+    "level": {
+      "on_track": "順調",
+      "attention": "要注意",
+      "at_risk": "リスクあり",
+      "overdue": "期限切れ",
+      "done": "完了",
+      "none": "締め切りなし"
+    },
+    "reason": {
+      "completed": "完了しています。",
+      "no_deadline": "確定した締め切りがないため、スケジュールのリスクは評価していません。",
+      "overdue": "締め切りを {minutes} 分過ぎています。",
+      "effort_exceeds_time": "残りの作業は約 {effort} 分ですが、使える時間は約 {available} 分です。",
+      "tight_schedule": "残りの作業が使える時間の {ratio}% を占めています。",
+      "behind_expected_progress": "進捗は {actual}% ですが、現時点の目安は約 {expected}% です。",
+      "little_time_low_progress": "残り約 {hours} 時間で、進捗がまだ少ない状態です。",
+      "blocked_by_dependencies": "未完了の依存タスクが {count} 件あります。",
+      "delayed_checkpoints": "目標日を過ぎたチェックポイントが {count} 件あります。",
+      "comfortable": "残りの作業に十分な時間があります。"
+    }
+  },
+  "task": {
+    "detail": "タスク",
+    "kind": {
+      "task": "タスク",
+      "deadline": "締め切り"
+    },
+    "markComplete": "「{title}」を完了にする",
+    "markIncomplete": "「{title}」を未完了に戻す",
+    "checkpointsProgress": "完了したチェックポイント",
+    "subtasksProgress": "完了したサブタスク",
+    "blocked": "未完了の依存タスクがあります",
+    "blockedBy": "ブロック中（{n}）"
+  },
+  "checkpoints": {
+    "toggle": "チェックポイント「{title}」を切り替え",
+    "delayed": "遅れ",
+    "affected": "後続のチェックポイント {n} 件に影響する可能性があります。日付を確認してください。"
+  },
+  "goals": {
+    "new": "新しい目標",
+    "outlook": {
+      "completed": "達成",
+      "ahead": "予定より先行",
+      "on_pace": "予定どおり",
+      "behind": "予定より遅れ",
+      "insufficient_data": "データ不足",
+      "consistent": "継続できています",
+      "irregular": "取り組みが不定期",
+      "inactive": "最近の記録なし"
+    }
+  },
+  "toast": {
+    "completed": "「{title}」を完了しました",
+    "deleted": "「{title}」を削除しました",
+    "restored": "元に戻しました",
+    "duplicated": "複製しました",
+    "saved": "保存しました",
+    "created": "作成しました"
+  },
+  "confirm": {
+    "typeToConfirm": "確認のため {word} と入力してください"
+  },
+  "overview": {
+    "greeting": {
+      "morning": "おはようございます、{name}さん",
+      "afternoon": "こんにちは、{name}さん",
+      "evening": "こんばんは、{name}さん",
+      "night": "遅くまでお疲れさまです、{name}さん"
+    },
+    "capture": {
+      "label": "クイックキャプチャ",
+      "placeholder": "タスクを入力、またはお知らせを貼り付けて解析…",
+      "add": "追加",
+      "analyze": "解析する",
+      "added": "インボックスに追加しました"
+    },
+    "stats": {
+      "today": "今日やること",
+      "completed": "今週の完了",
+      "dueSoon": "7日以内の締め切り",
+      "overdue": "期限切れ"
+    },
+    "today": "今日",
+    "todayEmpty": "今日の予定はありません",
+    "todayEmptyHint": "ゆとりを楽しむか、「今後の予定」から前倒ししましょう。",
+    "upcoming": "今後の締め切り",
+    "upcomingEmpty": "2週間以内の締め切りはありません",
+    "attention": "要対応",
+    "attentionEmpty": "すべて順調です",
+    "goals": "進行中の目標",
+    "goalsEmpty": "進行中の目標はまだありません",
+    "recent": "最近の進捗",
+    "recentEmpty": "記録した進捗がここに表示されます。",
+    "week": {
+      "completed": "今週の完了",
+      "remaining": "今週の締め切り",
+      "created": "今週の追加"
+    }
+  },
+  "auth": {
+    "signIn": "サインイン",
+    "welcome": "TickPoint へようこそ",
+    "signInHint": "Aryuki アカウントでサインインしてください。",
+    "continueWithAccounts": "Aryuki Accounts で続ける",
+    "accountsNote": "TickPoint がパスワードを扱うことはありません。サインインは Aryuki Accounts が行います。",
+    "signingIn": "サインインしています…",
+    "signedOut": "TickPoint からサインアウトしました。",
+    "loopError": "自動サインインを完了できませんでした。もう一度お試しください。",
+    "missingToken": "サインインの応答が不完全でした。",
+    "tryAgain": "もう一度試す",
+    "devOnly": "開発環境専用：ローカルサインイン",
+    "callbackError": {
+      "default": "サインインを確認できませんでした。もう一度お試しください。",
+      "expired": "サインインの有効期限が切れました。もう一度サインインしてください。",
+      "rejected": "サインインが受け付けられませんでした。セッションが無効化された可能性があります。",
+      "malformed": "サインインの応答が無効です。",
+      "app_not_allowed": "このアカウントには TickPoint へのアクセス権がありません。",
+      "FORBIDDEN": "このアカウントには TickPoint へのアクセス権がありません。",
+      "AUTH_UNAVAILABLE": "サインインサービスが一時的に利用できません。",
+      "RATE_LIMITED": "試行回数が多すぎます。しばらくお待ちください。",
+      "network": "ネットワークエラーです。接続を確認して再度お試しください。"
+    }
+  },
+  "account": {
+    "menu": "アカウントメニュー",
+    "profile": "アカウントプロフィール",
+    "signOut": "サインアウト",
+    "signOutTickPoint": "TickPoint からサインアウト",
+    "signOutEverywhere": "Aryuki Accounts からサインアウト",
+    "signOutEverywhereHint": "Aryuki Accounts のセッションを終了します。このブラウザの他の Aryuki アプリからもサインアウトされます。"
+  },
+  "notifications": {
+    "title": "通知"
+  },
+  "settings": {
+    "general": {
+      "language": "言語",
+      "theme": "テーマ"
+    }
+  },
+  "errors": {
+    "loadFailed": "ページを読み込めませんでした",
+    "tryAgainHint": "接続を確認して、もう一度お試しください。",
+    "notFoundTitle": "ページが見つかりません",
+    "VALIDATION_ERROR": "入力内容を確認してください。",
+    "UNAUTHENTICATED": "サインインしてください。",
+    "SESSION_EXPIRED": "セッションの期限が切れました。更新しています…",
+    "FORBIDDEN": "この操作を行う権限がありません。",
+    "NOT_FOUND": "この項目はすでに存在しません。",
+    "CONFLICT": "別の場所で変更されました。再読み込みしてからお試しください。",
+    "CIRCULAR_DEPENDENCY": "循環する依存関係になるため設定できません。",
+    "CIRCULAR_HIERARCHY": "タスクを自分のサブタスクの中に入れることはできません。",
+    "NESTING_TOO_DEEP": "タスクの入れ子は最大6階層までです。",
+    "RATE_LIMITED": "リクエストが多すぎます。しばらくお待ちください。",
+    "QUOTA_EXCEEDED": "AI の利用上限に達しました。",
+    "PAYLOAD_TOO_LARGE": "サイズが大きすぎます。",
+    "CSRF_REJECTED": "セキュリティ上の理由でブロックされました。ページを再読み込みしてください。",
+    "AI_DISABLED": "AI 機能は設定でオフになっています。",
+    "AI_UNAVAILABLE": "現在 AI サービスを利用できません。少し待ってからお試しください。",
+    "AI_INVALID_OUTPUT": "AI の結果を利用できませんでした。もう一度お試しください。",
+    "AI_TIMEOUT": "AI の応答に時間がかかりすぎました。短い文章でお試しください。",
+    "AUTH_UNAVAILABLE": "サインインサービスを利用できません。",
+    "NOT_CONFIGURED": "この機能はまだサーバーで設定されていません。",
+    "EDITED_CHECKPOINTS": "選択したチェックポイントの一部はあなたが編集したものです。",
+    "NETWORK_ERROR": "ネットワークエラーです。接続を確認してください。",
+    "INTERNAL_ERROR": "問題が発生しました。もう一度お試しください。"
+  }
+}

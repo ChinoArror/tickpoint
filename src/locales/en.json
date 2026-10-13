@@ -1,0 +1,337 @@
+{
+  "brand": {
+    "tagline": "Make every moment count.",
+    "pitch": "Turn announcements, emails and vague goals into clear deadlines, measurable checkpoints and steady progress.",
+    "features": {
+      "capture": {
+        "title": "Smart Capture",
+        "body": "Paste long text. Review the deadlines, deliverables and requirements it finds."
+      },
+      "deadlines": {
+        "title": "Unambiguous deadlines",
+        "body": "Exact times with time zones, live countdowns and honest risk levels."
+      },
+      "checkpoints": {
+        "title": "Measurable checkpoints",
+        "body": "Break big work into verifiable steps you approve before they are saved."
+      },
+      "goals": {
+        "title": "Flexible goals",
+        "body": "Track quantities, hours or milestones, with or without a target date."
+      }
+    }
+  },
+  "common": {
+    "close": "Close",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "remove": "Remove",
+    "undo": "Undo",
+    "retry": "Retry",
+    "dismiss": "Dismiss",
+    "viewAll": "View all",
+    "moreActions": "More actions",
+    "loading": "Loading…",
+    "optional": "Optional",
+    "none": "None",
+    "back": "Back",
+    "next": "Next",
+    "done": "Done",
+    "create": "Create",
+    "apply": "Apply",
+    "reset": "Reset",
+    "search": "Search",
+    "yes": "Yes",
+    "no": "No",
+    "or": "or",
+    "copy": "Copy",
+    "copied": "Copied",
+    "open": "Open",
+    "show": "Show",
+    "hide": "Hide",
+    "all": "All",
+    "untitled": "Untitled"
+  },
+  "a11y": {
+    "skipToContent": "Skip to content",
+    "mainNavigation": "Main navigation",
+    "collapseSidebar": "Collapse sidebar",
+    "expandSidebar": "Expand sidebar"
+  },
+  "nav": {
+    "overview": "Overview",
+    "inbox": "Inbox",
+    "today": "Today",
+    "upcoming": "Upcoming",
+    "deadlines": "Deadlines",
+    "goals": "Goals",
+    "projects": "Projects",
+    "calendar": "Calendar",
+    "timeline": "Timeline",
+    "analytics": "Analytics",
+    "capture": "Smart Capture",
+    "settings": "Settings",
+    "completed": "Completed",
+    "archived": "Archived",
+    "group": {
+      "plan": "Plan",
+      "insight": "Insights"
+    }
+  },
+  "mobileNav": {
+    "home": "Home",
+    "tasks": "Tasks",
+    "calendar": "Calendar",
+    "goals": "Goals",
+    "more": "More"
+  },
+  "actions": {
+    "quickAdd": "Quick add",
+    "newTask": "New task",
+    "newDeadline": "New deadline"
+  },
+  "search": {
+    "open": "Open search",
+    "placeholder": "Search tasks, goals and projects…",
+    "noResults": "No results for “{q}”",
+    "tasks": "Tasks",
+    "goals": "Goals",
+    "projects": "Projects",
+    "hint": "Type to search. Press Enter to open."
+  },
+  "due": {
+    "unknown": "No date",
+    "approx": "Around {date}",
+    "sourceTime": "{time} {zone}",
+    "precision": {
+      "exact": "Exact date & time",
+      "date": "Date only",
+      "approximate": "Approximate",
+      "unknown": "Unknown"
+    }
+  },
+  "dueEditor": {
+    "precisionLabel": "Deadline precision",
+    "date": "Due date",
+    "time": "Due time",
+    "timeZone": "Time zone",
+    "timeRequired": "Enter the exact time. TickPoint never guesses a time for you.",
+    "localPreview": "That is {time} in your time zone.",
+    "dateOnlyHint": "Becomes overdue after this whole day has passed.",
+    "approxHint": "Used for ordering only; shown as approximate.",
+    "chooseZone": "Choose a time zone"
+  },
+  "countdown": {
+    "dhm": "{d}d {h}h {m}m",
+    "hm": "{h}h {m}m",
+    "m": "{m}m",
+    "s": "{s}s",
+    "remaining": "{time} remaining",
+    "overdue": "Overdue by {time}",
+    "overdueSince": "Overdue · {date}"
+  },
+  "duration": {
+    "hm": "{h}h {m}m",
+    "h": "{h}h",
+    "m": "{m}m"
+  },
+  "time": {
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "yesterday": "Yesterday"
+  },
+  "theme": {
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "priority": {
+    "none": "No priority",
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "urgent": "Urgent"
+  },
+  "status": {
+    "not_started": "Not started",
+    "in_progress": "In progress",
+    "paused": "Paused",
+    "completed": "Completed",
+    "archived": "Archived"
+  },
+  "risk": {
+    "level": {
+      "on_track": "On track",
+      "attention": "Attention needed",
+      "at_risk": "At risk",
+      "overdue": "Overdue",
+      "done": "Done",
+      "none": "No deadline"
+    },
+    "reason": {
+      "completed": "Completed.",
+      "no_deadline": "No confirmed deadline, so schedule risk is not assessed.",
+      "overdue": "The deadline passed {minutes} minutes ago.",
+      "effort_exceeds_time": "About {effort} min of work left but only {available} min of available time.",
+      "tight_schedule": "Remaining work uses {ratio}% of your available time.",
+      "behind_expected_progress": "Progress is {actual}% but about {expected}% would be expected by now.",
+      "little_time_low_progress": "Only about {hours}h left with little progress.",
+      "blocked_by_dependencies": "Blocked by {count} unfinished dependency(ies).",
+      "delayed_checkpoints": "{count} checkpoint(s) are past their target date.",
+      "comfortable": "Enough time for the remaining work."
+    }
+  },
+  "task": {
+    "detail": "Task",
+    "kind": {
+      "task": "Task",
+      "deadline": "Deadline"
+    },
+    "markComplete": "Mark “{title}” complete",
+    "markIncomplete": "Mark “{title}” incomplete",
+    "checkpointsProgress": "Checkpoints completed",
+    "subtasksProgress": "Subtasks completed",
+    "blocked": "Blocked by unfinished dependencies",
+    "blockedBy": "Blocked ({n})"
+  },
+  "checkpoints": {
+    "toggle": "Toggle checkpoint “{title}”",
+    "delayed": "Delayed",
+    "affected": "{n} dependent checkpoint(s) may be affected. Review their dates."
+  },
+  "goals": {
+    "new": "New goal",
+    "outlook": {
+      "completed": "Completed",
+      "ahead": "Ahead of schedule",
+      "on_pace": "On pace",
+      "behind": "Behind schedule",
+      "insufficient_data": "Not enough data yet",
+      "consistent": "Consistent activity",
+      "irregular": "Irregular activity",
+      "inactive": "No recent activity"
+    }
+  },
+  "toast": {
+    "completed": "Completed “{title}”",
+    "deleted": "Deleted “{title}”",
+    "restored": "Restored",
+    "duplicated": "Duplicated",
+    "saved": "Saved",
+    "created": "Created"
+  },
+  "confirm": {
+    "typeToConfirm": "Type {word} to confirm"
+  },
+  "overview": {
+    "greeting": {
+      "morning": "Good morning, {name}",
+      "afternoon": "Good afternoon, {name}",
+      "evening": "Good evening, {name}",
+      "night": "Working late, {name}?"
+    },
+    "capture": {
+      "label": "Quick capture",
+      "placeholder": "Capture a task, or paste an announcement to analyze…",
+      "add": "Add",
+      "analyze": "Analyze",
+      "added": "Added to Inbox"
+    },
+    "stats": {
+      "today": "For today",
+      "completed": "Completed this week",
+      "dueSoon": "Due in 7 days",
+      "overdue": "Overdue"
+    },
+    "today": "Today",
+    "todayEmpty": "Nothing scheduled for today",
+    "todayEmptyHint": "Enjoy the space, or pull something forward from Upcoming.",
+    "upcoming": "Upcoming deadlines",
+    "upcomingEmpty": "No deadlines in the next two weeks",
+    "attention": "Needs attention",
+    "attentionEmpty": "Everything is on track",
+    "goals": "Active goals",
+    "goalsEmpty": "No active goals yet",
+    "recent": "Recent progress",
+    "recentEmpty": "Progress you record will appear here.",
+    "week": {
+      "completed": "Done this week",
+      "remaining": "Due this week",
+      "created": "Added this week"
+    }
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "welcome": "Welcome to TickPoint",
+    "signInHint": "Sign in with your Aryuki account to continue.",
+    "continueWithAccounts": "Continue with Aryuki Accounts",
+    "accountsNote": "TickPoint never sees your password. Sign-in is handled by Aryuki Accounts.",
+    "signingIn": "Signing you in…",
+    "signedOut": "You have been signed out of TickPoint.",
+    "loopError": "Sign-in could not be completed automatically. Please try again.",
+    "missingToken": "The sign-in response was incomplete.",
+    "tryAgain": "Try again",
+    "devOnly": "Development only: local sign-in",
+    "callbackError": {
+      "default": "We couldn't verify your sign-in. Please try again.",
+      "expired": "That sign-in link has expired. Please sign in again.",
+      "rejected": "Your sign-in was not accepted. Your session may have been revoked.",
+      "malformed": "The sign-in response was invalid.",
+      "app_not_allowed": "Your account does not have access to TickPoint.",
+      "FORBIDDEN": "Your account does not have access to TickPoint.",
+      "AUTH_UNAVAILABLE": "The sign-in service is temporarily unavailable.",
+      "RATE_LIMITED": "Too many attempts. Please wait a moment.",
+      "network": "Network error. Check your connection and try again."
+    }
+  },
+  "account": {
+    "menu": "Account menu",
+    "profile": "Account profile",
+    "signOut": "Sign out",
+    "signOutTickPoint": "Sign out of TickPoint",
+    "signOutEverywhere": "Sign out of Aryuki Accounts",
+    "signOutEverywhereHint": "This ends your central Aryuki Accounts session, which signs you out of other Aryuki apps on this browser too."
+  },
+  "notifications": {
+    "title": "Notifications"
+  },
+  "settings": {
+    "general": {
+      "language": "Language",
+      "theme": "Theme"
+    }
+  },
+  "errors": {
+    "loadFailed": "Couldn't load this page",
+    "tryAgainHint": "Check your connection and try again.",
+    "notFoundTitle": "Page not found",
+    "VALIDATION_ERROR": "Some fields need attention.",
+    "UNAUTHENTICATED": "Please sign in.",
+    "SESSION_EXPIRED": "Your session expired. Renewing…",
+    "FORBIDDEN": "You don't have permission to do that.",
+    "NOT_FOUND": "That item no longer exists.",
+    "CONFLICT": "This was changed elsewhere. Refresh and try again.",
+    "CIRCULAR_DEPENDENCY": "That would create a circular dependency.",
+    "CIRCULAR_HIERARCHY": "A task can't be nested inside its own subtask.",
+    "NESTING_TOO_DEEP": "Tasks can be nested at most 6 levels deep.",
+    "RATE_LIMITED": "Too many requests. Please wait a moment.",
+    "QUOTA_EXCEEDED": "Your AI quota is used up for now.",
+    "PAYLOAD_TOO_LARGE": "That is too large.",
+    "CSRF_REJECTED": "The request was blocked for security reasons. Reload the page.",
+    "AI_DISABLED": "AI features are turned off in Settings.",
+    "AI_UNAVAILABLE": "The AI service is unavailable right now. Try again shortly.",
+    "AI_INVALID_OUTPUT": "The AI returned an unusable result. Please try again.",
+    "AI_TIMEOUT": "The AI took too long to respond. Try a shorter text.",
+    "AUTH_UNAVAILABLE": "The sign-in service is unavailable.",
+    "NOT_CONFIGURED": "This feature is not configured on the server yet.",
+    "EDITED_CHECKPOINTS": "Some selected checkpoints were edited by you.",
+    "NETWORK_ERROR": "Network error. Check your connection.",
+    "INTERNAL_ERROR": "Something went wrong. Please try again."
+  }
+}
