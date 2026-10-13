@@ -71,11 +71,9 @@ const createAsOptions = computed<{ value: CreateAs; label: string }[]>(() => [
         </p>
       </div>
 
-      <div class="mt-3 flex flex-wrap items-start justify-between gap-3">
-        <div class="min-w-0 flex-1">
-          <EvidenceQuote :text="row.evidence" :verified="row.evidenceVerified" @focus="emit('focusEvidence', `dl:${row.key}`)" />
-        </div>
-        <div v-if="!primary" class="w-full sm:w-60">
+      <div class="mt-3 flex min-w-0 flex-col gap-3">
+        <EvidenceQuote :text="row.evidence" :verified="row.evidenceVerified" @focus="emit('focusEvidence', `dl:${row.key}`)" />
+        <div v-if="!primary" class="w-full max-w-xs">
           <Field v-slot="{ id }" :label="t('capture.review.deadlines.createAs')">
             <Select :id="id" v-model="row.createAs" :options="createAsOptions" size="sm" />
           </Field>

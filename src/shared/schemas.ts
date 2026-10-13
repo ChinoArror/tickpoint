@@ -335,7 +335,7 @@ export const reminderCreateSchema = z
     kind: z.enum(['offset', 'absolute']),
     offsetMinutes: z.number().int().min(0).max(60 * 24 * 60).nullish(),
     absoluteAt: z.number().int().nullish(),
-    channels: z.array(z.enum(NOTIFICATION_CHANNELS)).min(1).max(3).default(['in_app', 'push']),
+    channels: z.array(z.enum(NOTIFICATION_CHANNELS)).min(1).max(3).default(['in_app', 'push', 'email']),
   })
   .refine((v) => [v.taskId, v.goalId, v.checkpointId].filter(Boolean).length === 1, {
     message: 'EXACTLY_ONE_TARGET',

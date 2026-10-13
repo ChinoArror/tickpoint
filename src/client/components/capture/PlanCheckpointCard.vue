@@ -101,8 +101,8 @@ function toggleDep(id: string) {
         <Textarea :id="id" rows="2" :model-value="cp.completionCriteria ?? ''" :aria-describedby="describedby" @update:model-value="(v) => edit({ completionCriteria: (v as string) || null })" />
       </Field>
 
-      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <Field v-slot="{ id, describedby }" :label="t('plan.card.start')">
+      <div class="grid grid-cols-2 gap-3 lg:grid-cols-3">
+        <Field v-slot="{ id, describedby }" :label="t('plan.card.start')" class="min-w-0">
           <Input :id="id" type="date" size="sm" :model-value="cp.startDate ?? ''" :aria-describedby="describedby" @update:model-value="(v) => edit({ startDate: (v as string) || null })" />
         </Field>
         <Field v-slot="{ id, describedby }" :label="t('plan.card.target')">
@@ -122,7 +122,7 @@ function toggleDep(id: string) {
         <Field v-slot="{ id, describedby }" :label="t('plan.card.priority')">
           <Select :id="id" size="sm" :model-value="cp.priority" :options="priorityOptions" :aria-describedby="describedby" @update:model-value="(v) => edit({ priority: v as Priority })" />
         </Field>
-        <Field v-slot="{ id, describedby }" :label="t('plan.card.reminder')" class="sm:col-span-2 lg:col-span-2">
+        <Field v-slot="{ id, describedby }" :label="t('plan.card.reminder')" class="col-span-2 lg:col-span-2">
           <Select
             :id="id"
             size="sm"

@@ -415,7 +415,7 @@ export async function createTask(
   for (const tagId of input.tagIds) stmts.push(ctx.db.insert(schema.taskTags).values({ ownerUuid: ctx.owner, taskId: id, tagId }))
   for (const off of input.reminderOffsets ?? []) {
     stmts.push(
-      ctx.db.insert(schema.reminderRules).values({ id: newId(), ownerUuid: ctx.owner, taskId: id, kind: 'offset', offsetMinutes: off, channels: '["in_app","push"]' }),
+      ctx.db.insert(schema.reminderRules).values({ id: newId(), ownerUuid: ctx.owner, taskId: id, kind: 'offset', offsetMinutes: off, channels: '["in_app","push","email"]' }),
     )
   }
   await ctx.db.batch(stmts as [any, ...any[]])

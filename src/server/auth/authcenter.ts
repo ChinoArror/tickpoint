@@ -21,6 +21,8 @@ export interface VerifiedIdentity {
   name: string | null
   username: string | null
   email: string | null
+  /** AuthCenter email_verified claim; only verified account emails receive notifications automatically. */
+  emailVerified: boolean
   avatarUrl: string | null
   identityType: 'user' | 'test'
   scopePermissions: string[] | null
@@ -113,6 +115,7 @@ export async function verifyToken(env: Env, token: string, fetcher: typeof fetch
       name: str(user.name) ?? str(payload.name),
       username: str(user.username) ?? str(payload.username),
       email: str(user.email) ?? str(payload.email),
+      emailVerified: user.email_verified === true || payload.email_verified === true,
       avatarUrl: str(user.avatar_url) ?? str(payload.avatar_url),
       identityType: isTest ? 'test' : 'user',
       scopePermissions,
@@ -126,29 +129,62 @@ export async function verifyToken(env: Env, token: string, fetcher: typeof fetch
 // Agent quota (AI calls)
 // ---------------------------------------------------------------------------
 
-export async function checkQuota(env: Env, uuid: string): Promise<void> {
-  if (!env.AUTH_APP_SECRET) return
+export interface QuotaStatus {
+  unlimited: boolean
+  remainingTokens: number | null
+  remainingRequests: number | null
+  testSession: boolean
+  quota: Record<string, unknown> | null
+}
+
+function num(v: unknown): number | null {
+  return typeof v === 'number' && Number.isFinite(v) ? v : null
+}
+
+/**
+ * Agent-limit pre-check (GET /api/quota/check). Per the AuthCenter guide the AI
+ * call must not proceed when the check fails, so every failure is an error:
+ *   429 -> QUOTA_EXCEEDED, 403 -> AI_FORBIDDEN, 401/other/network -> QUOTA_CHECK_FAILED.
+ * AuthCenter applies the RPM / RPD / tokens-per-day limits configured in its dashboard.
+ */
+export async function checkQuota(env: Env, uuid: string, fetcher: typeof fetch = fetch): Promise<QuotaStatus> {
+  if (!env.AUTH_APP_SECRET) throw new AppError('NOT_CONFIGURED', 503, 'Usage limits are not configured on this server')
   const url = new URL('/api/quota/check', env.AUTH_BASE_URL)
   url.searchParams.set('uuid', uuid)
   url.searchParams.set('app_id', env.AUTH_APP_ID)
   let res: Response
   try {
-    res = await fetch(url.toString(), {
+    res = await fetcher(url.toString(), {
       headers: { Authorization: `Bearer ${env.AUTH_APP_SECRET}` },
       signal: AbortSignal.timeout(5000),
     })
   } catch {
-    // Fail open on network errors; the local AI rate limiter still applies.
-    console.warn('quota_check_unreachable')
-    return
+    throw new AppError('QUOTA_CHECK_FAILED', 503, 'The usage check is temporarily unavailable')
   }
-  if (res.status === 429) throw new AppError('QUOTA_EXCEEDED', 429, 'AI quota exceeded')
-  if (res.status === 403) throw new AppError('FORBIDDEN', 403, 'AI access is not permitted for this account')
+  if (res.status === 429) {
+    const retryAfter = Number(res.headers.get('retry-after'))
+    throw new AppError('QUOTA_EXCEEDED', 429, 'AI usage limit reached', Number.isFinite(retryAfter) && retryAfter > 0 ? { retryAfterSeconds: retryAfter } : undefined)
+  }
+  if (res.status === 403) throw new AppError('AI_FORBIDDEN', 403, 'AI access is not permitted for this account')
   if (res.status === 401) {
     console.error('quota_check_app_secret_rejected')
-    return
+    throw new AppError('QUOTA_CHECK_FAILED', 503, 'The usage check failed')
   }
-  if (!res.ok) console.warn('quota_check_failed', res.status)
+  if (!res.ok) {
+    console.warn('quota_check_failed', res.status)
+    throw new AppError('QUOTA_CHECK_FAILED', 503, 'The usage check failed')
+  }
+  const body = (await res.json().catch(() => ({}))) as Record<string, unknown>
+  if (body.valid === false) throw new AppError('QUOTA_EXCEEDED', 429, 'AI usage limit reached')
+  const remainingTokens = num(body.remaining_tokens)
+  const remainingRequests = num(body.remaining_requests)
+  return {
+    unlimited: body.unlimited === true || (remainingTokens == null && remainingRequests == null),
+    remainingTokens,
+    remainingRequests,
+    testSession: body.test_session === true,
+    quota: body.quota && typeof body.quota === 'object' ? (body.quota as Record<string, unknown>) : null,
+  }
 }
 
 export async function consumeQuota(env: Env, uuid: string, tokens: number): Promise<void> {

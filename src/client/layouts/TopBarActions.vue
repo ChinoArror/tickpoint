@@ -76,7 +76,7 @@ async function signOutAll() {
 
     <PopoverRoot v-model:open="ui.notificationsOpen">
       <PopoverTrigger as-child>
-        <button type="button" class="relative grid size-9 place-items-center rounded-lg text-muted transition hover:bg-surface-hover hover:text-fg" :aria-label="t('notifications.title') + (unread ? ` (${unread})` : '')">
+        <button type="button" class="relative grid size-9 place-items-center rounded-lg text-muted transition hover:bg-surface-hover hover:text-fg max-md:size-11" :aria-label="t('notifications.title') + (unread ? ` (${unread})` : '')">
           <Bell class="size-[18px]" :class="unread ? 'origin-top animate-[wiggle_1.2s_ease-in-out_1]' : ''" />
           <Transition name="pop">
             <span v-if="unread" class="tabular absolute right-1 top-1 grid h-4 min-w-4 place-items-center rounded-full bg-danger px-1 text-[10px] font-bold text-white ring-2 ring-bg">{{ unread > 9 ? '9+' : unread }}</span>
@@ -91,13 +91,13 @@ async function signOutAll() {
     </PopoverRoot>
 
     <Menu :items="langItems" width="160px">
-      <IconButton :label="t('settings.general.language')"><Languages /></IconButton>
+      <IconButton class="max-md:hidden" :label="t('settings.general.language')"><Languages /></IconButton>
     </Menu>
     <Menu :items="themeItems" width="160px">
-      <IconButton :label="t('settings.general.theme')"><component :is="themeIcon" /></IconButton>
+      <IconButton class="max-md:hidden" :label="t('settings.general.theme')"><component :is="themeIcon" /></IconButton>
     </Menu>
     <Menu :items="profileItems" width="240px">
-      <button type="button" class="ml-1 rounded-full transition hover:ring-2 hover:ring-primary/30" :aria-label="t('account.menu')">
+      <button type="button" class="ml-1 grid place-items-center rounded-full transition hover:ring-2 hover:ring-primary/30 max-md:ml-0 max-md:size-11" :aria-label="t('account.menu')">
         <Avatar :src="session.me?.user.avatarUrl" :name="session.me?.user.name ?? session.me?.user.username" :size="30" />
       </button>
     </Menu>

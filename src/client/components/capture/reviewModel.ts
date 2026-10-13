@@ -38,10 +38,11 @@ export interface ListRow {
 
 export interface AmbiguityRow {
   key: string
-  field: string
   description: string
   options: string[]
   evidence: string | null
+  /** undefined when the server did not say; only an explicit false means the quote was not found. */
+  evidenceVerified?: boolean | undefined
   reviewed: boolean
 }
 
@@ -128,28 +129,50 @@ function toDue(d: ExtractionResult['deadlines'][number]): DueSpec {
   return { precision: d.precision, date: d.date, time: null, timeZone: null }
 }
 
-function mapLocations(list: ExtractionResult['locations']) {
+interface LocationMapping {
+  fields: Record<LocationField, string>
+  evidence: LocationEvidence[]
+  /** Fallbacks taken from a submission_platform entry when the submission block has none. */
+  submission: { url: string; platform: string }
+}
+
+/** The server type does not declare evidenceVerified on ambiguities yet. */
+type ServerAmbiguity = ExtractionResult['ambiguities'][number] & { evidenceVerified?: boolean }
+
+function mapLocations(list: ExtractionResult['locations']): LocationMapping {
   const out: Record<LocationField, string> = { physical: '', building: '', room: '', campus: '', online: '', contact: '' }
   const evidence: LocationEvidence[] = []
+  const submission = { url: '', platform: '' }
   const add = (field: LocationField, value: string | null | undefined) => {
     const v = value?.trim()
     if (!v) return
     out[field] = out[field] ? `${out[field]}; ${v}` : v
   }
+  let physicalDetailsTaken = false
   for (const loc of list) {
-    const k = loc.kind.toLowerCase()
-    if (k.includes('online') || k.includes('link') || k === 'url') add('online', [loc.value, loc.url].filter(Boolean).join(' '))
-    else if (k.includes('contact')) add('contact', loc.value)
-    else if (k.includes('room')) add('room', loc.value)
-    else if (k.includes('building')) add('building', loc.value)
-    else if (k.includes('campus')) add('campus', loc.value)
-    else add('physical', loc.value)
-    add('building', loc.building)
-    add('room', loc.room)
-    add('campus', loc.campus)
+    const kind = loc.kind.toLowerCase()
+    if (kind === 'online_meeting') {
+      const parts = [loc.value, loc.url].map((x) => x?.trim()).filter((x): x is string => !!x)
+      add('online', [...new Set(parts)].join(' '))
+    } else if (kind === 'submission_platform') {
+      // Not a place: it belongs to the submission block.
+      if (!submission.url && loc.url?.trim()) submission.url = loc.url.trim()
+      if (!submission.platform && loc.value?.trim()) submission.platform = loc.value.trim()
+    } else if (kind === 'contact') {
+      add('contact', loc.value)
+    } else {
+      // 'physical' (and any unknown kind): join every venue, but take building/room/campus from the first one only.
+      add('physical', loc.value)
+      if (!physicalDetailsTaken) {
+        add('building', loc.building)
+        add('room', loc.room)
+        add('campus', loc.campus)
+        physicalDetailsTaken = true
+      }
+    }
     if (loc.evidence) evidence.push({ key: loc.id, kind: loc.kind, text: loc.evidence, verified: loc.evidenceVerified })
   }
-  return { fields: out, evidence }
+  return { fields: out, evidence, submission }
 }
 
 /** Build the editable review state from an extraction response. */
@@ -183,13 +206,20 @@ export function buildReviewState(res: ExtractionResponse, defaults: { saveSource
     recordKind: primary ? 'deadline' : 'task',
     deadlines,
     primaryKey: primary ? primary.id : null,
-    ambiguities: r.ambiguities.map((a) => ({ key: a.id, field: a.field, description: a.description, options: a.options, evidence: a.evidence, reviewed: false })),
+    ambiguities: r.ambiguities.map((a) => ({
+      key: a.id,
+      description: a.description,
+      options: a.options,
+      evidence: a.evidence,
+      evidenceVerified: (a as ServerAmbiguity).evidenceVerified,
+      reviewed: false,
+    })),
     location: loc.fields,
     locationEvidence: loc.evidence,
     submission: {
       method: sub.method ?? '',
-      platform: sub.platform ?? '',
-      url: sub.url ?? '',
+      platform: sub.platform || loc.submission.platform,
+      url: sub.url || loc.submission.url,
       destination: sub.destination ?? '',
       naming: sub.naming ?? '',
       sizeLimit: sub.sizeLimit ?? '',

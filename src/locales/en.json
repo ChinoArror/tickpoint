@@ -321,7 +321,7 @@
     "CIRCULAR_HIERARCHY": "A task can't be nested inside its own subtask.",
     "NESTING_TOO_DEEP": "Tasks can be nested at most 6 levels deep.",
     "RATE_LIMITED": "Too many requests. Please wait a moment.",
-    "QUOTA_EXCEEDED": "Your AI quota is used up for now.",
+    "QUOTA_EXCEEDED": "You have reached your AI usage limit. It resets automatically; try again later.",
     "PAYLOAD_TOO_LARGE": "That is too large.",
     "CSRF_REJECTED": "The request was blocked for security reasons. Reload the page.",
     "AI_DISABLED": "AI features are turned off in Settings.",
@@ -332,6 +332,10 @@
     "NOT_CONFIGURED": "This feature is not configured on the server yet.",
     "EDITED_CHECKPOINTS": "Some selected checkpoints were edited by you.",
     "NETWORK_ERROR": "Network error. Check your connection.",
-    "INTERNAL_ERROR": "Something went wrong. Please try again."
+    "INTERNAL_ERROR": "Something went wrong. Please try again.",
+    "QUOTA_CHECK_FAILED": "The usage check is unavailable right now, so AI is paused. Try again shortly.",
+    "AI_FORBIDDEN": "Your account is not allowed to use AI features in TickPoint.",
+    "VERIFICATION_FAILED": "That code did not work. Check it or request a new one.",
+    "EMAIL_NOT_VERIFIED": "Verify an email address first."
   }
 }

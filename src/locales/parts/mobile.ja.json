@@ -1,0 +1,19 @@
+{
+  "mobile": {
+    "language": { "en": "English", "ja": "日本語" },
+    "tasks": {
+      "viewsLabel": "タスクの表示",
+      "filter": "絞り込み",
+      "filterActive": "絞り込み、{n}件適用中",
+      "filterTitle": "タスクを絞り込む",
+      "filterHint": "選択するとすぐに一覧へ反映されます。"
+    },
+    "board": { "showColumn": "{name}列を表示" },
+    "calendar": {
+      "legend": "凡例",
+      "weekLabel": "曜日と日付",
+      "dayAria": "{date}、{count}",
+      "itemCount": "{n}件"
+    }
+  }
+}

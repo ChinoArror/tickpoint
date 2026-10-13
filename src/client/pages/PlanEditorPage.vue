@@ -295,7 +295,7 @@ const parentKind = computed(() => (parent.value?.kind === 'goal' ? t('plan.paren
 </script>
 
 <template>
-  <div class="mx-auto w-full max-w-4xl px-4 py-6 md:px-8 md:py-8">
+  <div class="mx-auto w-full max-w-4xl px-4 py-6 md:px-8 md:py-8" :class="isPending ? 'max-md:pb-44' : ''">
     <div v-if="planQ.isPending.value" class="flex flex-col gap-4" aria-busy="true">
       <Skeleton :rows="3" />
       <Skeleton :rows="8" />
@@ -422,13 +422,16 @@ const parentKind = computed(() => (parent.value?.kind === 'goal' ? t('plan.paren
       <!-- Footer -->
       <footer
         v-if="isPending"
-        class="sticky bottom-0 z-10 -mx-4 mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-border bg-surface-raised/95 px-4 py-3 backdrop-blur max-md:bottom-20 md:-mx-8 md:px-8"
+        class="sticky bottom-[calc(64px+env(safe-area-inset-bottom))] z-10 -mx-4 mt-8 border-t border-border bg-surface-raised/95 px-4 py-3 backdrop-blur md:bottom-0 md:-mx-8 md:px-8"
       >
-        <p v-if="hasBlankTitle" class="text-xs text-warning-text">{{ t('plan.footer.approveBlocked') }}</p>
-        <span v-else />
-        <div class="flex items-center gap-2">
-          <Button variant="danger-ghost" :loading="discarding" @click="discard"><Trash2 aria-hidden="true" />{{ t('plan.footer.discard') }}</Button>
-          <Button variant="primary" :loading="approving" :disabled="!checkpoints.length || hasBlankTitle" @click="approve">{{ t('plan.footer.approve', { n: checkpoints.length }) }}</Button>
+        <div class="mx-auto flex max-w-4xl flex-col gap-2 md:flex-row md:items-center md:justify-between md:gap-3">
+          <p class="min-w-0 truncate text-xs" :class="hasBlankTitle ? 'text-warning-text' : 'text-muted'">
+            {{ hasBlankTitle ? t('plan.footer.approveBlocked') : t('plan.footer.ready') }}
+          </p>
+          <div class="grid grid-cols-2 gap-2 md:flex md:items-center">
+            <Button class="w-full md:w-auto" variant="danger-ghost" :loading="discarding" @click="discard"><Trash2 aria-hidden="true" />{{ t('plan.footer.discard') }}</Button>
+            <Button class="w-full md:w-auto" variant="primary" :loading="approving" :disabled="!checkpoints.length || hasBlankTitle" @click="approve">{{ t('plan.footer.approve', { n: checkpoints.length }) }}</Button>
+          </div>
         </div>
       </footer>
     </template>

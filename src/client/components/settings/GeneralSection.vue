@@ -78,7 +78,7 @@ const weekStartOptions = computed(() => [0, 1, 6].map((d) => ({ value: d, label:
         <Segmented v-model="localeChoice" :label="t('settingsPage.general.language')" :options="[{ value: 'en', label: 'English' }, { value: 'ja', label: '日本語' }]" />
       </SettingRow>
 
-      <SettingRow :label="t('settingsPage.general.timeZone')" :description="t('settingsPage.general.timeZoneHint')" html-for="setting-timezone">
+      <SettingRow stacked :label="t('settingsPage.general.timeZone')" :description="t('settingsPage.general.timeZoneHint')" html-for="setting-timezone">
         <div class="flex w-full flex-col gap-2 sm:w-72">
           <Input v-model="zoneQuery" type="search" autocomplete="off" :placeholder="t('settingsPage.general.timeZoneSearch')" :aria-label="t('settingsPage.general.timeZoneSearch')" />
           <Select id="setting-timezone" v-model="zone" :options="zoneOptions" />
@@ -90,11 +90,11 @@ const weekStartOptions = computed(() => [0, 1, 6].map((d) => ({ value: d, label:
         <Select id="setting-date-format" v-model="dateFormat" :options="dateFormatOptions" class="sm:w-56" />
       </SettingRow>
 
-      <SettingRow :label="t('settingsPage.general.timeFormat')" :description="t('settingsPage.general.timeFormatHint')">
+      <SettingRow stacked :label="t('settingsPage.general.timeFormat')" :description="t('settingsPage.general.timeFormatHint')">
         <Segmented v-model="timeFormat" :label="t('settingsPage.general.timeFormat')" :options="timeFormatOptions" />
       </SettingRow>
 
-      <SettingRow :label="t('settingsPage.general.theme')" :description="t('settingsPage.general.themeHint')">
+      <SettingRow stacked :label="t('settingsPage.general.theme')" :description="t('settingsPage.general.themeHint')">
         <Segmented v-model="themeModel" :label="t('settingsPage.general.theme')" :options="themeOptions" />
       </SettingRow>
 

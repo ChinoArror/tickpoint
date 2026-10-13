@@ -226,8 +226,9 @@ Behaviour:
 
 - **Structured output**: requests send a JSON schema through `responseJsonSchema`. Responses are validated with Zod. If the model rejects the schema, the provider falls back to plain JSON mode with local validation.
 - **Limits**: 75-second timeout per call, at most 2 attempts with backoff, and a size cap on the response.
-- **Local rate limits**: 30 AI requests per hour and 150 per day per user, on top of the AuthCenter agent quota.
-- **Usage tracking**: token counts are written to the `ai_usage` table and reported to the AuthCenter quota.
+- **AuthCenter usage limits** (RPM, requests per day, tokens per day, configured per user in the AuthCenter dashboard under Enable Agent Limits): every AI call is pre-checked with `GET /api/quota/check` and is **not made if the check fails** (429 → `QUOTA_EXCEEDED`, 403 → `AI_FORBIDDEN`, 401/other/network → `QUOTA_CHECK_FAILED`). Actual `usageMetadata.totalTokenCount` is reported afterwards with `POST /api/quota/consume` via `waitUntil`, including tokens spent on attempts that returned invalid output. `GET /api/v1/ai/quota` exposes the remaining allowance to the Settings → AI page.
+- **Local safety limits**: 30 AI requests per hour and 150 per day per user, in addition to the AuthCenter limits.
+- **Usage tracking**: token counts are written to the `ai_usage` table.
 - **Prompts**: all prompts are in English under `src/server/ai/prompts/`. The output language follows the user's interface language; quoted evidence is never translated.
 - **Prompt-injection defence**: user source text is fenced with a random boundary and treated as untrusted data. The model is told to ignore instructions inside the source.
 - **Evidence verification**: each extracted item carries a quotation. The server checks it against the source text (exact match, tolerant of whitespace and character width). Fabricated quotes are flagged as unverified.
@@ -239,9 +240,9 @@ Behaviour:
 | --- | --- |
 | In-app | Always available. Every reminder is recorded in the notification history. |
 | Web Push | VAPID key pair. The public key goes in `VAPID_PUBLIC_KEY` (a variable); the private key goes in `VAPID_PRIVATE_KEY` (a secret). `scripts/sync-secrets.mjs` generates the pair once into `.design/vapid.json`. `VAPID_SUBJECT` must be a `mailto:` address. On iOS, push works only after the PWA is installed to the Home Screen. |
-| Email | `EMAIL_PROVIDER` is `none`, `resend` or `cloudflare`. With `resend`, set `RESEND_API_KEY` as a secret. With `cloudflare`, bind a Cloudflare Email Sending binding named `EMAIL` in `wrangler.jsonc` (the binding is not present yet). |
+| Email | Cloudflare Email Service through the `send_email` binding `EMAIL` (`EMAIL_PROVIDER: "cloudflare"`), sending from `TickPoint <noreply@point.aryuki.com>`. The sending domain `point.aryuki.com` must be onboarded in Cloudflare Email Service. `resend` (with `RESEND_API_KEY`) remains available as an alternative provider. Locally the binding is simulated (messages are logged and written to files). |
 
-The current setting is `EMAIL_PROVIDER: "none"`. Email reminders are then recorded honestly as **skipped** (`email_provider_not_configured`) in the delivery log and are not sent. `GET /api/v1/auth/config` reports `emailConfigured: false` in this state.
+Email recipients: a user's Aryuki Accounts email is a recipient by default when AuthCenter marks it verified (`email_verified`), and email reminders are then on by default. Users can add up to 5 more addresses in Settings → Notifications; each must be verified with a 6-digit code (stored only as a SHA-256 hash, valid 20 minutes, 5 attempts, resend cooldown 60 s) before it receives anything. Users without a verified address are asked to add and verify one; the first verified address switches email reminders on. Reminder emails go to every verified, enabled address and are logged per delivery (for example `sent 2/2`). Templates (reminder, verification, test) are localized in English and Japanese and live in `src/server/notifications/email-templates.ts`.
 
 Reminder timing: a reminder is a rule relative to its target (for example 1 hour before). Jobs are created for the exact fire instant. Delivery happens on the one-minute cron, so reminders are "within about a minute", not second-exact. Date-only deadlines are anchored at 09:00 in the user's time zone. Quiet hours defer delivery to the end of the quiet window.
 

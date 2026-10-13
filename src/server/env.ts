@@ -20,8 +20,18 @@ export interface Env {
   VAPID_PRIVATE_KEY?: string
   RESEND_API_KEY?: string
 
-  /** Optional Cloudflare Email Sending binding (when EMAIL_PROVIDER = 'cloudflare'). */
-  EMAIL?: { send(message: unknown): Promise<unknown> }
+  /** Cloudflare Email Service send_email binding (when EMAIL_PROVIDER = 'cloudflare'). */
+  EMAIL?: {
+    send(message: {
+      to: string | string[]
+      from: string | { email: string; name?: string }
+      subject: string
+      html?: string
+      text?: string
+      replyTo?: string | { email: string; name?: string }
+      headers?: Record<string, string>
+    }): Promise<{ messageId: string }>
+  }
 
   /** Development-only sign-in bypass. Ignored unless APP_ENV is development and host is local. */
   DEV_AUTH_BYPASS?: string

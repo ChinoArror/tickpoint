@@ -10,6 +10,7 @@ import Select from '@/components/ui/Select.vue'
 import Skeleton from '@/components/ui/Skeleton.vue'
 import Switch from '@/components/ui/Switch.vue'
 import SettingRow from './SettingRow.vue'
+import AiQuotaCard from './AiQuotaCard.vue'
 import { useSettingSave } from './useSettingSave'
 import { api } from '@/lib/api'
 import { useFormat } from '@/composables/useFormat'
@@ -126,6 +127,8 @@ function opLabel(op: string) {
         </SettingRow>
       </div>
     </Card>
+
+    <AiQuotaCard />
 
     <Card :title="t('settingsPage.ai.usageTitle')" :subtitle="t('settingsPage.ai.usageHint')" :padded="true">
       <Skeleton v-if="usage.isPending.value" :rows="3" height="32px" />

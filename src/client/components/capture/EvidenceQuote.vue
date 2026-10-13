@@ -10,7 +10,7 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div v-if="text" class="flex flex-col items-start gap-1">
+  <div v-if="text" class="flex w-full min-w-0 flex-col items-start gap-1">
     <button
       type="button"
       class="group flex max-w-full items-start gap-1.5 rounded-md text-left text-xs text-muted transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2"

@@ -647,7 +647,7 @@ const newDepsCount = computed(() => task.value?.dependencies.length ?? 0)
       <!-- Sticky header -->
       <header
         class="z-10 flex shrink-0 items-start gap-3 border-b border-border bg-surface-raised px-5 py-4"
-        :class="inDrawer ? '' : 'sticky top-0'"
+        :class="inDrawer ? '' : 'sticky top-0 max-md:top-[var(--topbar-h)]'"
       >
         <TaskCheck
           class="mt-1.5"
@@ -682,11 +682,11 @@ const newDepsCount = computed(() => task.value?.dependencies.length ?? 0)
         </div>
         <div class="flex shrink-0 items-center gap-1">
           <Menu :items="menuItems" width="220px">
-            <IconButton :label="t('taskDetail.moreActions')">
+            <IconButton class="max-md:size-11" :label="t('taskDetail.moreActions')">
               <MoreHorizontal aria-hidden="true" />
             </IconButton>
           </Menu>
-          <IconButton v-if="inDrawer" :label="t('common.close')" @click="emit('close')">
+          <IconButton v-if="inDrawer" class="max-md:size-11" :label="t('common.close')" @click="emit('close')">
             <X aria-hidden="true" />
           </IconButton>
         </div>
@@ -754,7 +754,7 @@ const newDepsCount = computed(() => task.value?.dependencies.length ?? 0)
           <Field v-slot="{ id }" :label="t('taskDetail.fields.project')">
             <Select :id="id" :model-value="task.projectId ?? ''" :options="projectOptions" @update:model-value="(v) => save({ projectId: String(v) || null })" />
           </Field>
-          <div class="grid grid-cols-2 gap-3">
+          <div class="grid gap-3 sm:grid-cols-2">
             <Field v-slot="{ id }" :label="t('taskDetail.fields.estimate')" :hint="f.minutes(task.estimatedMinutes)">
               <Input :id="id" v-model="estimateDraft" type="number" min="0" :placeholder="t('taskDetail.fields.minutesPlaceholder')" @change="commitEstimate" />
             </Field>
@@ -834,7 +834,8 @@ const newDepsCount = computed(() => task.value?.dependencies.length ?? 0)
         </div>
 
         <!-- Sections -->
-        <div class="mt-6 flex flex-col gap-5">
+        <!-- Section headers (DetailSection) get 44px tap targets on mobile -->
+        <div class="mt-6 flex flex-col gap-5 max-md:[&>section>h3>button]:min-h-11">
           <!-- Description -->
           <DetailSection v-if="shown('description')" :title="t('taskDetail.sections.description.title')" :default-open="true">
             <Textarea v-model="descriptionDraft" rows="4" :placeholder="t('taskDetail.sections.description.placeholder')" :aria-label="t('taskDetail.sections.description.title')" @change="commitDescription" />
@@ -849,12 +850,12 @@ const newDepsCount = computed(() => task.value?.dependencies.length ?? 0)
           <DetailSection v-if="shown('subtasks')" :title="t('taskDetail.sections.subtasks.title')" :count="task.subtasks.length || null">
             <div class="flex flex-col gap-2">
               <p v-if="task.subtasks.length" class="text-xs text-muted tabular">{{ subtaskDone }}/{{ task.subtasks.length }}</p>
-              <TransitionGroup v-if="task.subtasks.length" name="list" tag="div" class="relative flex flex-col" role="list">
+              <TransitionGroup v-if="task.subtasks.length" name="list" tag="div" class="tap-task-rows relative flex flex-col" role="list">
                 <TaskRow v-for="sub in task.subtasks" :key="sub.id" :task="sub" :show-project="false" dense />
               </TransitionGroup>
               <p v-else class="text-xs text-subtle">{{ t('taskDetail.sections.subtasks.empty') }}</p>
               <form class="flex items-center gap-2" @submit.prevent="addSubtask">
-                <Input v-model="subtaskTitle" size="sm" class="flex-1" maxlength="300" :placeholder="t('taskDetail.sections.subtasks.placeholder')" :aria-label="t('taskDetail.sections.subtasks.add')" />
+                <Input v-model="subtaskTitle" size="sm" class="min-w-0 flex-1" maxlength="300" :placeholder="t('taskDetail.sections.subtasks.placeholder')" :aria-label="t('taskDetail.sections.subtasks.add')" />
                 <Button type="submit" variant="soft" size="sm" :disabled="!subtaskTitle.trim()"><Plus class="size-4" aria-hidden="true" />{{ t('taskDetail.sections.subtasks.add') }}</Button>
               </form>
             </div>

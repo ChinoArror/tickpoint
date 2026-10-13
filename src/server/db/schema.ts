@@ -549,3 +549,28 @@ export const rateLimits = sqliteTable(
   },
   (t) => [primaryKey({ columns: [t.key, t.windowStart] })],
 )
+
+// ---------------------------------------------------------------------------
+// Email notification recipients
+// ---------------------------------------------------------------------------
+
+export const notificationEmails = sqliteTable(
+  'notification_emails',
+  {
+    id: text('id').primaryKey(),
+    ownerUuid: text('owner_uuid').notNull().references(() => users.uuid, { onDelete: 'cascade' }),
+    /** Lower-cased address. */
+    address: text('address').notNull(),
+    /** account = the AuthCenter email (verified there); user = added in TickPoint. */
+    source: text('source').notNull().default('user'),
+    verifiedAt: integer('verified_at'),
+    /** SHA-256 of the pending verification code; never the code itself. */
+    codeHash: text('code_hash'),
+    codeExpiresAt: integer('code_expires_at'),
+    codeAttempts: integer('code_attempts').notNull().default(0),
+    lastSentAt: integer('last_sent_at'),
+    enabled: integer('enabled', { mode: 'boolean' }).notNull().default(true),
+    createdAt: integer('created_at').notNull().default(sql`(unixepoch('subsec') * 1000)`),
+  },
+  (t) => [uniqueIndex('notification_emails_owner_addr_uq').on(t.ownerUuid, t.address), index('notification_emails_owner_idx').on(t.ownerUuid)],
+)

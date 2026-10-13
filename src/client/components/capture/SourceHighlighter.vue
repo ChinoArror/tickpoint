@@ -59,14 +59,14 @@ watch(
 </script>
 
 <template>
-  <div ref="root" class="whitespace-pre-wrap break-words text-[13px] leading-relaxed text-fg">
+  <div ref="root" class="whitespace-pre-wrap break-words px-4 pb-4 pt-2 text-[13px] leading-relaxed text-fg">
     <template v-for="(s, i) in segments" :key="i">
       <mark
         v-if="s.key"
         :data-mark="s.key"
-        class="rounded-[4px] bg-primary-soft px-0.5 text-fg"
+        class="box-decoration-clone rounded bg-primary-soft px-0.5 text-fg"
         :class="s.key === focusKey ? 'mark-focus bg-primary/35 ring-2 ring-primary/50' : ''"
-      >{{ s.text }}</mark>
+      >{{ s.text.trim() }}</mark>
       <template v-else>{{ s.text }}</template>
     </template>
   </div>

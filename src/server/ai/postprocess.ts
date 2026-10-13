@@ -35,13 +35,13 @@ export interface ExtractionDraft extends Omit<ExtractionResult, 'deadlines' | 'l
   deliverables: (ExtractionResult['deliverables'][number] & { id: string; evidenceVerified: boolean })[]
   requirements: (ExtractionResult['requirements'][number] & { id: string; evidenceVerified: boolean })[]
   rewards: (ExtractionResult['rewards'][number] & { id: string; evidenceVerified: boolean })[]
-  ambiguities: (ExtractionResult['ambiguities'][number] & { id: string })[]
+  ambiguities: (ExtractionResult['ambiguities'][number] & { id: string; evidenceVerified: boolean })[]
   submissionEvidenceVerified: boolean
 }
 
 export function postProcessExtraction(r: ExtractionResult, source: string): ExtractionDraft {
   const src = norm(source)
-  const ambiguities = r.ambiguities.map((a, i) => ({ ...a, id: `a${i + 1}` }))
+  const ambiguities = r.ambiguities.map((a, i) => ({ ...a, id: `a${i + 1}`, evidenceVerified: evidenceInSource(a.evidence, src) }))
   let n = ambiguities.length
 
   const deadlines = r.deadlines.map((d, i) => {
@@ -66,7 +66,7 @@ export function postProcessExtraction(r: ExtractionResult, source: string): Extr
     if (precision === 'exact' && !timezone) {
       issues.push('timezone_missing')
       if (!ambiguities.some((a) => a.kind === 'timezone_missing' && a.field.includes(String(i)))) {
-        ambiguities.push({ id: `a${++n}`, kind: 'timezone_missing', field: `deadlines.${i}`, description: d.label, options: [], evidence: d.evidence })
+        ambiguities.push({ id: `a${++n}`, kind: 'timezone_missing', field: `deadlines.${i}`, description: d.label, options: [], evidence: d.evidence, evidenceVerified: evidenceInSource(d.evidence, src) })
       }
     }
     const evidenceVerified = evidenceInSource(d.evidence, src)

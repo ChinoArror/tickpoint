@@ -144,7 +144,8 @@ export async function generateJson<S extends ZodType>(opts: GenerateOptions<S>):
   }
 
   if (lastError instanceof RetryableError) throw new AppError('AI_UNAVAILABLE', 503, 'The AI service is busy. Please try again shortly.')
-  if ((lastError as Error)?.message === 'invalid_output') throw new AppError('AI_INVALID_OUTPUT', 502, 'The AI returned an invalid result. Please try again.')
+  // Tokens were still spent on invalid attempts; expose usage so it is recorded and reported.
+  if ((lastError as Error)?.message === 'invalid_output') throw new AppError('AI_INVALID_OUTPUT', 502, 'The AI returned an invalid result. Please try again.', { usage })
   throw new AppError('AI_UNAVAILABLE', 503, 'The AI service is unavailable')
 }
 

@@ -344,3 +344,37 @@ html.dark {
   --fc-classic-ring-color: var(--focus-ring);
 }
 .tp-calendar { font-size: 13px }
+
+/* ------------------------------------------------------------------------- */
+/* Mobile helpers                                                             */
+/* ------------------------------------------------------------------------- */
+/* Hide scrollbars but keep the element scrollable (pill navs, board columns). */
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Sheets and dialogs keep scroll to themselves instead of chaining to the page. */
+[role='dialog'] {
+  overscroll-behavior: contain;
+}
+
+/* Task rows on small screens: widen the checkbox and row-menu hit areas to 44px. Layout is unchanged. */
+@media (max-width: 767px) {
+  .tap-task-rows [role='checkbox'],
+  .tap-task-rows button[aria-haspopup='menu'] {
+    position: relative;
+  }
+  .tap-task-rows [role='checkbox']::after {
+    content: '';
+    position: absolute;
+    inset: -12px;
+  }
+  .tap-task-rows button[aria-haspopup='menu']::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+  }
+}

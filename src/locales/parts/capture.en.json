@@ -17,6 +17,7 @@
   "capture": {
     "title": "Smart Capture",
     "progress": "Capture progress",
+    "stepCompact": "Step {n} of {total} · {label}",
     "steps": {
       "paste": "Paste",
       "analyze": "Analyze",
@@ -127,8 +128,7 @@
         "reviewed": "Reviewed",
         "remaining": "{n} left to review",
         "allReviewed": "All items reviewed",
-        "options": "Options mentioned",
-        "field": "Field: {field}"
+        "options": "Options mentioned"
       },
       "list": {
         "add": "Add",
@@ -310,6 +310,7 @@
       "discarded": "Plan discarded.",
       "approve": "Approve & add {n} checkpoint(s)",
       "approveBlocked": "Every checkpoint needs a title.",
+      "ready": "Check each checkpoint before approving.",
       "approved": "Added {n} checkpoint(s).",
       "goTo": "Open"
     },

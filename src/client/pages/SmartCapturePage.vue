@@ -15,6 +15,7 @@ import Skeleton from '@/components/ui/Skeleton.vue'
 import Spinner from '@/components/ui/Spinner.vue'
 import Textarea from '@/components/ui/Textarea.vue'
 import Card from '@/components/ui/Card.vue'
+import ProgressBar from '@/components/ui/ProgressBar.vue'
 import ReviewForm from '@/components/capture/ReviewForm.vue'
 import SourceHighlighter, { type Passage } from '@/components/capture/SourceHighlighter.vue'
 import {
@@ -325,13 +326,19 @@ const phase = computed<'input' | 'analyzing' | 'review' | 'done'>(() => {
 })
 const currentStep = computed(() => ({ input: 1, analyzing: 2, review: busy.value ? 4 : 3, done: 5 })[phase.value])
 const steps = computed(() => ['paste', 'analyze', 'review', 'confirm', 'next'].map((k, i) => ({ key: k, n: i + 1, label: t(`capture.steps.${k}`) })))
+const currentStepLabel = computed(() => steps.value[currentStep.value - 1]?.label ?? '')
 </script>
 
 <template>
-  <div class="mx-auto w-full max-w-6xl px-4 py-6 md:px-8 md:py-8">
+  <div class="mx-auto w-full max-w-6xl px-4 py-6 md:px-8 md:py-8" :class="phase === 'review' && isPending ? 'max-md:pb-44' : ''">
     <header class="flex flex-col gap-4">
       <h1 class="text-2xl font-semibold tracking-tight text-fg md:text-[28px]">{{ t('capture.title') }}</h1>
-      <ol class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs" :aria-label="t('capture.progress')">
+      <!-- Compact step header on phones; the full stepper takes over from 640px. -->
+      <div class="flex flex-col gap-2 sm:hidden">
+        <p class="text-xs font-medium text-muted">{{ t('capture.stepCompact', { n: currentStep, total: steps.length, label: currentStepLabel }) }}</p>
+        <ProgressBar :value="currentStep" :max="steps.length" size="xs" tone="primary" :label="t('capture.progress')" />
+      </div>
+      <ol class="hidden items-center gap-1.5 overflow-x-auto pb-1 text-xs sm:flex" :aria-label="t('capture.progress')">
         <li v-for="s in steps" :key="s.key" class="flex shrink-0 items-center gap-1.5" :aria-current="currentStep === s.n ? 'step' : undefined">
           <span
             class="tabular grid size-5 shrink-0 place-items-center rounded-full text-[11px] font-semibold"
@@ -450,7 +457,7 @@ const steps = computed(() => ['paste', 'analyze', 'review', 'confirm', 'next'].m
             <p class="flex items-start gap-2 text-xs text-muted">
               <Info class="mt-px size-3.5 shrink-0 text-subtle" aria-hidden="true" />{{ t('capture.input.privacy') }}
             </p>
-            <Button variant="ai" size="lg" class="sm:shrink-0" :disabled="!canAnalyze" @click="analyze"><Sparkles aria-hidden="true" />{{ t('capture.input.analyze') }}</Button>
+            <Button variant="ai" size="md" class="w-full sm:w-auto sm:shrink-0" :disabled="!canAnalyze" @click="analyze"><Sparkles aria-hidden="true" />{{ t('capture.input.analyze') }}</Button>
           </div>
         </template>
       </div>
@@ -492,7 +499,9 @@ const steps = computed(() => ['paste', 'analyze', 'review', 'confirm', 'next'].m
             </div>
           </div>
 
-          <Segmented v-model="mobileTab" :options="tabOptions" :label="t('capture.review.tabs.label')" class="mb-4 flex w-full lg:hidden [&>button]:flex-1" />
+          <div class="sticky top-[var(--topbar-h)] z-20 -mx-4 mb-4 bg-bg/90 px-4 py-2 backdrop-blur lg:hidden">
+            <Segmented v-model="mobileTab" :options="tabOptions" :label="t('capture.review.tabs.label')" class="flex w-full [&>button]:flex-1" />
+          </div>
 
           <div class="grid gap-6 lg:grid-cols-2 lg:items-start">
             <aside
@@ -500,9 +509,9 @@ const steps = computed(() => ['paste', 'analyze', 'review', 'confirm', 'next'].m
               class="min-w-0 lg:sticky lg:top-4 lg:max-h-[calc(100dvh-7rem)] lg:overflow-y-auto"
               :class="mobileTab === 'source' ? '' : 'max-lg:hidden'"
             >
-              <Card :title="t('capture.review.sourcePanel')">
+              <Card :title="t('capture.review.sourcePanel')" :padded="false">
                 <SourceHighlighter v-if="sourceFull" :text="sourceFull" :passages="passages" :focus-key="focusKey" />
-                <p v-else class="text-sm text-subtle">{{ t('capture.review.sourceDeleted') }}</p>
+                <p v-else class="px-4 pb-4 pt-2 text-sm text-subtle">{{ t('capture.review.sourceDeleted') }}</p>
               </Card>
             </aside>
 
@@ -517,20 +526,23 @@ const steps = computed(() => ['paste', 'analyze', 'review', 'confirm', 'next'].m
             </section>
           </div>
 
-          <div v-if="isPending" class="sticky bottom-0 z-10 -mx-4 mt-6 border-t border-border bg-surface-raised/95 px-4 py-3 backdrop-blur max-md:bottom-20 md:-mx-8 md:px-8">
-            <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3">
-              <div class="min-w-0 flex-1">
-                <div v-if="issues.length" role="alert" class="text-xs text-danger-text">
+          <div
+            v-if="isPending"
+            class="sticky bottom-[calc(64px+env(safe-area-inset-bottom))] z-10 -mx-4 mt-6 border-t border-border bg-surface-raised/95 px-4 py-3 backdrop-blur md:bottom-0 md:-mx-8 md:px-8"
+          >
+            <div class="mx-auto flex max-w-6xl flex-col gap-2 md:flex-row md:items-center md:justify-between md:gap-3">
+              <div class="min-w-0 md:flex-1">
+                <div v-if="issues.length" role="alert" class="max-h-28 overflow-y-auto text-xs text-danger-text">
                   <p class="font-semibold">{{ t('capture.review.footer.errorsTitle') }}</p>
                   <ul class="list-disc pl-4">
                     <li v-for="i in issues" :key="i">{{ i }}</li>
                   </ul>
                 </div>
-                <p v-else-if="remainingReview" class="text-xs text-muted">{{ t('capture.review.footer.blocked', { n: remainingReview }) }}</p>
+                <p v-else-if="remainingReview" class="truncate text-xs text-muted">{{ t('capture.review.footer.blocked', { n: remainingReview }) }}</p>
               </div>
-              <div class="flex items-center gap-2">
-                <Button variant="danger-ghost" :disabled="busy" @click="rejectDraft"><Trash2 aria-hidden="true" />{{ t('capture.review.footer.reject') }}</Button>
-                <Button variant="primary" :loading="busy" :disabled="remainingReview > 0" @click="confirmDraft">{{ t('capture.review.footer.confirm') }}</Button>
+              <div class="grid grid-cols-2 gap-2 md:flex md:items-center">
+                <Button class="w-full md:w-auto" variant="danger-ghost" :disabled="busy" @click="rejectDraft"><Trash2 aria-hidden="true" />{{ t('capture.review.footer.reject') }}</Button>
+                <Button class="w-full md:w-auto" variant="primary" :loading="busy" :disabled="remainingReview > 0" @click="confirmDraft">{{ t('capture.review.footer.confirm') }}</Button>
               </div>
             </div>
           </div>

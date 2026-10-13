@@ -1,0 +1,19 @@
+{
+  "mobile": {
+    "language": { "en": "English", "ja": "日本語" },
+    "tasks": {
+      "viewsLabel": "Task views",
+      "filter": "Filter",
+      "filterActive": "Filter, {n} active",
+      "filterTitle": "Filter tasks",
+      "filterHint": "Changes apply as soon as you pick them."
+    },
+    "board": { "showColumn": "Show {name} column" },
+    "calendar": {
+      "legend": "Legend",
+      "weekLabel": "Days of the week",
+      "dayAria": "{date}, {count}",
+      "itemCount": "{n} items"
+    }
+  }
+}

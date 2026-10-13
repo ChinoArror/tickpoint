@@ -11,8 +11,10 @@ import { idSchema, pushSubscriptionSchema, reminderCreateSchema, reminderUpdateS
 import { svc } from './context'
 import { activity, getOwnedCheckpoint, getOwnedGoal, getOwnedTask } from '../services/common'
 import { syncRule } from '../reminders/schedule'
-import { copyFor, renderEmail } from '../notifications/templates'
+import { copyFor } from '../notifications/templates'
 import { emailProvider, sendPush } from '../notifications/channels'
+import * as emails from '../services/emails'
+import { testEmail } from '../notifications/email-templates'
 import { rateLimit } from '../middleware'
 
 export const notifyRoutes = new Hono<AppBindings>()
@@ -157,16 +159,21 @@ notifyRoutes.post('/notifications/test', rateLimit('notify-test', 600_000, 5), a
   const ctx = await svc(c)
   const s = ctx.settings
   const copy = copyFor(s.locale)
-  const results: Record<string, { status: string; detail?: string }> = {}
+  const results: Record<string, { status: string; detail?: string; sent?: number; total?: number }> = {}
   await ctx.db.insert(schema.notifications).values({ id: newId(), ownerUuid: ctx.owner, type: 'test', title: copy.testTitle, body: copy.testBody, link: '/settings/notifications' })
   results.in_app = { status: 'sent' }
   if (s.notifyPush) results.push = await sendPush(c.env, ctx.db, { owner: ctx.owner, title: copy.testTitle, body: copy.testBody, link: '/settings/notifications', tag: 'tp-test' })
   if (s.notifyEmail) {
-    const user = await ctx.db.query.users.findFirst({ where: eq(schema.users.uuid, ctx.owner), columns: { email: true } })
     const provider = emailProvider(c.env)
+    const addresses = await emails.deliverableAddresses(ctx.db, ctx.owner)
     if (!provider) results.email = { status: 'skipped', detail: 'email_provider_not_configured' }
-    else if (!user?.email) results.email = { status: 'skipped', detail: 'no_email_address' }
-    else results.email = await provider.send({ to: user.email, ...renderEmail(s.locale, 'test', copy.testTitle, copy.testBody, new URL('/settings/notifications', c.env.APP_ORIGIN).toString()) })
+    else if (!addresses.length) results.email = { status: 'skipped', detail: 'no_verified_email' }
+    else {
+      const msg = testEmail({ locale: s.locale, origin: c.env.APP_ORIGIN })
+      const outs = await Promise.all(addresses.map((to) => provider.send({ to, ...msg })))
+      const sent = outs.filter((o) => o.status === 'sent').length
+      results.email = sent ? { status: 'sent', detail: `${sent}/${addresses.length}`, sent, total: addresses.length } : { ...outs[0], sent: 0, total: addresses.length }
+    }
   }
   for (const [channel, r] of Object.entries(results)) {
     await ctx.db.insert(schema.notificationDeliveries).values({ id: newId(), ownerUuid: ctx.owner, jobId: null, channel, status: r.status === 'sent' ? 'sent' : r.status === 'skipped' ? 'skipped' : 'failed', detail: `test${r.detail ? ':' + r.detail : ''}`, attemptedAt: ctx.now })
@@ -195,4 +202,34 @@ notifyRoutes.get('/push/subscriptions', async (c) => {
   const ctx = await svc(c)
   const rows = await ctx.db.select({ id: schema.pushSubscriptions.id, userAgent: schema.pushSubscriptions.userAgent, createdAt: schema.pushSubscriptions.createdAt, lastSuccessAt: schema.pushSubscriptions.lastSuccessAt }).from(schema.pushSubscriptions).where(eq(schema.pushSubscriptions.ownerUuid, ctx.owner))
   return ok(c, rows)
+})
+
+// Email recipients --------------------------------------------------------------------
+
+notifyRoutes.get('/notification-emails', async (c) => {
+  const ctx = await svc(c)
+  return ok(c, { items: await emails.listRecipients(ctx), max: emails.MAX_RECIPIENTS, emailConfigured: Boolean(emailProvider(c.env)) })
+})
+notifyRoutes.post('/notification-emails', async (c) => {
+  const ctx = await svc(c)
+  const { address } = await readJson(c, z.object({ address: emails.emailAddressSchema }))
+  return ok(c, await emails.addRecipient(ctx, c.env, address, ctx.settings.locale), 201)
+})
+notifyRoutes.post('/notification-emails/:id/resend', async (c) => {
+  const ctx = await svc(c)
+  return ok(c, await emails.resendCode(ctx, c.env, idParam(c.req.param('id')), ctx.settings.locale))
+})
+notifyRoutes.post('/notification-emails/:id/verify', rateLimit('email-verify-attempt', 600_000, 30), async (c) => {
+  const ctx = await svc(c)
+  const { code } = await readJson(c, z.object({ code: z.string().trim().max(12) }))
+  return ok(c, await emails.verifyRecipient(ctx, idParam(c.req.param('id')), code.replace(/\s+/g, '')))
+})
+notifyRoutes.patch('/notification-emails/:id', async (c) => {
+  const ctx = await svc(c)
+  const { enabled } = await readJson(c, z.object({ enabled: z.boolean() }))
+  return ok(c, await emails.setRecipientEnabled(ctx, idParam(c.req.param('id')), enabled))
+})
+notifyRoutes.delete('/notification-emails/:id', async (c) => {
+  await emails.removeRecipient(await svc(c), idParam(c.req.param('id')))
+  return ok(c, { deleted: true })
 })

@@ -96,6 +96,15 @@ class ResendProvider implements EmailProvider {
   }
 }
 
+/** Parses 'Name <addr@host>' into the structured sender the Email Service expects. */
+export function parseSender(from: string): { email: string; name?: string } {
+  const m = from.match(/^\s*(.*?)\s*<([^>]+)>\s*$/)
+  return m ? { email: m[2].trim(), ...(m[1] ? { name: m[1].replace(/^"|"$/g, '') } : {}) } : { email: from.trim() }
+}
+
+const CF_RETRYABLE = new Set(['E_RATE_LIMIT_EXCEEDED', 'E_DAILY_LIMIT_EXCEEDED', 'E_DELIVERY_FAILED', 'E_INTERNAL_SERVER_ERROR'])
+
+/** Cloudflare Email Service via the Workers send_email binding (no API key; domain onboarded in Cloudflare). */
 class CloudflareEmailProvider implements EmailProvider {
   name = 'cloudflare'
   constructor(
@@ -104,10 +113,11 @@ class CloudflareEmailProvider implements EmailProvider {
   ) {}
   async send(m: EmailMessage): Promise<SendOutcome> {
     try {
-      await this.binding.send({ from: this.from, to: m.to, subject: m.subject, html: m.html, text: m.text })
-      return { status: 'sent' }
+      const r = await this.binding.send({ to: m.to, from: parseSender(this.from), subject: m.subject, html: m.html, text: m.text })
+      return { status: 'sent', detail: r?.messageId ? `id:${String(r.messageId).slice(0, 80)}` : undefined }
     } catch (e) {
-      return { status: 'retryable', detail: `cf_email_${(e as Error).message?.slice(0, 60)}` }
+      const code = String((e as { code?: string }).code ?? 'E_UNKNOWN')
+      return { status: CF_RETRYABLE.has(code) ? 'retryable' : 'permanent', detail: code }
     }
   }
 }

@@ -9,7 +9,10 @@ import { and, eq, inArray, lt, or, sql } from 'drizzle-orm'
 import type { Env } from '../env'
 import { getDb, schema, type DB } from '../db/client'
 import { newId, randomToken } from '../lib/crypto'
-import { copyFor, formatWhen, renderEmail } from '../notifications/templates'
+import { copyFor, formatWhen } from '../notifications/templates'
+import { reminderEmail } from '../notifications/email-templates'
+import { buildReminderEmailData } from '../notifications/reminder-email-data'
+import { deliverableAddresses } from '../services/emails'
 import { emailProvider, sendPush, type SendOutcome } from '../notifications/channels'
 import { loadTargetState, ruleChannels } from './schedule'
 import { wallClockAt, zonedTimeToUtc, isoDateInZone, addDaysToIsoDate } from '../../shared/time'
@@ -155,14 +158,18 @@ async function processJob(env: Env, db: DB, id: string, token: string, now: numb
   }
 
   if (enabled.has('email') && !alreadyDone.has('email')) {
-    const user = await db.query.users.findFirst({ where: eq(schema.users.uuid, job.ownerUuid), columns: { email: true } })
     const provider = emailProvider(env)
+    const addresses = await deliverableAddresses(db, job.ownerUuid)
     let o: SendOutcome
-    if (!user?.email) o = { status: 'skipped', detail: 'no_email_address' }
+    if (!addresses.length) o = { status: 'skipped', detail: 'no_verified_email' }
     else if (!provider) o = { status: 'skipped', detail: 'email_provider_not_configured' }
     else {
-      const m = renderEmail(locale, 'reminder', title, body, new URL(link, env.APP_ORIGIN).toString())
-      o = await provider.send({ to: user.email, ...m })
+      const m = reminderEmail(await buildReminderEmailData(db, rule, target, { locale, tz, now, origin: env.APP_ORIGIN }))
+      const outs = await Promise.all(addresses.map((to) => provider.send({ to, ...m })))
+      const sent = outs.filter((x) => x.status === 'sent').length
+      o = sent
+        ? { status: 'sent', detail: `${sent}/${addresses.length}` }
+        : { status: outs.some((x) => x.status === 'retryable') ? 'retryable' : 'permanent', detail: outs[0]?.detail }
     }
     outcomes.push(o)
     await log('email', o)

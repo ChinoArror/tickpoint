@@ -67,7 +67,7 @@ const showCompleted = field('showCompletedCheckpoints')
         <Select id="setting-default-view" v-model="view" :options="viewOptions" class="sm:w-48" />
       </SettingRow>
 
-      <SettingRow :label="t('settingsPage.tasks.reminders')" :description="t('settingsPage.tasks.remindersHint')">
+      <SettingRow stacked :label="t('settingsPage.tasks.reminders')" :description="t('settingsPage.tasks.remindersHint')">
         <div class="flex flex-wrap gap-1.5" role="group" :aria-label="t('settingsPage.tasks.reminders')">
           <button
             v-for="p in REMINDER_PRESETS"

@@ -110,4 +110,12 @@ Test counts are from the test files (59 integration cases and 49 unit cases). Th
 - [x] Custom domain `point.aryuki.com` serves the SPA, API, security headers and the AuthCenter login redirect (smoke-tested 2026-10-13)
 - [ ] Live AuthCenter sign-in, verification and silent renewal in production: **pending verification**
 - [ ] Web Push delivery verified end to end: **pending verification**
-- [ ] Email delivery verified end to end: **pending verification**
+- [ ] Email delivery verified end to end: **pending verification**. Cloudflare Email Service binding `EMAIL` is deployed, `point.aryuki.com` is enabled for sending, and templates/recipient verification are covered by integration tests; no real message has been sent yet (live send skipped by request).
+
+## Update 2026-10-13 (round 2)
+
+- [x] AuthCenter agent usage limits: strict pre-check (fail closed), consume after every call including invalid-output attempts, `GET /api/v1/ai/quota` + Settings → AI "Usage limits" card (verified live: test session reports unlimited)
+- [x] Email recipients: account email (when AuthCenter-verified) by default, up to 5 extra addresses with 6-digit code verification, deep link from the email, per-address enable/disable
+- [x] Branded English/Japanese email templates (reminder, verification, test), previewed in a browser
+- [x] Display fixes: Card body padding (affected every card), container-responsive due editor, settings row layout (Default reminders, quiet hours), Smart Capture review layout, evidence/location mapping
+- [x] Mobile optimisation verified on production at 375 px: compact top bar, task view pills and filter sheet, swipeable board, calendar week strip, sticky Smart Capture footer, context-aware quick-add button, compact More sheet with language/theme

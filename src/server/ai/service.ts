@@ -64,7 +64,9 @@ async function run<S extends z.ZodType>(
     return r
   } catch (e) {
     const status = e instanceof AppError ? (e.code === 'AI_INVALID_OUTPUT' ? 'invalid_output' : e.code === 'AI_TIMEOUT' ? 'timeout' : 'error') : 'error'
-    await recordUsage(ctx, op, model, { inputTokens: 0, outputTokens: 0, totalTokens: 0 }, status, started)
+    const spent = (e instanceof AppError && (e.details as { usage?: { inputTokens: number; outputTokens: number; totalTokens: number } } | undefined)?.usage) || { inputTokens: 0, outputTokens: 0, totalTokens: 0 }
+    await recordUsage(ctx, op, model, spent, status, started)
+    if (e instanceof AppError && e.code === 'AI_INVALID_OUTPUT') throw new AppError(e.code, e.status, e.message)
     throw e
   }
 }
@@ -580,7 +582,7 @@ export async function confirmPlan(ctx: ServiceCtx, id: string, items: DraftCheck
   // Reminder suggestions are only created for items where the user kept an offset in the approved payload.
   const reminderStmts = checked.items
     .filter((it) => it.reminderOffsetMinutes != null && it.targetDate)
-    .map((it) => ctx.db.insert(schema.reminderRules).values({ id: newId(), ownerUuid: ctx.owner, checkpointId: idMap.get(it.clientId)!, kind: 'offset', offsetMinutes: it.reminderOffsetMinutes!, channels: '["in_app","push"]' }))
+    .map((it) => ctx.db.insert(schema.reminderRules).values({ id: newId(), ownerUuid: ctx.owner, checkpointId: idMap.get(it.clientId)!, kind: 'offset', offsetMinutes: it.reminderOffsetMinutes!, channels: '["in_app","push","email"]' }))
   if (reminderStmts.length) await ctx.db.batch(reminderStmts as [any, ...any[]])
   for (const it of checked.items) if (it.reminderOffsetMinutes != null && it.targetDate) await syncTargetReminders(ctx.db, ctx.owner, { checkpointId: idMap.get(it.clientId)! }, ctx.timeZone)
 

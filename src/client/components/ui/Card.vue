@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { cn } from '@/lib/cn'
 
-defineProps<{ title?: string; subtitle?: string; class?: string; padded?: boolean; interactive?: boolean }>()
+// Boolean props default to false in Vue, so padding must default explicitly to true.
+withDefaults(defineProps<{ title?: string; subtitle?: string; class?: string; padded?: boolean; interactive?: boolean }>(), { padded: true })
 </script>
 
 <template>
@@ -18,11 +19,11 @@ defineProps<{ title?: string; subtitle?: string; class?: string; padded?: boolea
       <slot name="header">
         <div class="min-w-0">
           <h2 class="truncate text-[13px] font-semibold text-fg">{{ title }}</h2>
-          <p v-if="subtitle" class="truncate text-xs text-subtle">{{ subtitle }}</p>
+          <p v-if="subtitle" class="line-clamp-2 text-xs text-subtle">{{ subtitle }}</p>
         </div>
       </slot>
       <div class="flex shrink-0 items-center gap-1"><slot name="actions" /></div>
     </header>
-    <div :class="padded === false ? '' : 'p-4 pt-2'"><slot /></div>
+    <div :class="padded ? 'p-4 pt-2' : ''"><slot /></div>
   </section>
 </template>

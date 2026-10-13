@@ -1,0 +1,89 @@
+{
+  "emailRecipients": {
+    "title": "Recipient addresses",
+    "hint": "Reminders by email go to every verified address that is turned on.",
+    "accountBadge": "Account email",
+    "verified": "Verified",
+    "pending": "Pending verification",
+    "countLabel": "Additional addresses: {count} of {max}",
+    "count": "{count} of {max}",
+    "calloutTitle": "Add and verify an email address to receive reminders by email",
+    "calloutBody": "Email reminders stay off until at least one address is verified with a code we send to it.",
+    "needVerified": "Verify an address first. Email reminders can't be turned on until one is verified.",
+    "notConfigured": "Email delivery is not configured on this server yet. Addresses can be saved, but no email will be sent.",
+    "addLabel": "Add an email address",
+    "addPlaceholder": "Email address",
+    "addButton": "Send code",
+    "addHint": "We'll send a 6-digit code to this address.",
+    "addLimit": "You've added the maximum number of addresses.",
+    "invalidAddress": "Enter a valid email address.",
+    "enterCode": "Enter code",
+    "codeTitle": "Enter the 6-digit code sent to {address}",
+    "codeLabel": "Verification code",
+    "digit": "Digit {n} of 6",
+    "codeIncomplete": "Enter all 6 digits of the code.",
+    "verify": "Verify",
+    "verifying": "Verifying…",
+    "resend": "Resend code",
+    "resendIn": "Resend in {time}",
+    "attemptsLeft": "{count} attempts left",
+    "codeSent": "Code sent to {address}.",
+    "codeResent": "A new code was sent to {address}.",
+    "verifiedToast": "{address} is verified.",
+    "verifiedBadge": "Verified",
+    "deliverLabel": "Send email reminders to {address}",
+    "rowActions": "Actions for {address}",
+    "remove": "Remove address",
+    "removeTitle": "Remove {address}?",
+    "removeMessage": "Email reminders will no longer be sent to this address.",
+    "removeConfirm": "Remove",
+    "removed": "Address removed.",
+    "reason": {
+      "mismatch": "That code doesn't match. Check it and try again.",
+      "expired": "That code has expired. Request a new one.",
+      "attempts": "Too many wrong attempts. Request a new code."
+    },
+    "errors": {
+      "VALIDATION_ERROR": "Enter a valid email address.",
+      "CONFLICT": "That address is already verified, or you've reached the address limit.",
+      "RATE_LIMITED": "Please wait a minute before requesting another code.",
+      "NOT_CONFIGURED": "Email delivery is not configured on this server yet.",
+      "FORBIDDEN": "The account email can't be removed. You can turn it off instead.",
+      "VERIFICATION_FAILED": "That code did not work. Check it or request a new one."
+    },
+    "testSent": "Sent to {sent} of {total} addresses",
+    "testDetails": {
+      "no_verified_email": "No verified email address. Add and verify one to receive email reminders.",
+      "email_provider_not_configured": "Email delivery is not configured on this server yet."
+    }
+  },
+  "aiQuota": {
+    "title": "Usage limits",
+    "subtitle": "Limits are managed by Aryuki Accounts: requests per minute, requests per day and tokens per day.",
+    "refresh": "Refresh usage limits",
+    "status": {
+      "ok": "Available",
+      "QUOTA_EXCEEDED": "Limit reached",
+      "AI_FORBIDDEN": "Not allowed",
+      "QUOTA_CHECK_FAILED": "Check unavailable",
+      "NOT_CONFIGURED": "Not configured"
+    },
+    "statusHint": {
+      "ok": "AI features are available with your current limits.",
+      "QUOTA_EXCEEDED": "You have used up your limit. It resets automatically.",
+      "AI_FORBIDDEN": "Your account is not allowed to use AI features in TickPoint.",
+      "QUOTA_CHECK_FAILED": "We couldn't check your limits, so AI is paused for now.",
+      "NOT_CONFIGURED": "Usage limits are not configured on this server yet."
+    },
+    "retryIn": "Try again in about {time}.",
+    "remainingTokens": "Remaining tokens",
+    "remainingRequests": "Remaining requests",
+    "unlimited": "Unlimited",
+    "unknown": "Not reported",
+    "testSession": "This is a test session. Its limits may be shared or reset differently.",
+    "localTitle": "TickPoint safety limits",
+    "localHint": "Extra caps TickPoint applies on top of your account limits.",
+    "localPerHour": "{count} requests per hour",
+    "localPerDay": "{count} requests per day"
+  }
+}

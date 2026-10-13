@@ -2,7 +2,6 @@
 import { computed, useId } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { CalendarDays, CalendarOff, Clock, Waves } from 'lucide-vue-next'
-import Segmented from '@/components/ui/Segmented.vue'
 import Input from '@/components/ui/Input.vue'
 import Select from '@/components/ui/Select.vue'
 import { useFormat } from '@/composables/useFormat'
@@ -49,6 +48,19 @@ const zones = computed(() => {
   return model.value?.timeZone ? list : [{ value: '', label: t('dueEditor.chooseZone'), disabled: true }, ...list]
 })
 
+/** Arrow-key navigation within the precision radio group. */
+function onPrecisionKey(e: KeyboardEvent) {
+  const keys = options.value.map((o) => o.value)
+  const i = keys.indexOf(precision.value)
+  let next: number | null = null
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (i + 1) % keys.length
+  else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = (i - 1 + keys.length) % keys.length
+  if (next == null) return
+  e.preventDefault()
+  precision.value = keys[next]
+  ;(e.currentTarget as HTMLElement).querySelector<HTMLElement>('[data-value="' + keys[next] + '"]')?.focus()
+}
+
 // Preview the exact instant in the user's own zone when the source zone differs.
 const preview = computed(() => {
   const m = model.value
@@ -62,20 +74,37 @@ const preview = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-2.5">
-    <Segmented v-model="precision" :options="options" :label="t('dueEditor.precisionLabel')" size="sm" class="w-full overflow-x-auto [&>button]:flex-1" />
+  <!-- Container-responsive: adapts to the column it is placed in, not the viewport. -->
+  <div class="@container flex flex-col gap-2.5">
+    <div role="radiogroup" :aria-label="t('dueEditor.precisionLabel')" class="grid grid-cols-2 gap-1 rounded-[10px] bg-surface-sunken p-1 @md:grid-cols-4" @keydown="onPrecisionKey">
+      <button
+        v-for="o in options"
+        :key="o.value"
+        type="button"
+        role="radio"
+        :aria-checked="precision === o.value"
+        :tabindex="precision === o.value ? 0 : -1"
+        :data-value="o.value"
+        class="flex h-8 min-w-0 items-center justify-center gap-1.5 rounded-lg px-2 text-xs font-medium transition-[background-color,color,box-shadow] duration-200"
+        :class="precision === o.value ? 'bg-surface text-fg shadow-sm ring-1 ring-border' : 'text-muted hover:text-fg'"
+        @click="precision = o.value"
+      >
+        <component :is="o.icon" class="size-3.5 shrink-0" aria-hidden="true" />
+        <span class="truncate">{{ o.label }}</span>
+      </button>
+    </div>
     <Transition name="fade" mode="out-in">
-      <div v-if="precision !== 'unknown'" :key="precision === 'exact' ? 'exact' : 'date'" class="grid gap-2" :class="precision === 'exact' ? 'sm:grid-cols-[1fr_auto_1.2fr]' : ''">
-        <div>
+      <div v-if="precision !== 'unknown'" :key="precision === 'exact' ? 'exact' : 'date'" class="grid gap-2" :class="precision === 'exact' ? 'grid-cols-2 @lg:grid-cols-[1fr_7.5rem_1.3fr]' : ''">
+        <div class="min-w-0">
           <label :for="`${uid}-date`" class="sr-only">{{ t('dueEditor.date') }}</label>
           <Input :id="`${uid}-date`" type="date" :model-value="model?.date ?? ''" :invalid="!!errors?.date" @update:model-value="(v) => patch({ date: (v as string) || null })" />
         </div>
         <template v-if="precision === 'exact'">
-          <div>
+          <div class="min-w-0">
             <label :for="`${uid}-time`" class="sr-only">{{ t('dueEditor.time') }}</label>
-            <Input :id="`${uid}-time`" type="time" class="sm:w-32" :model-value="model?.time ?? ''" :invalid="!!errors?.time" @update:model-value="(v) => patch({ time: (v as string) || null })" />
+            <Input :id="`${uid}-time`" type="time" :model-value="model?.time ?? ''" :invalid="!!errors?.time" @update:model-value="(v) => patch({ time: (v as string) || null })" />
           </div>
-          <div>
+          <div class="col-span-2 min-w-0 @lg:col-span-1">
             <label :for="`${uid}-tz`" class="sr-only">{{ t('dueEditor.timeZone') }}</label>
             <Select :id="`${uid}-tz`" :model-value="model?.timeZone ?? ''" :options="zones" :invalid="!!errors?.timeZone" @update:model-value="(v) => patch({ timeZone: v as string })" />
           </div>

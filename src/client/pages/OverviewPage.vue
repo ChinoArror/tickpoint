@@ -88,14 +88,15 @@ async function toggleCheckpoint(cp: { id: string; status: string; title: string 
 <template>
   <div class="mx-auto w-full max-w-6xl px-4 py-6 md:px-8 md:py-8">
     <!-- Header -->
-    <header class="flex flex-wrap items-end justify-between gap-4">
-      <div class="animate-fade-up">
+    <header class="flex flex-col gap-4 md:flex-row md:flex-wrap md:items-end md:justify-between">
+      <div class="animate-fade-up min-w-0">
         <p class="text-[13px] font-medium text-subtle">{{ todayLabel }}</p>
         <h1 class="mt-0.5 text-2xl font-semibold tracking-tight text-fg md:text-[28px]">{{ greeting }}</h1>
       </div>
-      <div class="flex gap-2">
-        <Button variant="secondary" @click="router.push('/capture')"><Sparkles class="size-4 text-ai" aria-hidden="true" />{{ t('nav.capture') }}</Button>
-        <Button variant="primary" @click="ui.openQuickAdd()"><Plus class="size-4" aria-hidden="true" />{{ t('actions.newTask') }}</Button>
+      <!-- Mobile: two equal buttons side by side -->
+      <div class="grid grid-cols-2 gap-2 md:flex">
+        <Button class="w-full md:w-auto" variant="secondary" @click="router.push('/capture')"><Sparkles class="size-4 text-ai" aria-hidden="true" />{{ t('nav.capture') }}</Button>
+        <Button class="w-full md:w-auto" variant="primary" @click="ui.openQuickAdd()"><Plus class="size-4" aria-hidden="true" />{{ t('actions.newTask') }}</Button>
       </div>
     </header>
 
@@ -120,14 +121,14 @@ async function toggleCheckpoint(cp: { id: string; status: string; title: string 
 
     <!-- Stats strip -->
     <div class="stagger mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
-      <div v-for="(s, i) in stats" :key="s.key" class="flex items-center gap-3 rounded-2xl border border-border bg-surface p-3.5 shadow-xs" :style="{ '--i': i }">
-        <span class="grid size-10 place-items-center rounded-xl" :class="s.tone"><component :is="s.icon" class="size-5" aria-hidden="true" /></span>
+      <div v-for="(s, i) in stats" :key="s.key" class="flex items-center gap-2.5 rounded-2xl border border-border bg-surface p-3 shadow-xs md:gap-3 md:p-3.5" :style="{ '--i': i }">
+        <span class="grid size-9 shrink-0 place-items-center rounded-xl md:size-10" :class="s.tone"><component :is="s.icon" class="size-[18px] md:size-5" aria-hidden="true" /></span>
         <div class="min-w-0">
           <p class="tabular text-xl font-semibold leading-none text-fg">
             <span v-if="isPending" class="skeleton inline-block h-5 w-6 align-middle" />
             <template v-else>{{ s.value }}</template>
           </p>
-          <p class="mt-1 truncate text-xs text-muted">{{ t(`overview.stats.${s.key}`) }}</p>
+          <p class="mt-1 line-clamp-2 text-xs leading-snug text-muted">{{ t(`overview.stats.${s.key}`) }}</p>
         </div>
       </div>
     </div>
@@ -153,7 +154,7 @@ async function toggleCheckpoint(cp: { id: string; status: string; title: string 
           <div class="px-1.5 pb-2">
             <Skeleton v-if="isPending" :rows="4" class="p-2" />
             <template v-else-if="todayCount">
-              <TransitionGroup tag="div" name="list" class="relative" role="list">
+              <TransitionGroup tag="div" name="list" class="tap-task-rows relative" role="list">
                 <TaskRow v-for="task in data!.todayTasks" :key="task.id" :task="task" />
                 <div v-for="cp in data!.todayCheckpoints" :key="cp.id" class="flex cursor-pointer items-start gap-3 rounded-xl px-3 py-2.5 transition hover:bg-surface-hover" role="listitem" @click="cp.taskId ? ui.openTask(cp.taskId) : router.push(`/goals/${cp.goalId}`)">
                   <TaskCheck class="mt-0.5" size="sm" :checked="cp.status === 'done'" :label="t('checkpoints.toggle', { title: cp.title })" @toggle="toggleCheckpoint(cp)" />

@@ -43,3 +43,6 @@ export const MOBILE_NAV = [
   { to: '/calendar', key: 'calendar', icon: CalendarRange },
   { to: '/goals', key: 'goals', icon: Target },
 ]
+
+/** Routes that belong to the bottom "Tasks" tab. */
+export const TASK_VIEW_PATHS = ['/inbox', '/today', '/upcoming', '/deadlines', '/completed', '/archived']

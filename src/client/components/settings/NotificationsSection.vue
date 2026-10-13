@@ -10,6 +10,7 @@ import Input from '@/components/ui/Input.vue'
 import Skeleton from '@/components/ui/Skeleton.vue'
 import Switch from '@/components/ui/Switch.vue'
 import SettingRow from './SettingRow.vue'
+import EmailRecipients from './EmailRecipients.vue'
 import { useSettingSave } from './useSettingSave'
 import { api } from '@/lib/api'
 import { usePush, type PushResult } from '@/composables/usePush'
@@ -24,6 +25,13 @@ interface ChannelRaw {
   detail?: string | null
   code?: string | null
   reason?: string | null
+  sent?: number | null
+  total?: number | null
+}
+interface RecipientList {
+  items: { verified: boolean }[]
+  max: number
+  emailConfigured: boolean
 }
 interface DeliveryRow {
   id?: string
@@ -54,10 +62,18 @@ const notifyEmail = field('notifyEmail')
 const quietOn = field('quietHoursEnabled')
 const quietStart = field('quietStart')
 const quietEnd = field('quietEnd')
-const emailMissing = computed(() => session.config?.emailConfigured === false)
+
+// Same query key as EmailRecipients, so both share one cached request.
+const recipients = useQuery({
+  queryKey: ['notification-emails'],
+  queryFn: ({ signal }) => api.get<RecipientList>('/notification-emails', undefined, signal),
+})
+const emailMissing = computed(() => recipients.data.value?.emailConfigured === false)
+const hasVerifiedEmail = computed(() => (recipients.data.value?.items ?? []).some((r) => r.verified))
+/** Turning email on needs a verified address; turning it off is always allowed. */
+const emailSwitchDisabled = computed(() => emailMissing.value || (!hasVerifiedEmail.value && !notifyEmail.value))
 
 onMounted(() => {
-  void session.loadConfig().catch(() => undefined)
   void push.refresh()
 })
 
@@ -92,6 +108,8 @@ interface TestRow {
   channel: Channel
   status: string
   detail: string | null
+  sent: number | null
+  total: number | null
 }
 const testRows = ref<TestRow[] | null>(null)
 
@@ -100,15 +118,24 @@ function normalizeTest(raw: Record<string, string | ChannelRaw | undefined | nul
   for (const ch of ['in_app', 'push', 'email'] as const) {
     const v = raw[ch]
     if (v === undefined || v === null) continue
-    if (typeof v === 'string') rows.push({ channel: ch, status: v, detail: null })
+    if (typeof v === 'string') rows.push({ channel: ch, status: v, detail: null, sent: null, total: null })
     else
       rows.push({
         channel: ch,
         status: v.status ?? (v.ok === true ? 'sent' : v.ok === false ? 'failed' : 'unknown'),
         detail: v.detail ?? v.code ?? v.reason ?? null,
+        sent: typeof v.sent === 'number' ? v.sent : null,
+        total: typeof v.total === 'number' ? v.total : null,
       })
   }
   return rows
+}
+
+/** "2/2"-style delivery counts, from numeric fields or a "sent 2/2" detail string. */
+function sentCounts(r: TestRow): { sent: number; total: number } | null {
+  if (r.sent != null && r.total != null) return { sent: r.sent, total: r.total }
+  const m = r.detail?.match(/sent\s+(\d+)\s*\/\s*(\d+)/i)
+  return m ? { sent: Number(m[1]), total: Number(m[2]) } : null
 }
 
 const testMutation = useMutation({
@@ -137,7 +164,14 @@ function statusLabel(status: string) {
 function detailLabel(code: string | null) {
   if (!code) return null
   const key = `settingsPage.notifications.details.${code}`
-  return te(key) ? t(key) : code
+  if (te(key)) return t(key)
+  const emailKey = `emailRecipients.testDetails.${code}`
+  if (te(emailKey)) return t(emailKey)
+  return code
+}
+function sentLabel(r: TestRow) {
+  const c = sentCounts(r)
+  return c ? t('emailRecipients.testSent', { sent: c.sent, total: c.total }) : null
 }
 function channelLabel(ch: Channel) {
   return t(`settingsPage.notifications.channels.${ch}`)
@@ -180,22 +214,26 @@ function deviceName(ua: string | null | undefined) {
         </SettingRow>
 
         <SettingRow :label="t('settingsPage.notifications.push')" :description="t('settingsPage.notifications.pushHint')">
-          <div class="flex w-full flex-col gap-2 sm:w-auto sm:items-end">
-            <Switch :model-value="pushOn" :disabled="pushBusy || !push.supported" :label="t('settingsPage.notifications.push')" @update:model-value="togglePush" />
+          <Switch :model-value="pushOn" :disabled="pushBusy || !push.supported" :label="t('settingsPage.notifications.push')" @update:model-value="togglePush" />
+          <template #note>
             <p v-if="!push.supported" class="text-xs text-muted">{{ t('settingsPage.notifications.pushResult.unsupported') }}</p>
-            <p v-if="pushNote" class="max-w-xs text-xs text-warning-text sm:text-right" role="status">{{ pushNote }}</p>
-            <p v-if="iosNote" class="max-w-xs rounded-lg bg-info-soft px-2.5 py-1.5 text-xs text-info sm:text-right">{{ t('settingsPage.notifications.iosInstallNote') }}</p>
-          </div>
+            <p v-if="pushNote" class="text-xs text-warning-text" role="status">{{ pushNote }}</p>
+            <p v-if="iosNote" class="rounded-lg bg-info-soft px-2.5 py-1.5 text-xs text-info">{{ t('settingsPage.notifications.iosInstallNote') }}</p>
+          </template>
         </SettingRow>
 
         <SettingRow :label="t('settingsPage.notifications.email')" :description="t('settingsPage.notifications.emailHint')">
-          <div class="flex w-full flex-col gap-2 sm:w-auto sm:items-end">
-            <Switch v-model="notifyEmail" :disabled="emailMissing" :label="t('settingsPage.notifications.email')" />
-            <p v-if="emailMissing" class="max-w-xs text-xs text-warning-text sm:text-right">{{ t('settingsPage.notifications.emailNotConfigured') }}</p>
-          </div>
+          <Switch v-model="notifyEmail" :disabled="emailSwitchDisabled" :label="t('settingsPage.notifications.email')" />
+          <template #note>
+            <p v-if="!emailMissing && !hasVerifiedEmail && recipients.isSuccess.value" class="text-xs text-warning-text">
+              {{ t('emailRecipients.needVerified') }}
+            </p>
+          </template>
         </SettingRow>
 
-        <SettingRow :label="t('settingsPage.notifications.quietHours')" :description="t('settingsPage.notifications.quietHoursHint')">
+        <EmailRecipients />
+
+        <SettingRow stacked :label="t('settingsPage.notifications.quietHours')" :description="t('settingsPage.notifications.quietHoursHint')">
           <div class="flex w-full flex-col gap-2.5 sm:w-auto sm:items-end">
             <Switch v-model="quietOn" :label="t('settingsPage.notifications.quietHours')" />
             <div class="flex flex-wrap items-center gap-2" :class="!quietOn && 'opacity-50'">
@@ -222,7 +260,8 @@ function deviceName(ua: string | null | undefined) {
                 <Badge :tone="statusTone(r.status)" size="sm">
                   <component :is="statusIcon(r.status)" class="mr-1 inline size-3" aria-hidden="true" />{{ statusLabel(r.status) }}
                 </Badge>
-                <span v-if="detailLabel(r.detail)" class="min-w-0 text-muted">{{ detailLabel(r.detail) }}</span>
+                <span v-if="sentLabel(r)" class="min-w-0 tabular text-muted">{{ sentLabel(r) }}</span>
+                <span v-if="detailLabel(r.detail) && !sentCounts(r)" class="min-w-0 text-muted">{{ detailLabel(r.detail) }}</span>
               </li>
             </ul>
           </div>

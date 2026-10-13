@@ -334,6 +334,30 @@ export interface PlanDraft {
   notes?: string
 }
 
+/** A notification email recipient. The account email (source 'account') is always present by default. */
+export interface Recipient {
+  id: string
+  address: string
+  source: 'account' | 'user'
+  verified: boolean
+  verifiedAt: number | null
+  enabled: boolean
+  pendingVerification: boolean
+  lastSentAt: number | null
+  createdAt: number
+}
+
+export interface AiQuota {
+  status: 'ok' | 'QUOTA_EXCEEDED' | 'AI_FORBIDDEN' | 'QUOTA_CHECK_FAILED' | 'NOT_CONFIGURED'
+  unlimited: boolean
+  remainingTokens: number | null
+  remainingRequests: number | null
+  testSession: boolean
+  quota: Record<string, unknown> | null
+  local: { requestsPerHour: number; requestsPerDay: number }
+  details?: { retryAfterSeconds?: number } | null
+}
+
 export interface Paged<T> {
   items: T[]
   nextCursor: string | null

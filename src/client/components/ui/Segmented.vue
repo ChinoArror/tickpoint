@@ -1,5 +1,6 @@
 <script setup lang="ts" generic="T extends string">
 import { nextTick, onMounted, ref, watch, type Component } from 'vue'
+import { useResizeObserver } from '@vueuse/core'
 import { cn } from '@/lib/cn'
 
 /** Segmented control with a sliding indicator (radiogroup semantics). */
@@ -13,6 +14,8 @@ function measure() {
   if (el) indicator.value = { left: el.offsetLeft, width: el.offsetWidth, ready: true }
 }
 onMounted(() => nextTick(measure))
+// Re-measure when the control resizes (container width changes, fonts load, panes open).
+useResizeObserver(root, () => measure())
 watch(model, () => nextTick(measure))
 watch(() => props.options, () => nextTick(measure), { deep: true })
 

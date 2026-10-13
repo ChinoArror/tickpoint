@@ -3,7 +3,7 @@ import { computed, ref, watch, type Component } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { keepPreviousData, useQuery } from '@tanstack/vue-query'
-import { useMediaQuery } from '@vueuse/core'
+import { useMediaQuery, useSwipe } from '@vueuse/core'
 import FullCalendar from '@fullcalendar/vue3'
 import type { CalendarOptions, DateClickInfo, DatesSetInfo, EventClickInfo, EventDisplayInfo, EventDropInfo, EventInput } from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/vue3/daygrid'
@@ -14,7 +14,7 @@ import classicThemePlugin from '@fullcalendar/vue3/themes/classic'
 import '@fullcalendar/vue3/skeleton.css'
 import '@fullcalendar/vue3/themes/classic/theme.css'
 import '@fullcalendar/vue3/themes/classic/palette.css'
-import { AlertTriangle, CalendarClock, CalendarDays, ChevronLeft, ChevronRight, Clock, ListChecks, Target } from 'lucide-vue-next'
+import { AlertTriangle, CalendarClock, CalendarDays, ChevronDown, ChevronLeft, ChevronRight, Clock, ListChecks, Target } from 'lucide-vue-next'
 import Button from '@/components/ui/Button.vue'
 import IconButton from '@/components/ui/IconButton.vue'
 import Segmented from '@/components/ui/Segmented.vue'
@@ -58,15 +58,28 @@ const cpActions = useCheckpointActions()
 
 const isDesktop = useMediaQuery('(min-width: 768px)')
 const mode = ref<Mode>('month')
-const anchor = ref(f.today.value) // Mobile agenda cursor (first day of the 7-day window).
+const anchor = ref(f.today.value) // Mobile agenda cursor: any day inside the visible week.
 const fcRange = ref<{ from: string; to: string } | null>(null) // Visible range reported by FullCalendar.
 const cal = ref<InstanceType<typeof FullCalendar> | null>(null)
 
 const VIEW_BY_MODE: Record<Mode, string> = { month: 'dayGridMonth', week: 'timeGridWeek', day: 'timeGridDay' }
 const MODE_BY_VIEW: Record<string, Mode> = { dayGridMonth: 'month', timeGridWeek: 'week', timeGridDay: 'day' }
 
+// Mobile week strip: weeks start on the user's weekStart setting.
+const weekStartDay = computed(() => session.settings?.weekStart ?? 0)
+function startOfWeek(iso: string): string {
+  const dow = new Date(`${iso}T00:00:00Z`).getUTCDay()
+  return addDaysToIsoDate(iso, -((dow - weekStartDay.value + 7) % 7))
+}
+const weekFrom = computed(() => startOfWeek(anchor.value))
+const weekDays = computed(() => Array.from({ length: 7 }, (_, i) => addDaysToIsoDate(weekFrom.value, i)))
+const selectedDay = ref(f.today.value)
+const todayIso = computed(() => f.today.value)
+const legendOpen = ref(false)
+const agendaRef = ref<HTMLElement | null>(null)
+
 const activeRange = computed(() => {
-  if (!isDesktop.value) return { from: anchor.value, to: addDaysToIsoDate(anchor.value, 6) }
+  if (!isDesktop.value) return { from: weekFrom.value, to: addDaysToIsoDate(weekFrom.value, 6) }
   return fcRange.value
 })
 
@@ -311,7 +324,31 @@ function navigate(step: 'prev' | 'next' | 'today') {
   }
   if (step === 'today') anchor.value = f.today.value
   else anchor.value = addDaysToIsoDate(anchor.value, step === 'prev' ? -7 : 7)
+  // Keep today selected when it is inside the new week, otherwise the first day of the week.
+  const days = weekDays.value
+  selectedDay.value = days.includes(f.today.value) ? f.today.value : days[0]
 }
+
+// Swipe left or right on the agenda to move between weeks.
+useSwipe(agendaRef, {
+  threshold: 50,
+  onSwipeEnd(_e, direction) {
+    if (isDesktop.value) return
+    if (direction === 'left') navigate('next')
+    else if (direction === 'right') navigate('prev')
+  },
+})
+
+/** Selecting a day scrolls the agenda to that day's section. */
+function selectDay(day: string) {
+  selectedDay.value = day
+  agendaRef.value?.querySelector<HTMLElement>(`[data-day="${day}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
+const weekdayFormatter = computed(() => new Intl.DateTimeFormat(locale.value === 'ja' ? 'ja-JP' : 'en-US', { weekday: 'short', timeZone: 'UTC' }))
+const longDayFormatter = computed(() => new Intl.DateTimeFormat(locale.value === 'ja' ? 'ja-JP' : 'en-US', { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'UTC' }))
+const dayLabel = (iso: string) => longDayFormatter.value.format(Date.parse(`${iso}T00:00:00Z`))
+const weekdayShort = (iso: string) => weekdayFormatter.value.format(Date.parse(`${iso}T00:00:00Z`))
 
 const modeOptions = computed(() => [
   { value: 'month' as Mode, label: t('calendar.views.month') },
@@ -319,20 +356,19 @@ const modeOptions = computed(() => [
   { value: 'day' as Mode, label: t('calendar.views.day') },
 ])
 
-/** Mobile agenda: items grouped by their day within the 7-day window. */
-const agendaGroups = computed(() => {
+/** Mobile agenda: every day of the visible week, with its items sorted by start. */
+const agendaDays = computed(() => {
   const byDay = new Map<string, EventInput[]>()
   for (const ev of events.value) {
     const key = String(ev.start).slice(0, 10)
     byDay.set(key, [...(byDay.get(key) ?? []), ev])
   }
-  return [...byDay.entries()]
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([date, items]) => ({
-      date,
-      items: items.sort((a, b) => String(a.start).localeCompare(String(b.start))),
-    }))
+  return weekDays.value.map((date) => ({
+    date,
+    items: (byDay.get(date) ?? []).sort((a, b) => String(a.start).localeCompare(String(b.start))),
+  }))
 })
+const countByDay = computed(() => new Map(agendaDays.value.map((d) => [d.date, d.items.length])))
 
 const ICON_BY_KIND: Record<Kind, Component> = { exact: Clock, date: CalendarDays, approximate: CalendarDays, scheduled: CalendarClock, checkpoint: ListChecks, goal: Target }
 const LEGEND: { kind: Kind; label: string; tone: string }[] = [
@@ -355,16 +391,29 @@ const hasItems = computed(() => events.value.length > 0)
       </div>
       <div class="flex items-center gap-2">
         <div class="flex items-center gap-1" role="group" :aria-label="t('calendar.navLabel')">
-          <IconButton :label="t('calendar.prev')" size="sm" @click="navigate('prev')"><ChevronLeft aria-hidden="true" /></IconButton>
+          <IconButton :label="t('calendar.prev')" size="sm" class="max-md:size-10" @click="navigate('prev')"><ChevronLeft aria-hidden="true" /></IconButton>
           <Button variant="secondary" size="sm" @click="navigate('today')">{{ t('calendar.today') }}</Button>
-          <IconButton :label="t('calendar.next')" size="sm" @click="navigate('next')"><ChevronRight aria-hidden="true" /></IconButton>
+          <IconButton :label="t('calendar.next')" size="sm" class="max-md:size-10" @click="navigate('next')"><ChevronRight aria-hidden="true" /></IconButton>
         </div>
         <Segmented v-if="isDesktop" v-model="mode" :options="modeOptions" :label="t('calendar.viewLabel')" size="sm" />
       </div>
     </header>
 
+    <!-- Mobile: legend collapses behind a disclosure button -->
+    <button
+      v-if="!isDesktop"
+      type="button"
+      class="mt-4 inline-flex min-h-11 items-center gap-1.5 rounded-lg px-1 text-xs font-medium text-muted transition hover:text-fg"
+      :aria-expanded="legendOpen"
+      aria-controls="calendar-legend"
+      @click="legendOpen = !legendOpen"
+    >
+      {{ t('mobile.calendar.legend') }}
+      <ChevronDown class="size-4 transition-transform duration-200" :class="legendOpen && 'rotate-180'" aria-hidden="true" />
+    </button>
+
     <!-- Legend: every visual treatment also has an icon and text, never colour alone. -->
-    <ul class="mt-4 flex flex-wrap gap-2 text-xs text-muted" :aria-label="t('calendar.legendLabel')">
+    <ul v-if="isDesktop || legendOpen" id="calendar-legend" class="mt-4 flex flex-wrap gap-2 text-xs text-muted" :aria-label="t('calendar.legendLabel')">
       <li v-for="item in LEGEND" :key="item.kind" class="flex items-center gap-1.5 rounded-md px-2 py-1" :class="item.tone">
         <component :is="ICON_BY_KIND[item.kind]" class="size-3.5 shrink-0" aria-hidden="true" />
         <span>{{ t(item.label) }}</span>
@@ -385,18 +434,44 @@ const hasItems = computed(() => events.value.length > 0)
       <FullCalendar ref="cal" :options="options" />
     </div>
 
-    <!-- Mobile: agenda grouped by day. -->
-    <section v-else class="mt-5" :aria-label="t('calendar.agendaLabel')">
+    <!-- Mobile: week strip above an agenda grouped by day. -->
+    <section v-else ref="agendaRef" class="mt-3" :aria-label="t('calendar.agendaLabel')">
+      <div class="sticky top-[var(--topbar-h)] z-20 -mx-4 bg-bg/90 px-4 pb-3 pt-2 backdrop-blur-xl">
+        <div class="grid grid-cols-7 gap-1 rounded-2xl border border-border bg-surface p-1.5 shadow-xs" role="group" :aria-label="t('mobile.calendar.weekLabel')">
+          <button
+            v-for="day in weekDays"
+            :key="day"
+            type="button"
+            class="relative flex h-14 min-w-0 flex-col items-center justify-center gap-0.5 rounded-xl transition-colors duration-150"
+            :class="[
+              selectedDay === day ? 'bg-primary text-on-primary shadow-sm' : 'text-fg hover:bg-surface-hover',
+              day === todayIso && selectedDay !== day ? 'ring-1 ring-inset ring-primary' : '',
+            ]"
+            :aria-pressed="selectedDay === day"
+            :aria-label="t('mobile.calendar.dayAria', { date: dayLabel(day), count: t('mobile.calendar.itemCount', { n: countByDay.get(day) ?? 0 }) })"
+            @click="selectDay(day)"
+          >
+            <span class="text-[11px] font-medium" :class="selectedDay === day ? 'text-on-primary/80' : 'text-subtle'" aria-hidden="true">{{ weekdayShort(day) }}</span>
+            <span class="tabular text-[15px] font-semibold leading-none" aria-hidden="true">{{ Number(day.slice(8)) }}</span>
+            <span class="mt-0.5 size-1 rounded-full" :class="(countByDay.get(day) ?? 0) ? (selectedDay === day ? 'bg-on-primary' : 'bg-primary') : 'bg-transparent'" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+
       <div class="mb-3 flex items-center justify-between text-xs text-muted">
         <span>{{ t('calendar.views.agenda') }}</span>
         <span v-if="isFetching" class="text-subtle">{{ t('common.loading') }}</span>
       </div>
       <EmptyState v-if="!hasItems" compact :icon="CalendarDays" :title="t('calendar.noItems')" :description="t('calendar.noItemsHint')" />
       <div v-else class="stagger flex flex-col gap-4">
-        <div v-for="(group, gi) in agendaGroups" :key="group.date" :style="{ '--i': gi }">
-          <h2 class="sticky top-0 z-10 bg-bg/90 py-1.5 text-[13px] font-semibold text-fg backdrop-blur">{{ f.relativeDay(group.date) }}</h2>
-          <ul class="flex flex-col gap-1.5">
-            <li v-for="ev in group.items" :key="String(ev.id)">
+        <div v-for="(day, gi) in agendaDays" :key="day.date" :data-day="day.date" class="scroll-mt-[9.5rem]" :style="{ '--i': gi }">
+          <h2 class="flex items-baseline gap-2 py-1 text-[13px] font-semibold text-fg">
+            {{ f.relativeDay(day.date) }}
+            <span class="text-xs font-normal text-subtle">{{ dayLabel(day.date) }}</span>
+          </h2>
+          <p v-if="!day.items.length" class="rounded-xl border border-dashed border-border px-3 py-2.5 text-xs text-subtle">{{ t('calendar.noItems') }}</p>
+          <ul v-else class="flex flex-col gap-1.5">
+            <li v-for="ev in day.items" :key="String(ev.id)">
               <button
                 type="button"
                 class="flex w-full min-h-11 items-center gap-3 rounded-xl border border-border bg-surface px-3 py-2 text-left shadow-xs transition hover:bg-surface-hover"

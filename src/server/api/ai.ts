@@ -2,7 +2,9 @@ import { Hono } from 'hono'
 import { and, desc, eq, gte, sql } from 'drizzle-orm'
 import type { AppBindings } from '../env'
 import { schema } from '../db/client'
-import { ok, parse, readJson } from '../lib/http'
+import { AppError, ok, parse, readJson } from '../lib/http'
+import { LIMITS } from '../../shared/constants'
+import { checkQuota } from '../auth/authcenter'
 import { bodyLimit } from '../middleware'
 import {
   analyzeRequestSchema,
@@ -59,6 +61,24 @@ aiRoutes.delete('/checkpoints/:id', async (c) => {
 aiRoutes.post('/analyze', async (c) => ok(c, await ai.analyze(await aiCtx(c), await readJson(c, analyzeRequestSchema))))
 
 // Usage -------------------------------------------------------------------------
+
+/** Current AuthCenter agent limits for this user (RPM / RPD / tokens per day) plus local limits. */
+aiRoutes.get('/quota', async (c) => {
+  const ctx = await svc(c)
+  const local = { requestsPerHour: LIMITS.aiRequestsPerHour, requestsPerDay: LIMITS.aiRequestsPerDay }
+  if (c.env.APP_ENV === 'development' && ctx.owner.startsWith('dev-')) {
+    return ok(c, { status: 'ok', unlimited: true, remainingTokens: null, remainingRequests: null, testSession: false, quota: null, local })
+  }
+  try {
+    const q = await checkQuota(c.env, ctx.owner)
+    return ok(c, { status: 'ok', ...q, local })
+  } catch (e) {
+    if (e instanceof AppError && ['QUOTA_EXCEEDED', 'AI_FORBIDDEN', 'QUOTA_CHECK_FAILED', 'NOT_CONFIGURED'].includes(e.code)) {
+      return ok(c, { status: e.code, unlimited: false, remainingTokens: 0, remainingRequests: 0, testSession: false, quota: null, local, details: e.details ?? null })
+    }
+    throw e
+  }
+})
 
 aiRoutes.get('/usage', async (c) => {
   const ctx = await svc(c)

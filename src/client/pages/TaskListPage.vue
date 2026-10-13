@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch, type Component } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useMediaQuery } from '@vueuse/core'
 import { VueDraggable } from 'vue-draggable-plus'
-import { AlarmClock, AlertTriangle, Archive, CalendarDays, CheckCircle2, Columns3, CornerDownRight, Copy, ExternalLink, Inbox, LayoutList, ListChecks, MoreHorizontal, Pause, Play, Plus, Sun, Trash2 } from 'lucide-vue-next'
+import { AlarmClock, AlertTriangle, Archive, CalendarDays, CheckCircle2, Columns3, CornerDownRight, Copy, ExternalLink, Inbox, LayoutList, ListChecks, MoreHorizontal, Pause, Play, Plus, SlidersHorizontal, Sun, Trash2 } from 'lucide-vue-next'
 import Button from '@/components/ui/Button.vue'
+import Dialog from '@/components/ui/Dialog.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
+import Field from '@/components/ui/Field.vue'
 import IconButton from '@/components/ui/IconButton.vue'
 import Menu, { type MenuItem } from '@/components/ui/Menu.vue'
 import Segmented from '@/components/ui/Segmented.vue'
 import Select from '@/components/ui/Select.vue'
 import Skeleton from '@/components/ui/Skeleton.vue'
+import PillNav from '@/components/mobile/PillNav.vue'
 import TaskRow from '@/components/domain/TaskRow.vue'
 import CountdownChip from '@/components/domain/CountdownChip.vue'
 import PriorityFlag from '@/components/domain/PriorityFlag.vue'
@@ -39,6 +43,7 @@ interface Group {
 
 const props = defineProps<{ view: View }>()
 const { t } = useI18n()
+const isDesktop = useMediaQuery('(min-width: 768px)')
 const f = useFormat()
 const now = useNow()
 const ui = useUiStore()
@@ -87,6 +92,16 @@ const kindOptions = computed(() => [
   { value: 'deadline', label: t('taskList.filters.kindDeadline') },
 ])
 const projectById = computed(() => new Map((projects.value ?? []).map((p) => [p.id, p])))
+
+// Mobile: filters live in a bottom sheet behind one button, and the views become a pill bar.
+const filterOpen = ref(false)
+const activeFilterCount = computed(() => [priorityFilter.value, projectFilter.value, props.view === 'deadlines' ? 'all' : kindFilter.value].filter((v) => v !== 'all').length)
+function resetFilters() {
+  priorityFilter.value = 'all'
+  projectFilter.value = 'all'
+  kindFilter.value = 'all'
+}
+const viewTabs = computed(() => (['inbox', 'today', 'upcoming', 'deadlines', 'completed'] as const).map((v) => ({ to: `/${v}`, label: t(`nav.${v}`) })))
 
 const params = computed(() => {
   const p: Record<string, string | number | undefined> = { view: props.view, limit: 50 }
@@ -251,6 +266,23 @@ function rowMenu(task: Task): MenuItem[] {
 }
 
 // ---- Board -------------------------------------------------------------------------------
+const boardRef = ref<HTMLElement | null>(null)
+const activeColumn = ref(0)
+/** Distance between two adjacent board columns (column width plus the gap-3 spacing). */
+function columnStep() {
+  const first = boardRef.value?.firstElementChild as HTMLElement | null | undefined
+  return first ? first.offsetWidth + 12 : 0
+}
+function onBoardScroll(e: Event) {
+  const step = columnStep()
+  if (!step) return
+  const left = (e.target as HTMLElement).scrollLeft
+  activeColumn.value = Math.min(BOARD_STATUSES.length - 1, Math.round(left / step))
+}
+function scrollToColumn(i: number) {
+  boardRef.value?.scrollTo({ left: i * columnStep(), behavior: 'smooth' })
+}
+
 const columns = reactive<Record<BoardStatus, Task[]>>({ not_started: [], in_progress: [], paused: [], completed: [] })
 function rebuildColumns() {
   for (const s of BOARD_STATUSES) columns[s] = items.value.filter((x) => x.status === s)
@@ -298,11 +330,28 @@ function projectOf(task: Task) {
           <span class="tabular">{{ t('taskList.count', { n: f.number(items.length, 0) }) }}</span><span v-if="hasMore">+</span>
         </p>
       </div>
-      <Segmented v-model="mode" :options="modeOptions" :label="t('taskList.mode.label')" size="sm" />
+      <div class="flex items-center gap-2">
+        <Button
+          v-if="!isDesktop"
+          variant="secondary"
+          size="sm"
+          class="h-9"
+          :aria-label="activeFilterCount ? t('mobile.tasks.filterActive', { n: activeFilterCount }) : undefined"
+          @click="filterOpen = true"
+        >
+          <SlidersHorizontal class="size-4" aria-hidden="true" />
+          {{ t('mobile.tasks.filter') }}
+          <span v-if="activeFilterCount" class="tabular grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1 text-[11px] font-semibold text-on-primary" aria-hidden="true">{{ activeFilterCount }}</span>
+        </Button>
+        <Segmented v-model="mode" :options="modeOptions" :label="t('taskList.mode.label')" size="sm" />
+      </div>
     </header>
 
-    <!-- Filters -->
-    <div class="mt-5 flex flex-wrap items-center gap-2">
+    <!-- Mobile: view switcher (the bottom "Tasks" tab lands on Today) -->
+    <PillNav v-if="!isDesktop" class="mt-3" :items="viewTabs" :label="t('mobile.tasks.viewsLabel')" />
+
+    <!-- Desktop filters -->
+    <div v-if="isDesktop" class="mt-5 flex flex-wrap items-center gap-2">
       <Select v-model="priorityFilter" size="sm" class="w-auto min-w-36" :options="priorityOptions" :aria-label="t('taskList.filters.priority')" />
       <Select v-model="projectFilter" size="sm" class="w-auto min-w-40" :options="projectOptions" :aria-label="t('taskList.filters.project')" />
       <Select v-if="view !== 'deadlines'" v-model="kindFilter" size="sm" class="w-auto min-w-36" :options="kindOptions" :aria-label="t('taskList.filters.kind')" />
@@ -327,7 +376,7 @@ function projectOf(task: Task) {
               {{ g.label }}
               <span class="tabular rounded-full bg-surface-sunken px-1.5 text-[11px] font-medium normal-case tracking-normal">{{ g.items.length }}</span>
             </h2>
-            <TransitionGroup name="list" tag="div" class="relative flex flex-col gap-0.5" role="list">
+            <TransitionGroup name="list" tag="div" class="tap-task-rows relative flex flex-col gap-0.5" role="list">
               <TaskRow v-for="task in g.items" :key="task.id" :task="task" :menu="rowMenu(task)" />
             </TransitionGroup>
           </section>
@@ -357,11 +406,12 @@ function projectOf(task: Task) {
           <Button v-if="emptyAction" variant="primary" size="sm" @click="emptyAction.run()">{{ emptyAction.label }}</Button>
         </EmptyState>
 
-        <div v-else class="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-4 md:mx-0 md:px-0">
+        <div v-else>
+        <div ref="boardRef" class="scrollbar-none -mx-4 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-4 md:mx-0 md:scroll-px-0 md:px-0" @scroll.passive="onBoardScroll">
           <section
             v-for="s in BOARD_STATUSES"
             :key="s"
-            class="flex w-[17.5rem] shrink-0 snap-start flex-col rounded-2xl bg-bg-subtle p-2 md:w-auto md:min-w-0 md:flex-1"
+            class="flex w-[85vw] max-w-[22rem] shrink-0 snap-start flex-col rounded-2xl bg-bg-subtle p-2 md:w-auto md:max-w-none md:min-w-0 md:flex-1"
             :aria-label="t(`status.${s}`)"
           >
             <header class="flex items-center justify-between px-2 py-1.5">
@@ -372,6 +422,8 @@ function projectOf(task: Task) {
               v-model="columns[s]"
               group="board"
               :animation="200"
+              :delay="150"
+              :delay-on-touch-only="true"
               ghost-class="opacity-40"
               class="flex flex-1 flex-col gap-2 rounded-xl p-0.5"
               @add="(e) => onBoardAdd(e, s)"
@@ -387,7 +439,7 @@ function projectOf(task: Task) {
                     <p class="line-clamp-2 text-sm font-medium text-fg" :class="task.status === 'completed' && 'text-muted line-through decoration-subtle'">{{ task.title }}</p>
                   </button>
                   <Menu :items="rowMenu(task)">
-                    <IconButton :label="t('common.moreActions')" size="sm" class="-mr-1 -mt-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100">
+                    <IconButton :label="t('common.moreActions')" size="sm" class="-mr-1 -mt-1 opacity-100 max-md:size-11 max-md:-mr-2 max-md:-mt-2 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100">
                       <MoreHorizontal aria-hidden="true" />
                     </IconButton>
                   </Menu>
@@ -412,10 +464,45 @@ function projectOf(task: Task) {
           </section>
         </div>
 
+        <!-- Mobile: column indicator -->
+        <div v-if="!isDesktop" class="flex items-center justify-center gap-0.5" role="group" :aria-label="t('taskList.mode.board')">
+          <button
+            v-for="(s, i) in BOARD_STATUSES"
+            :key="s"
+            type="button"
+            class="grid size-11 place-items-center rounded-full"
+            :aria-label="t('mobile.board.showColumn', { name: t(`status.${s}`) })"
+            :aria-current="activeColumn === i ? 'true' : undefined"
+            @click="scrollToColumn(i)"
+          >
+            <span class="h-1.5 rounded-full transition-[width,background-color] duration-200 ease-[var(--ease-out)]" :class="activeColumn === i ? 'w-4 bg-primary' : 'w-1.5 bg-border-strong'" aria-hidden="true" />
+          </button>
+        </div>
+        </div>
+
         <div v-if="hasMore" class="mt-4 flex justify-center">
           <Button variant="secondary" size="sm" :loading="loadingMore" @click="loadMore">{{ loadingMore ? t('taskList.loadingMore') : t('taskList.loadMore') }}</Button>
         </div>
       </template>
     </div>
+
+    <!-- Mobile filters: one sheet with the same selects as the desktop bar -->
+    <Dialog v-if="!isDesktop" v-model:open="filterOpen" :title="t('mobile.tasks.filterTitle')" :description="t('mobile.tasks.filterHint')" size="sm">
+      <div class="flex flex-col gap-4">
+        <Field v-slot="{ id }" :label="t('taskList.filters.priority')">
+          <Select :id="id" v-model="priorityFilter" :options="priorityOptions" />
+        </Field>
+        <Field v-slot="{ id }" :label="t('taskList.filters.project')">
+          <Select :id="id" v-model="projectFilter" :options="projectOptions" />
+        </Field>
+        <Field v-if="view !== 'deadlines'" v-slot="{ id }" :label="t('taskList.filters.kind')">
+          <Select :id="id" v-model="kindFilter" :options="kindOptions" />
+        </Field>
+      </div>
+      <template #footer>
+        <Button variant="ghost" :disabled="!activeFilterCount" @click="resetFilters">{{ t('common.reset') }}</Button>
+        <Button variant="primary" @click="filterOpen = false">{{ t('common.done') }}</Button>
+      </template>
+    </Dialog>
   </div>
 </template>

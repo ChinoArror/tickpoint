@@ -17,6 +17,7 @@
   "capture": {
     "title": "スマートキャプチャ",
     "progress": "キャプチャの進捗",
+    "stepCompact": "ステップ {n} / {total} · {label}",
     "steps": {
       "paste": "貼り付け",
       "analyze": "解析",
@@ -127,8 +128,7 @@
         "reviewed": "確認済み",
         "remaining": "あと {n} 件確認",
         "allReviewed": "すべて確認済み",
-        "options": "候補",
-        "field": "項目: {field}"
+        "options": "候補"
       },
       "list": {
         "add": "追加",
@@ -310,6 +310,7 @@
       "discarded": "計画を破棄しました。",
       "approve": "承認して {n} 件のチェックポイントを追加",
       "approveBlocked": "すべてのチェックポイントにタイトルが必要です。",
+      "ready": "承認する前に、各チェックポイントを確認してください。",
       "approved": "チェックポイント {n} 件を追加しました。",
       "goTo": "開く"
     },

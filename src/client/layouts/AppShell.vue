@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent } from 'vue'
+import { computed, defineAsyncComponent, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { onKeyStroke, useMediaQuery } from '@vueuse/core'
+import { onKeyStroke, useMediaQuery, useWindowScroll } from '@vueuse/core'
 import { MoreHorizontal, PanelLeftClose, PanelLeftOpen, Plus, Search } from 'lucide-vue-next'
 import Logo from '@/components/brand/Logo.vue'
 import Kbd from '@/components/ui/Kbd.vue'
 import TopBarActions from './TopBarActions.vue'
-import { MOBILE_NAV, NAV } from './nav'
+import { MOBILE_NAV, NAV, TASK_VIEW_PATHS } from './nav'
 import { useUiStore } from '@/stores/ui'
 import { useProjects } from '@/composables/useTasks'
 
@@ -24,6 +24,31 @@ const { data: projects } = useProjects()
 const collapsed = computed(() => desktop.value && ui.sidebarCollapsed)
 const groups = computed(() => ({ main: NAV.filter((n) => n.group === 'main'), plan: NAV.filter((n) => n.group === 'plan'), insight: NAV.filter((n) => n.group === 'insight') }))
 const isActive = (to: string) => (to === '/' ? route.path === '/' : route.path === to || route.path.startsWith(to + '/'))
+const taskTabActive = computed(() => TASK_VIEW_PATHS.includes(route.path))
+
+// Mobile quick-add FAB: hidden on pages with their own bottom actions and while a sheet or dialog is open.
+const FAB_HIDDEN_PREFIXES = ['/capture', '/plan', '/settings', '/tasks/']
+const { y: scrollY } = useWindowScroll()
+const fabScrollHidden = ref(false)
+let lastScrollY = 0
+watch(scrollY, (v) => {
+  const dy = v - lastScrollY
+  if (Math.abs(dy) < 8) return
+  // Scrolling down hides the button; scrolling back up brings it back.
+  fabScrollHidden.value = v > 120 && dy > 0
+  lastScrollY = v
+})
+const fabVisible = computed(
+  () =>
+    !desktop.value &&
+    !FAB_HIDDEN_PREFIXES.some((p) => route.path.startsWith(p)) &&
+    !ui.quickAddOpen &&
+    !ui.taskDrawerId &&
+    !ui.searchOpen &&
+    !ui.moreSheetOpen &&
+    !ui.notificationsOpen &&
+    !fabScrollHidden.value,
+)
 
 function typing(e: KeyboardEvent) {
   const el = e.target as HTMLElement | null
@@ -44,7 +69,7 @@ onKeyStroke('q', (e) => {
 </script>
 
 <template>
-  <div class="flex min-h-dvh">
+  <div class="flex min-h-dvh max-md:overflow-x-clip">
     <a href="#main" class="sr-only z-[90] rounded-md bg-primary px-3 py-2 text-on-primary focus:not-sr-only focus:fixed focus:left-3 focus:top-3">{{ t('a11y.skipToContent') }}</a>
 
     <!-- Desktop sidebar -->
@@ -152,7 +177,7 @@ onKeyStroke('q', (e) => {
         :key="item.to"
         :to="item.to"
         class="flex h-16 flex-col items-center justify-center gap-0.5 text-[10px] font-medium transition-colors"
-        :class="isActive(item.to) || (item.key === 'tasks' && ['/inbox', '/upcoming', '/deadlines'].includes(route.path)) ? 'text-primary-text' : 'text-subtle'"
+        :class="isActive(item.to) || (item.key === 'tasks' && taskTabActive) ? 'text-primary-text' : 'text-subtle'"
         :aria-current="isActive(item.to) ? 'page' : undefined"
       >
         <component :is="item.icon" class="size-[22px] transition-transform duration-300 ease-[var(--ease-spring)]" :class="isActive(item.to) && '-translate-y-0.5 scale-110'" aria-hidden="true" />
@@ -165,15 +190,17 @@ onKeyStroke('q', (e) => {
     </nav>
 
     <!-- Mobile quick-add FAB -->
-    <button
-      v-if="!desktop"
-      type="button"
-      class="fixed bottom-[calc(76px+env(safe-area-inset-bottom))] right-4 z-30 grid size-14 place-items-center rounded-2xl bg-primary text-on-primary shadow-lg transition-transform duration-200 active:scale-90"
-      :aria-label="t('actions.quickAdd')"
-      @click="ui.openQuickAdd()"
-    >
-      <Plus class="size-6" />
-    </button>
+    <Transition name="pop">
+      <button
+        v-if="fabVisible"
+        type="button"
+        class="fixed bottom-[calc(76px+env(safe-area-inset-bottom))] right-4 z-30 grid size-14 place-items-center rounded-2xl bg-primary text-on-primary shadow-lg transition-transform duration-200 active:scale-90"
+        :aria-label="t('actions.quickAdd')"
+        @click="ui.openQuickAdd()"
+      >
+        <Plus class="size-6" />
+      </button>
+    </Transition>
 
     <TaskDrawer v-if="ui.taskDrawerId" />
     <QuickAdd v-if="ui.quickAddOpen" />

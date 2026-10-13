@@ -42,6 +42,7 @@ export async function createSession(
   const now = Date.now()
   const raw = randomToken(32)
   const idHash = await sha256Hex(raw)
+  const accountEmail = identity.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identity.email) ? identity.email.trim().toLowerCase() : null
   const jwtEnc = token === DEV_BYPASS_MARKER ? DEV_BYPASS_MARKER : await encryptString(token, sessionSecret(env), JWT_PURPOSE)
 
   await db.batch([
@@ -77,8 +78,26 @@ export async function createSession(
     // First sign-in seeds settings from the browser; later sign-ins never overwrite them.
     db
       .insert(schema.userSettings)
-      .values({ userUuid: identity.uuid, ...(initial.timeZone ? { timeZone: initial.timeZone } : {}), ...(initial.locale ? { locale: initial.locale } : {}) })
+      .values({
+        userUuid: identity.uuid,
+        ...(initial.timeZone ? { timeZone: initial.timeZone } : {}),
+        ...(initial.locale ? { locale: initial.locale } : {}),
+        // Users whose account email is verified get email reminders by default.
+        notifyEmail: Boolean(accountEmail && identity.emailVerified),
+      })
       .onConflictDoNothing(),
+    // The AuthCenter email is a notification recipient; it is trusted only when AuthCenter verified it.
+    ...(accountEmail
+      ? [
+          db
+            .insert(schema.notificationEmails)
+            .values({ id: newId(), ownerUuid: identity.uuid, address: accountEmail, source: 'account', verifiedAt: identity.emailVerified ? now : null })
+            .onConflictDoUpdate({
+              target: [schema.notificationEmails.ownerUuid, schema.notificationEmails.address],
+              set: { source: 'account', ...(identity.emailVerified ? { verifiedAt: now, codeHash: null, codeExpiresAt: null } : {}) },
+            }),
+        ]
+      : []),
     db.insert(schema.sessions).values({
       idHash,
       userUuid: identity.uuid,

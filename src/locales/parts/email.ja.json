@@ -1,0 +1,89 @@
+{
+  "emailRecipients": {
+    "title": "受信先メールアドレス",
+    "hint": "メールでのリマインダーは、認証済みで有効なすべての受信先に届きます。",
+    "accountBadge": "アカウントのメール",
+    "verified": "認証済み",
+    "pending": "認証待ち",
+    "countLabel": "追加のアドレス: {max}件中 {count} 件",
+    "count": "{max} 件中 {count} 件",
+    "calloutTitle": "メールでリマインダーを受け取るには、メールアドレスを追加して認証してください",
+    "calloutBody": "少なくとも 1 つのアドレスを、送信される確認コードで認証するまで、メールのリマインダーはオフのままです。",
+    "needVerified": "先にアドレスを認証してください。認証済みのアドレスがないと、メールのリマインダーはオンにできません。",
+    "notConfigured": "このサーバーではメール送信がまだ設定されていません。アドレスは保存できますが、メールは送信されません。",
+    "addLabel": "メールアドレスを追加",
+    "addPlaceholder": "メールアドレス",
+    "addButton": "確認コードを送信",
+    "addHint": "このアドレスに 6 桁の確認コードをお送りします。",
+    "addLimit": "追加できるアドレスの上限に達しています。",
+    "invalidAddress": "有効なメールアドレスを入力してください。",
+    "enterCode": "コードを入力",
+    "codeTitle": "{address} に送信された 6 桁の確認コードを入力",
+    "codeLabel": "確認コード",
+    "digit": "{n} 桁目（全 6 桁）",
+    "codeIncomplete": "確認コードの 6 桁をすべて入力してください。",
+    "verify": "認証する",
+    "verifying": "認証中…",
+    "resend": "コードを再送",
+    "resendIn": "{time} 後に再送できます",
+    "attemptsLeft": "残り {count} 回",
+    "codeSent": "{address} に確認コードを送信しました。",
+    "codeResent": "{address} に新しい確認コードを送信しました。",
+    "verifiedToast": "{address} の認証が完了しました。",
+    "verifiedBadge": "認証済み",
+    "deliverLabel": "{address} にメールでリマインダーを送る",
+    "rowActions": "{address} の操作",
+    "remove": "アドレスを削除",
+    "removeTitle": "{address} を削除しますか？",
+    "removeMessage": "このアドレスへのメールリマインダーは送信されなくなります。",
+    "removeConfirm": "削除",
+    "removed": "アドレスを削除しました。",
+    "reason": {
+      "mismatch": "確認コードが一致しません。入力内容を確かめてもう一度お試しください。",
+      "expired": "この確認コードは期限切れです。新しいコードを請求してください。",
+      "attempts": "誤入力が多すぎます。新しい確認コードを請求してください。"
+    },
+    "errors": {
+      "VALIDATION_ERROR": "有効なメールアドレスを入力してください。",
+      "CONFLICT": "このアドレスは認証済みか、アドレスの上限に達しています。",
+      "RATE_LIMITED": "確認コードの再送は 1 分ほど待ってからお試しください。",
+      "NOT_CONFIGURED": "このサーバーではメール送信がまだ設定されていません。",
+      "FORBIDDEN": "アカウントのメールアドレスは削除できません。代わりにオフにできます。",
+      "VERIFICATION_FAILED": "確認コードが正しくありません。入力内容を確かめるか、新しいコードを請求してください。"
+    },
+    "testSent": "{total} 件中 {sent} 件に送信",
+    "testDetails": {
+      "no_verified_email": "認証済みのメールアドレスがありません。メールのリマインダーを受け取るには、アドレスを追加して認証してください。",
+      "email_provider_not_configured": "このサーバーではメール送信がまだ設定されていません。"
+    }
+  },
+  "aiQuota": {
+    "title": "利用上限",
+    "subtitle": "利用上限は Aryuki Accounts で管理されています。1 分あたりのリクエスト数、1 日あたりのリクエスト数、1 日あたりのトークン数が対象です。",
+    "refresh": "利用上限を更新",
+    "status": {
+      "ok": "利用可能",
+      "QUOTA_EXCEEDED": "上限に達しました",
+      "AI_FORBIDDEN": "利用できません",
+      "QUOTA_CHECK_FAILED": "確認できません",
+      "NOT_CONFIGURED": "未設定"
+    },
+    "statusHint": {
+      "ok": "現在の上限のもとで AI 機能を利用できます。",
+      "QUOTA_EXCEEDED": "利用上限に達しました。時間が経つと自動的にリセットされます。",
+      "AI_FORBIDDEN": "お使いのアカウントでは TickPoint の AI 機能を利用できません。",
+      "QUOTA_CHECK_FAILED": "利用上限を確認できないため、AI は一時停止中です。",
+      "NOT_CONFIGURED": "このサーバーではまだ利用上限が設定されていません。"
+    },
+    "retryIn": "約 {time} 後にもう一度お試しください。",
+    "remainingTokens": "残りトークン",
+    "remainingRequests": "残りリクエスト数",
+    "unlimited": "無制限",
+    "unknown": "情報なし",
+    "testSession": "これはテスト用のセッションです。上限は他と共有されたり、別の方法でリセットされたりする場合があります。",
+    "localTitle": "TickPoint の安全上限",
+    "localHint": "お使いのアカウントの上限に加えて、TickPoint が独自に適用する上限です。",
+    "localPerHour": "1 時間あたり {count} リクエスト",
+    "localPerDay": "1 日あたり {count} リクエスト"
+  }
+}

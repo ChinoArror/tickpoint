@@ -27,6 +27,10 @@
   ],
   "r2_buckets": [{ "binding": "FILES", "bucket_name": "tickpoint-save" }],
 
+  // Cloudflare Email Service (domain point.aryuki.com onboarded for sending).
+  // Locally the binding is simulated: messages are logged and written to files.
+  "send_email": [{ "name": "EMAIL" }],
+
   // Reminder dispatch every minute; housekeeping once a day.
   "triggers": { "crons": ["* * * * *", "17 3 * * *"] },
 
@@ -42,8 +46,8 @@
     "AUTH_CALLBACK_URL": "https://point.aryuki.com/sso-callback",
     "GEMINI_MODEL": "gemini-3.8-flash",
     "VAPID_PUBLIC_KEY": "BLMhbqV2IRkW9FNjctoZ1S_nKLD22QdM0fzstywts0ROc8r55jKAGFjA9a2UjnHhwLUausnCs35A77b6VL5yOD8",
-    "VAPID_SUBJECT": "mailto:noreply@aryuki.com",
-    "EMAIL_PROVIDER": "none",
-    "EMAIL_FROM": "TickPoint <noreply@aryuki.com>"
+    "VAPID_SUBJECT": "mailto:noreply@point.aryuki.com",
+    "EMAIL_PROVIDER": "cloudflare",
+    "EMAIL_FROM": "TickPoint <noreply@point.aryuki.com>"
   }
 }

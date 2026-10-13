@@ -97,7 +97,7 @@ function markReviewed(key: string) {
 <template>
   <div class="flex flex-col gap-4">
     <!-- Banner -->
-    <div class="flex items-start gap-3 rounded-2xl border border-ai/25 bg-ai-soft p-3.5">
+    <div class="flex flex-col items-start gap-2 rounded-2xl border border-ai/25 bg-ai-soft p-3.5">
       <Badge tone="ai" class="shrink-0"><Sparkles aria-hidden="true" />{{ t('ai.unconfirmed') }}</Badge>
       <p class="min-w-0 text-[13px] leading-relaxed text-fg">{{ t('capture.review.banner') }}</p>
     </div>
@@ -121,7 +121,7 @@ function markReviewed(key: string) {
         <Field v-slot="{ id, describedby }" :label="t('capture.review.summaryFields.sourceLanguage')">
           <Input :id="id" v-model="state.sourceLanguage" :aria-describedby="describedby" size="sm" />
         </Field>
-        <div class="flex flex-col gap-1.5">
+        <div class="flex flex-col gap-1.5 sm:col-span-2">
           <p class="text-[13px] font-medium text-fg">{{ t('capture.review.summaryFields.recordKind') }}</p>
           <Segmented v-model="state.recordKind" :options="kindOptions" :label="t('capture.review.summaryFields.recordKind')" class="w-full [&>button]:flex-1" />
         </div>
@@ -161,7 +161,6 @@ function markReviewed(key: string) {
             <AlertTriangle class="mt-0.5 size-4 shrink-0 text-warning-text" aria-hidden="true" />
             <div class="min-w-0 flex-1">
               <p class="text-[13px] font-medium text-fg">{{ a.description }}</p>
-              <p class="mt-0.5 text-xs text-subtle">{{ t('capture.review.ambiguities.field', { field: a.field }) }}</p>
               <div v-if="a.options.length" class="mt-2">
                 <p class="mb-1 text-xs text-muted">{{ t('capture.review.ambiguities.options') }}</p>
                 <div class="flex flex-wrap gap-1.5">
@@ -175,7 +174,7 @@ function markReviewed(key: string) {
                 </div>
               </div>
               <div class="mt-2">
-                <EvidenceQuote :text="a.evidence" compact @focus="emit('focusEvidence', `amb:${a.key}`)" />
+                <EvidenceQuote :text="a.evidence" :verified="a.evidenceVerified ?? true" compact @focus="emit('focusEvidence', `amb:${a.key}`)" />
               </div>
             </div>
           </div>

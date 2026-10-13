@@ -64,6 +64,7 @@ authRoutes.post('/dev-login', async (c) => {
     name: body.user === 'alice' ? 'Alice Developer' : 'Bob Developer',
     username: body.user,
     email: `${body.user}@example.test`,
+    emailVerified: true,
     avatarUrl: null,
     identityType: 'user',
     scopePermissions: null,
