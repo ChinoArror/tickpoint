@@ -2,8 +2,8 @@
 import { computed, defineAsyncComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import { useQuery } from '@tanstack/vue-query'
-import { Bell, Check, ExternalLink, Languages, LogOut, Monitor, Moon, Plus, Settings, Sun, UserRound } from 'lucide-vue-next'
+import { useQuery, useQueryClient } from '@tanstack/vue-query'
+import { Bell, Check, ExternalLink, Languages, LogOut, Monitor, Moon, Plus, Settings, Sun } from 'lucide-vue-next'
 import { PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger } from 'reka-ui'
 import Avatar from '@/components/ui/Avatar.vue'
 import Menu, { type MenuItem } from '@/components/ui/Menu.vue'
@@ -13,7 +13,9 @@ import { useUiStore } from '@/stores/ui'
 import { applyTheme, themePref, type ThemePref } from '@/composables/useTheme'
 import { setLocale } from '@/i18n'
 import { api } from '@/lib/api'
-import { qk } from '@/composables/useTasks'
+import { qk, useErrorMessage } from '@/composables/useTasks'
+import { runActivity } from '@/composables/useActivity'
+import { useToast } from '@/composables/useToast'
 import { confirm } from '@/composables/useConfirm'
 import type { AppNotification } from '@/lib/types'
 
@@ -22,6 +24,9 @@ const NotificationsPanel = defineAsyncComponent(() => import('@/components/shell
 const { t, locale } = useI18n()
 const router = useRouter()
 const session = useSessionStore()
+const qc = useQueryClient()
+const toast = useToast()
+const errMsg = useErrorMessage()
 const ui = useUiStore()
 
 const { data: notif } = useQuery({
@@ -57,16 +62,19 @@ const profileItems = computed<MenuItem[]>(() => [
   { label: t('account.profile'), icon: ExternalLink, onSelect: () => window.open(session.me?.profileUrl, '_blank', 'noopener') },
   { label: t('nav.settings'), icon: Settings, onSelect: () => router.push('/settings') },
   { separator: true },
-  { label: t('account.signOutTickPoint'), icon: LogOut, onSelect: signOutLocal },
-  { label: t('account.signOutEverywhere'), icon: UserRound, danger: true, onSelect: signOutAll },
+  { label: t('account.signOut'), icon: LogOut, onSelect: signOutUser },
 ])
 
-async function signOutLocal() {
-  await session.signOutLocal()
-  router.replace('/signin?signedOut=1')
-}
-async function signOutAll() {
-  if (await confirm({ title: t('account.signOutEverywhere'), message: t('account.signOutEverywhereHint'), confirmLabel: t('account.signOut') })) await session.signOutEverywhere()
+async function signOutUser() {
+  if (!(await confirm({ title: t('feedback.signOutTitle'), message: t('feedback.signOutMessage'), confirmLabel: t('account.signOut') }))) return
+  try {
+    await runActivity(t('feedback.activity.signingOut'), async () => {
+      qc.clear()
+      await session.signOut()
+    })
+  } catch (e) {
+    toast.error(errMsg(e))
+  }
 }
 </script>
 

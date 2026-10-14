@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogOverlay, AlertDialogPortal, AlertDialogRoot, AlertDialogTitle } from 'reka-ui'
+import { AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogOverlay, AlertDialogPortal, AlertDialogRoot, AlertDialogTitle } from 'reka-ui'
 import { AlertTriangle } from 'lucide-vue-next'
 import { useI18n } from 'vue-i18n'
 import { confirmState, settleConfirm } from '@/composables/useConfirm'
@@ -33,14 +33,17 @@ const open = computed({ get: () => confirmState.open, set: (v) => !v && settleCo
           <AlertDialogCancel class="h-9 rounded-[10px] border border-border bg-surface px-3.5 text-sm font-medium transition hover:bg-surface-hover" @click="settleConfirm(false)">
             {{ confirmState.req?.cancelLabel ?? t('common.cancel') }}
           </AlertDialogCancel>
-          <AlertDialogAction
+          <!-- A plain button: AlertDialogAction closes the dialog before our click handler runs,
+               and that close would settle the request as cancelled. -->
+          <button
+            type="button"
             :disabled="!canConfirm"
             class="h-9 rounded-[10px] px-3.5 text-sm font-medium shadow-sm transition disabled:opacity-50"
             :class="confirmState.req?.danger ? 'bg-danger text-white hover:opacity-90' : 'bg-primary text-on-primary hover:bg-primary-hover'"
             @click="settleConfirm(true)"
           >
             {{ confirmState.req?.confirmLabel ?? t('common.confirm') }}
-          </AlertDialogAction>
+          </button>
         </div>
       </AlertDialogContent>
     </AlertDialogPortal>

@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { installFetchStub, signedIn, stubAuthCenter, testEnv } from './helpers'
+import { addDaysToIsoDate, isoDateInZone } from '../../src/shared/time'
 
 describe('deadlines, hierarchy and dependencies', () => {
   beforeEach(() => {
@@ -141,5 +142,24 @@ describe('deadlines, hierarchy and dependencies', () => {
     expect(r.status).toBe(400)
     expect(r.body.error.code).toBe('VALIDATION_ERROR')
     expect(r.body.error.details.map((d: any) => d.path)).toEqual(expect.arrayContaining(['title', 'priority']))
+  })
+})
+
+describe('date views', () => {
+  beforeEach(() => {
+    installFetchStub()
+    stubAuthCenter()
+  })
+
+  it('shows a date-only deadline due today on Today, and keeps yesterday out of Upcoming', async () => {
+    const c = await signedIn('user-alice')
+    const today = isoDateInZone(Date.now(), 'Asia/Tokyo')
+    await c.post('/tasks', { kind: 'deadline', title: 'Due today', due: { precision: 'date', date: today } })
+    await c.post('/tasks', { kind: 'deadline', title: 'Due yesterday', due: { precision: 'date', date: addDaysToIsoDate(today, -1) } })
+    const titles = async (view: string) => (await c.get(`/tasks?view=${view}`)).body.data.items.map((x: { title: string }) => x.title)
+    expect(await titles('today')).toEqual(expect.arrayContaining(['Due today', 'Due yesterday']))
+    const upcoming = await titles('upcoming')
+    expect(upcoming).toContain('Due today')
+    expect(upcoming).not.toContain('Due yesterday')
   })
 })

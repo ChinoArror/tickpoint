@@ -18,6 +18,7 @@ import {
   Trash2,
   RotateCcw,
 } from 'lucide-vue-next'
+import AiLanguagePicker from '@/components/ai/AiLanguagePicker.vue'
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
 import Badge from '@/components/ui/Badge.vue'
@@ -38,6 +39,7 @@ import { useToast } from '@/composables/useToast'
 import { useUiStore } from '@/stores/ui'
 import { confirm } from '@/composables/useConfirm'
 import { useNow } from '@/composables/useNow'
+import { useAiLanguage } from '@/composables/useAiLanguage'
 import type { GoalDetail } from '@/lib/types'
 
 const props = defineProps<{ id: string }>()
@@ -64,6 +66,7 @@ type AiAnalysis = {
   aiGenerated: true
 }
 const analysis = ref<AiAnalysis | null>(null)
+const outputLanguage = useAiLanguage()
 
 const statusTone: Record<GoalDetail['status'], 'primary' | 'warning' | 'success' | 'neutral'> = {
   active: 'primary',
@@ -128,13 +131,13 @@ const menu = computed<MenuItem[]>(() => {
 })
 
 const planMutation = useMutation({
-  mutationFn: () => api.post<{ draftId: string }>('/ai/checkpoints', { goalId: props.id }),
+  mutationFn: () => api.post<{ draftId: string }>('/ai/checkpoints', { goalId: props.id, outputLanguage: outputLanguage.value }),
   onSuccess: (r) => router.push(`/plan/${r.draftId}`),
   onError: (e) => toast.error(errMsg(e)),
 })
 
 const analyzeMutation = useMutation({
-  mutationFn: () => api.post<AiAnalysis>('/ai/analyze', { goalId: props.id }),
+  mutationFn: () => api.post<AiAnalysis>('/ai/analyze', { goalId: props.id, outputLanguage: outputLanguage.value }),
   onSuccess: (r) => (analysis.value = r),
   onError: (e) => toast.error(errMsg(e)),
 })
@@ -229,6 +232,7 @@ function onLogged() {
               {{ t('goalPage.ai.analyze') }}
             </Button>
           </template>
+          <AiLanguagePicker v-model="outputLanguage" class="mb-3" />
           <CheckpointList :checkpoints="goal.checkpoints" :parent="{ goalId: goal.id }" />
         </Card>
 

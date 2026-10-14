@@ -401,7 +401,11 @@ export type SettingsUpdateInput = z.infer<typeof settingsUpdateSchema>
 // Smart Capture and AI
 // ---------------------------------------------------------------------------
 
+/** Language for AI-written text; defaults to the user's interface language when omitted. */
+const outputLanguage = z.enum(SUPPORTED_LOCALES).nullish()
+
 export const extractRequestSchema = z.object({
+  outputLanguage,
   text: z.string().trim().min(LIMITS.captureMinChars, 'TOO_SHORT').max(LIMITS.captureMaxChars, 'TOO_LONG'),
   sourceTitle: z.string().max(300).nullish(),
   sourceUrl: httpUrl.nullish(),
@@ -458,6 +462,7 @@ export const extractConfirmSchema = z.object({
 export type ExtractConfirmInput = z.infer<typeof extractConfirmSchema>
 
 export const planRequestSchema = z.object({
+  outputLanguage,
   taskId: idSchema.nullish(),
   goalId: idSchema.nullish(),
   objective: z.string().max(4000).nullish(),
@@ -467,6 +472,7 @@ export const planRequestSchema = z.object({
 })
 
 export const planRegenerateSchema = z.object({
+  outputLanguage,
   /** Client ids of draft checkpoints to regenerate; all others are preserved verbatim. */
   checkpointIds: z.array(z.string().min(1).max(64)).min(1).max(20),
   instructions: z.string().max(1000).nullish(),
@@ -497,6 +503,7 @@ export const planDraftUpdateSchema = z.object({ checkpoints: z.array(draftCheckp
 export const planConfirmSchema = z.object({ checkpoints: z.array(draftCheckpointSchema).min(1).max(40) })
 
 export const analyzeRequestSchema = z.object({
+  outputLanguage,
   taskId: idSchema.nullish(),
   goalId: idSchema.nullish(),
   scope: z.enum(['deadline', 'progress']).default('deadline'),

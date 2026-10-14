@@ -295,10 +295,7 @@
   "account": {
     "menu": "Account menu",
     "profile": "Account profile",
-    "signOut": "Sign out",
-    "signOutTickPoint": "Sign out of TickPoint",
-    "signOutEverywhere": "Sign out of Aryuki Accounts",
-    "signOutEverywhereHint": "This ends your central Aryuki Accounts session, which signs you out of other Aryuki apps on this browser too."
+    "signOut": "Sign out"
   },
   "notifications": {
     "title": "Notifications"

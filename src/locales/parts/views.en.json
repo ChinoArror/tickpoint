@@ -194,5 +194,8 @@
       "scatter": "Checkpoint timing: {count} checkpoints, {late} completed late."
     },
     "footnote": "All statistics are calculated from your stored data. AI does not change these numbers."
+  },
+  "checkpointRow": {
+    "badge": "Checkpoint"
   }
 }

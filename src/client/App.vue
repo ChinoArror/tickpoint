@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { TooltipProvider } from 'reka-ui'
 import Toaster from '@/components/ui/Toaster.vue'
+import ActivityHost from '@/components/ui/ActivityHost.vue'
 import ConfirmHost from '@/components/ui/ConfirmHost.vue'
 
 const PwaPrompt = defineAsyncComponent(() => import('@/components/shell/PwaPrompt.vue'))
@@ -23,7 +24,10 @@ watchEffect(() => {
         <component :is="Component" />
       </Transition>
     </RouterView>
-    <Toaster />
+    <div class="pointer-events-none fixed inset-x-4 bottom-[calc(76px+env(safe-area-inset-bottom))] z-[60] flex flex-col items-stretch gap-2 md:inset-x-auto md:bottom-6 md:right-6 md:w-96 md:items-end">
+      <ActivityHost />
+      <Toaster />
+    </div>
     <ConfirmHost />
     <PwaPrompt />
   </TooltipProvider>

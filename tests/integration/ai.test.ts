@@ -278,3 +278,33 @@ describe('AI checkpoint planning', () => {
     expect(geminiCalls()).toHaveLength(0)
   })
 })
+
+describe('AI output language', () => {
+  beforeEach(() => {
+    installFetchStub()
+    stubAuthCenter()
+  })
+
+  it('uses the requested output language over the interface locale', async () => {
+    gemini(extraction())
+    const c = await signedIn('user-alice')
+    await c.patch('/settings', { locale: 'en' })
+    const r = await c.post('/ai/extract', { text: SOURCE, outputLanguage: 'ja' })
+    expect(r.status).toBe(201)
+    // The language policy lives in the user prompt, ahead of the fenced source.
+    const user: string = JSON.parse(geminiCalls()[0].body!).contents[0].parts[0].text
+    expect(user).toContain('in Japanese.')
+    expect(user).not.toContain('in English.')
+  })
+
+  it('falls back to the interface locale when outputLanguage is omitted', async () => {
+    gemini(extraction())
+    const c = await signedIn('user-alice')
+    await c.patch('/settings', { locale: 'en' })
+    await c.post('/ai/extract', { text: SOURCE, outputLanguage: null })
+    // The language policy lives in the user prompt, ahead of the fenced source.
+    const user: string = JSON.parse(geminiCalls()[0].body!).contents[0].parts[0].text
+    expect(user).toContain('in English.')
+    expect(user).not.toContain('in Japanese.')
+  })
+})

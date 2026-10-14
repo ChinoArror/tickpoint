@@ -226,16 +226,9 @@ const toggleMutation = useMutation({
   onSettled: () => void qc.invalidateQueries({ queryKey: KEY }),
 })
 
-const removeMutation = useMutation({
-  mutationFn: (id: string) => api.del(`/notification-emails/${id}`),
-  onSuccess: () => {
-    toast.success(t('emailRecipients.removed'))
-    void qc.invalidateQueries({ queryKey: KEY })
-  },
-  onError: (e) => toast.error(errorText(e)),
-})
-
+/** The account email is managed by Aryuki Accounts and can only be disabled, never removed. */
 async function remove(r: Recipient) {
+  if (r.source !== 'user') return
   const ok = await confirmDialog({
     title: t('emailRecipients.removeTitle', { address: r.address }),
     message: t('emailRecipients.removeMessage'),
@@ -244,7 +237,17 @@ async function remove(r: Recipient) {
   })
   if (!ok) return
   if (codeOpenId.value === r.id) closeCode()
-  removeMutation.mutate(r.id)
+  await qc.cancelQueries({ queryKey: KEY })
+  qc.setQueryData<RecipientList>(KEY, (prev) => (prev ? { ...prev, items: prev.items.filter((x) => x.id !== r.id) } : prev))
+  const refetch = () => void qc.invalidateQueries({ queryKey: KEY })
+  void toast.deferred(
+    t('feedback.recipientRemoving', { address: r.address }),
+    async () => {
+      await api.del(`/notification-emails/${r.id}`)
+      refetch()
+    },
+    { successMessage: t('emailRecipients.removed'), onUndo: refetch, onError: refetch },
+  )
 }
 
 function rowMenu(r: Recipient): MenuItem[] {

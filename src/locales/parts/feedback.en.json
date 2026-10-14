@@ -1,0 +1,19 @@
+{
+  "feedback": {
+    "undone": "Cancelled. Nothing was changed.",
+    "commitFailed": "That change couldn't be completed.",
+    "saving": "Saving…",
+    "backupRemoving": "Backup will be deleted.",
+    "recipientRemoving": "{address} will be removed.",
+    "wipeScheduled": "All TickPoint data will be deleted in a few seconds.",
+    "activity": {
+      "creatingBackup": "Creating backup…",
+      "restoringBackup": "Restoring backup…",
+      "importing": "Importing…",
+      "deletingAll": "Deleting all TickPoint data…",
+      "signingOut": "Signing out…"
+    },
+    "signOutTitle": "Sign out?",
+    "signOutMessage": "Signs you out of TickPoint and your Aryuki account on this browser. Other apps using the same Aryuki account will need you to sign in again."
+  }
+}

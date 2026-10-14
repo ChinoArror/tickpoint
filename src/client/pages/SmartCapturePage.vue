@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import { useQuery, useQueryClient } from '@tanstack/vue-query'
 import { refDebounced } from '@vueuse/core'
 import { AlertTriangle, Check, ChevronDown, FileText, Info, Sparkles, Trash2 } from 'lucide-vue-next'
+import AiLanguagePicker from '@/components/ai/AiLanguagePicker.vue'
 import Button from '@/components/ui/Button.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
 import Field from '@/components/ui/Field.vue'
@@ -31,6 +32,7 @@ import type { ExtractionResponse, PlanDraft } from '@/lib/types'
 import { LIMITS } from '@shared/constants'
 import { useErrorMessage, invalidatePlanning, useProjects } from '@/composables/useTasks'
 import { useFormat } from '@/composables/useFormat'
+import { useAiLanguage } from '@/composables/useAiLanguage'
 import { confirm as askConfirm } from '@/composables/useConfirm'
 import { useToast } from '@/composables/useToast'
 import { useSessionStore } from '@/stores/session'
@@ -64,6 +66,7 @@ const sourceDate = ref('')
 const context = ref('')
 const projectId = ref<string | null>(null)
 const showDetails = ref(false)
+const outputLanguage = useAiLanguage()
 
 if (!props.draftId) {
   try {
@@ -123,6 +126,7 @@ async function analyze() {
       context: context.value.trim() || null,
       projectId: projectId.value,
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      outputLanguage: outputLanguage.value,
     })
     if (id !== attempt) return
     stopAnalyzing()
@@ -297,7 +301,7 @@ async function generatePlan() {
   if (!d || planBusy.value) return
   planBusy.value = true
   try {
-    const body = d.primaryTaskId ? { taskId: d.primaryTaskId } : { goalId: d.primaryGoalId }
+    const body = { ...(d.primaryTaskId ? { taskId: d.primaryTaskId } : { goalId: d.primaryGoalId }), outputLanguage: outputLanguage.value }
     const plan = await api.post<PlanDraft>('/ai/checkpoints', body)
     await router.push(`/plan/${plan.draftId}`)
   } catch (e) {
@@ -453,7 +457,9 @@ const currentStepLabel = computed(() => steps.value[currentStep.value - 1]?.labe
             <Button size="sm" variant="secondary" @click="analyze">{{ t('capture.input.retry') }}</Button>
           </div>
 
-          <div class="mt-6 flex flex-col-reverse gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <AiLanguagePicker v-model="outputLanguage" class="mt-6" hint />
+
+          <div class="mt-4 flex flex-col-reverse gap-4 sm:flex-row sm:items-center sm:justify-between">
             <p class="flex items-start gap-2 text-xs text-muted">
               <Info class="mt-px size-3.5 shrink-0 text-subtle" aria-hidden="true" />{{ t('capture.input.privacy') }}
             </p>

@@ -199,11 +199,8 @@
       "copyUuid": "Copy user ID",
       "manage": "Manage your account",
       "signOutTitle": "Sign out",
-      "signOutSubtitle": "Two ways to leave, with different reach.",
-      "signOutTickPointHint": "Ends your TickPoint session on this browser. Your Aryuki Accounts sign-in and other apps stay active.",
-      "signOutEverywhereHint": "Ends your central Aryuki Accounts session. You will also be signed out of the other Aryuki apps on this browser.",
-      "everywhereConfirmTitle": "Sign out of Aryuki Accounts?",
-      "everywhereConfirm": "Sign out everywhere"
+      "signOutSubtitle": "End your session on this browser.",
+      "signOutHint": "Signs you out of TickPoint and your Aryuki account on this browser. Other apps using the same Aryuki account will need you to sign in again."
     }
   },
   "notificationsPanel": {

@@ -2,18 +2,17 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import { useQueryClient } from '@tanstack/vue-query'
-import { AlertTriangle, ArrowRight, CheckCircle2, CircleDot, Flame, Inbox, ListChecks, Plus, Sparkles, Sun, Target, TrendingUp } from 'lucide-vue-next'
+import { AlertTriangle, ArrowRight, CheckCircle2, CircleDot, Flame, Inbox, Plus, Sparkles, Sun, Target, TrendingUp } from 'lucide-vue-next'
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
 import Skeleton from '@/components/ui/Skeleton.vue'
 import ProgressRing from '@/components/ui/ProgressRing.vue'
 import TaskRow from '@/components/domain/TaskRow.vue'
-import TaskCheck from '@/components/domain/TaskCheck.vue'
+import CheckpointRow from '@/components/domain/CheckpointRow.vue'
 import CountdownChip from '@/components/domain/CountdownChip.vue'
 import RiskBadge from '@/components/domain/RiskBadge.vue'
-import { useDashboard, useCheckpointActions, useTaskActions, useErrorMessage } from '@/composables/useTasks'
+import { useDashboard, useTaskActions, useErrorMessage } from '@/composables/useTasks'
 import { useFormat } from '@/composables/useFormat'
 import { useSessionStore } from '@/stores/session'
 import { useUiStore } from '@/stores/ui'
@@ -23,7 +22,6 @@ import { wallClockAt } from '@shared/time'
 
 const { t } = useI18n()
 const router = useRouter()
-const qc = useQueryClient()
 const session = useSessionStore()
 const ui = useUiStore()
 const f = useFormat()
@@ -32,7 +30,6 @@ const toast = useToast()
 const errMsg = useErrorMessage()
 const { data, isPending, isError, refetch } = useDashboard()
 const taskActions = useTaskActions()
-const cpActions = useCheckpointActions()
 
 const name = computed(() => session.me?.user.name?.split(/\s+/)[0] ?? session.me?.user.username ?? '')
 const greeting = computed(() => {
@@ -78,11 +75,6 @@ const stats = computed(() => [
   { key: 'dueSoon', icon: Flame, value: data.value?.week.dueSoon ?? 0, tone: 'text-warning-text bg-warning-soft' },
   { key: 'overdue', icon: AlertTriangle, value: overdueCount.value, tone: 'text-danger-text bg-danger-soft' },
 ])
-
-async function toggleCheckpoint(cp: { id: string; status: string; title: string }) {
-  await cpActions.toggle(cp as never)
-  qc.invalidateQueries({ queryKey: ['dashboard'] })
-}
 </script>
 
 <template>
@@ -156,16 +148,7 @@ async function toggleCheckpoint(cp: { id: string; status: string; title: string 
             <template v-else-if="todayCount">
               <TransitionGroup tag="div" name="list" class="tap-task-rows relative" role="list">
                 <TaskRow v-for="task in data!.todayTasks" :key="task.id" :task="task" />
-                <div v-for="cp in data!.todayCheckpoints" :key="cp.id" class="flex cursor-pointer items-start gap-3 rounded-xl px-3 py-2.5 transition hover:bg-surface-hover" role="listitem" @click="cp.taskId ? ui.openTask(cp.taskId) : router.push(`/goals/${cp.goalId}`)">
-                  <TaskCheck class="mt-0.5" size="sm" :checked="cp.status === 'done'" :label="t('checkpoints.toggle', { title: cp.title })" @toggle="toggleCheckpoint(cp)" />
-                  <div class="min-w-0 flex-1">
-                    <p class="truncate text-sm text-fg">{{ cp.title }}</p>
-                    <p class="mt-0.5 flex items-center gap-1.5 truncate text-xs text-muted">
-                      <ListChecks class="size-3" aria-hidden="true" />{{ cp.parentTitle }}
-                      <span v-if="cp.targetDate && cp.targetDate < data!.today" class="font-medium text-danger-text">· {{ t('checkpoints.delayed') }}</span>
-                    </p>
-                  </div>
-                </div>
+                <CheckpointRow v-for="cp in data!.todayCheckpoints" :key="cp.id" :checkpoint="cp" :today="data!.today" />
               </TransitionGroup>
             </template>
             <EmptyState v-else compact :icon="Sun" :title="t('overview.todayEmpty')" :description="t('overview.todayEmptyHint')" />

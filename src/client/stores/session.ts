@@ -63,19 +63,23 @@ export const useSessionStore = defineStore('session', () => {
     }
   }
 
-  async function signOutLocal() {
-    await api.post('/auth/logout')
+  /**
+   * The one sign-out: ends TickPoint's session, then AuthCenter's via a browser redirect.
+   * Callers clear their own caches (e.g. the query client) before calling this.
+   */
+  async function signOut() {
+    await api.post('/auth/logout').catch(() => undefined)
+    try {
+      localStorage.removeItem('tp.hadSession')
+    } catch {
+      /* ignore */
+    }
     me.value = null
     status.value = 'anonymous'
-  }
-
-  /** Central sign-out: end TickPoint's session first, then AuthCenter's via browser redirect. */
-  async function signOutEverywhere() {
     const cfg = await loadConfig()
-    await signOutLocal().catch(() => undefined)
     const ret = `${location.origin}/signin?signedOut=1`
     location.assign(`${cfg.authBaseUrl}/logout?redirect=${encodeURIComponent(ret)}`)
   }
 
-  return { me, config, status, settings, load, loadConfig, updateSettings, signOutLocal, signOutEverywhere }
+  return { me, config, status, settings, load, loadConfig, updateSettings, signOut }
 })

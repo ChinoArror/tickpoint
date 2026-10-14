@@ -295,10 +295,7 @@
   "account": {
     "menu": "アカウントメニュー",
     "profile": "アカウントプロフィール",
-    "signOut": "サインアウト",
-    "signOutTickPoint": "TickPoint からサインアウト",
-    "signOutEverywhere": "Aryuki Accounts からサインアウト",
-    "signOutEverywhereHint": "Aryuki Accounts のセッションを終了します。このブラウザの他の Aryuki アプリからもサインアウトされます。"
+    "signOut": "サインアウト"
   },
   "notifications": {
     "title": "通知"

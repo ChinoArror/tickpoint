@@ -11,6 +11,7 @@ import Skeleton from '@/components/ui/Skeleton.vue'
 import Switch from '@/components/ui/Switch.vue'
 import { api, downloadUrl } from '@/lib/api'
 import { confirm } from '@/composables/useConfirm'
+import { runActivity } from '@/composables/useActivity'
 import { useFormat } from '@/composables/useFormat'
 import { useToast } from '@/composables/useToast'
 import { useErrorMessage, invalidatePlanning } from '@/composables/useTasks'
@@ -104,7 +105,10 @@ async function onFile(e: Event) {
 }
 
 const commit = useMutation({
-  mutationFn: () => api.post<Summary>('/import', parsed.value, { mode: 'commit', skipDuplicates: skipDuplicates.value ? 1 : 0 }),
+  mutationFn: () =>
+    runActivity(t('feedback.activity.importing'), () =>
+      api.post<Summary>('/import', parsed.value, { mode: 'commit', skipDuplicates: skipDuplicates.value ? 1 : 0 }),
+    ),
   onSuccess: (r) => {
     result.value = r
     preview.value = null
@@ -134,7 +138,7 @@ function sizeLabel(b: BackupRow) {
 }
 
 const createBackup = useMutation({
-  mutationFn: () => api.post<BackupRow>('/backups'),
+  mutationFn: () => runActivity(t('feedback.activity.creatingBackup'), () => api.post<BackupRow>('/backups')),
   onSuccess: () => {
     toast.success(t('dataTools.backups.created'))
     void qc.invalidateQueries({ queryKey: ['backups'] })
@@ -143,19 +147,10 @@ const createBackup = useMutation({
 })
 
 const restoreBackup = useMutation({
-  mutationFn: (id: string) => api.post<Summary>(`/backups/${id}/restore`),
+  mutationFn: (id: string) => runActivity(t('feedback.activity.restoringBackup'), () => api.post<Summary>(`/backups/${id}/restore`)),
   onSuccess: () => {
     toast.success(t('dataTools.backups.restored'))
     invalidatePlanning(qc)
-    void qc.invalidateQueries({ queryKey: ['backups'] })
-  },
-  onError: (e) => toast.error(errMsg(e)),
-})
-
-const deleteBackup = useMutation({
-  mutationFn: (id: string) => api.del(`/backups/${id}`),
-  onSuccess: () => {
-    toast.success(t('dataTools.backups.deleted'))
     void qc.invalidateQueries({ queryKey: ['backups'] })
   },
   onError: (e) => toast.error(errMsg(e)),
@@ -170,6 +165,7 @@ async function confirmRestore(b: BackupRow) {
   if (ok) restoreBackup.mutate(b.id)
 }
 
+/** Hides the row at once; the server delete runs when the Undo window closes. */
 async function confirmDeleteBackup(b: BackupRow) {
   const ok = await confirm({
     title: t('dataTools.backups.deleteTitle'),
@@ -177,21 +173,25 @@ async function confirmDeleteBackup(b: BackupRow) {
     confirmLabel: t('common.delete'),
     danger: true,
   })
-  if (ok) deleteBackup.mutate(b.id)
+  if (!ok) return
+  await qc.cancelQueries({ queryKey: ['backups'] })
+  qc.setQueryData<BackupRow[]>(['backups'], (prev) => prev?.filter((x) => x.id !== b.id))
+  const refetch = () => void qc.invalidateQueries({ queryKey: ['backups'] })
+  void toast.deferred(
+    t('feedback.backupRemoving'),
+    async () => {
+      await api.del(`/backups/${b.id}`)
+      refetch()
+    },
+    { successMessage: t('dataTools.backups.deleted'), onUndo: refetch, onError: refetch },
+  )
 }
 
 // ---- Danger zone ---------------------------------------------------------------
-const wiping = useMutation({
-  mutationFn: () => api.del('/account/data', { confirm: 'DELETE' }),
-  onSuccess: () => {
-    toast.success(t('dataTools.danger.deleted'))
-    qc.clear()
-    void router.replace('/')
-  },
-  onError: (e) => toast.error(errMsg(e)),
-})
+const wipePending = ref(false)
 
 async function confirmWipe() {
+  if (wipePending.value) return
   const ok = await confirm({
     title: t('dataTools.danger.title'),
     message: t('dataTools.danger.message'),
@@ -199,7 +199,21 @@ async function confirmWipe() {
     danger: true,
     typeToConfirm: 'DELETE',
   })
-  if (ok) wiping.mutate()
+  if (!ok) return
+  wipePending.value = true
+  void toast
+    .deferred(
+      t('feedback.wipeScheduled'),
+      async () => {
+        await api.del('/account/data', { confirm: 'DELETE' })
+        qc.clear()
+        void router.replace('/')
+      },
+      { delay: 8000, activityLabel: t('feedback.activity.deletingAll'), successMessage: t('dataTools.danger.deleted') },
+    )
+    .finally(() => {
+      wipePending.value = false
+    })
 }
 </script>
 
@@ -285,14 +299,14 @@ async function confirmWipe() {
       <p v-else-if="!backups.data.value?.length" class="py-4 text-center text-xs text-subtle">{{ t('dataTools.backups.empty') }}</p>
       <ul v-else class="flex flex-col divide-y divide-border">
         <li v-for="b in backups.data.value" :key="b.id" class="flex flex-wrap items-center gap-3 py-3 first:pt-0 last:pb-0">
-          <div class="min-w-0 flex-1">
+          <div class="min-w-0 flex-1 basis-44">
             <p class="tabular text-[13px] font-medium text-fg">{{ f.dateTime(b.createdAt) }}</p>
             <p class="text-xs text-muted">{{ sizeLabel(b) }}</p>
           </div>
           <div class="flex flex-wrap items-center gap-1.5">
             <Button variant="ghost" size="xs" @click="downloadUrl(`/backups/${b.id}/download`)"><Download class="size-3.5" aria-hidden="true" />{{ t('dataTools.backups.download') }}</Button>
-            <Button variant="ghost" size="xs" :loading="restoreBackup.isPending.value && restoreBackup.variables.value === b.id" @click="confirmRestore(b)"><RotateCcw class="size-3.5" aria-hidden="true" />{{ t('dataTools.backups.restore') }}</Button>
-            <Button variant="danger-ghost" size="xs" @click="confirmDeleteBackup(b)"><Trash2 class="size-3.5" aria-hidden="true" />{{ t('common.delete') }}</Button>
+            <Button variant="ghost" size="xs" :loading="restoreBackup.isPending.value && restoreBackup.variables.value === b.id" :disabled="restoreBackup.isPending.value" @click="confirmRestore(b)"><RotateCcw class="size-3.5" aria-hidden="true" />{{ t('dataTools.backups.restore') }}</Button>
+            <Button variant="danger-ghost" size="xs" :disabled="restoreBackup.isPending.value || wipePending" @click="confirmDeleteBackup(b)"><Trash2 class="size-3.5" aria-hidden="true" />{{ t('common.delete') }}</Button>
           </div>
         </li>
       </ul>
@@ -308,7 +322,7 @@ async function confirmWipe() {
             <p class="mt-0.5 max-w-md text-xs leading-relaxed text-muted">{{ t('dataTools.danger.description') }}</p>
           </div>
         </div>
-        <Button variant="danger" class="shrink-0" :loading="wiping.isPending.value" @click="confirmWipe"><Trash2 class="size-4" aria-hidden="true" />{{ t('dataTools.danger.action') }}</Button>
+        <Button variant="danger" class="shrink-0" :disabled="wipePending" @click="confirmWipe"><Trash2 class="size-4" aria-hidden="true" />{{ t('dataTools.danger.action') }}</Button>
       </div>
     </Card>
   </div>

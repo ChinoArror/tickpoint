@@ -45,6 +45,7 @@ import CheckpointList from '@/components/checkpoint/CheckpointList.vue'
 import DueEditor from './DueEditor.vue'
 import DetailSection from './DetailSection.vue'
 import ReminderEditor from './ReminderEditor.vue'
+import AiLanguagePicker from '@/components/ai/AiLanguagePicker.vue'
 import Badge from '@/components/ui/Badge.vue'
 import Button from '@/components/ui/Button.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
@@ -61,6 +62,7 @@ import { useTaskDetail } from '@/composables/useTasks'
 import { useTaskActions, useErrorMessage, useProjects, invalidatePlanning } from '@/composables/useTasks'
 import { useFormat } from '@/composables/useFormat'
 import { useNow } from '@/composables/useNow'
+import { useAiLanguage } from '@/composables/useAiLanguage'
 import { useToast } from '@/composables/useToast'
 import { confirm } from '@/composables/useConfirm'
 import { useSessionStore } from '@/stores/session'
@@ -558,11 +560,12 @@ function actionLabel(action: string): string {
 const aiBusy = ref<'plan' | 'analyze' | null>(null)
 const analysis = ref<AiAnalysis | null>(null)
 const aiEnabled = computed(() => session.settings?.aiEnabled !== false)
+const outputLanguage = useAiLanguage()
 
 async function generatePlan() {
   aiBusy.value = 'plan'
   try {
-    const draft = await api.post<{ draftId: string }>('/ai/checkpoints', { taskId: props.taskId })
+    const draft = await api.post<{ draftId: string }>('/ai/checkpoints', { taskId: props.taskId, outputLanguage: outputLanguage.value })
     router.push(`/plan/${draft.draftId}`)
   } catch (e) {
     toast.error(errMsg(e))
@@ -574,7 +577,7 @@ async function generatePlan() {
 async function analyze() {
   aiBusy.value = 'analyze'
   try {
-    const r = await api.post<{ analysis: AiAnalysis }>('/ai/analyze', { taskId: props.taskId })
+    const r = await api.post<{ analysis: AiAnalysis }>('/ai/analyze', { taskId: props.taskId, outputLanguage: outputLanguage.value })
     analysis.value = r.analysis
   } catch (e) {
     toast.error(errMsg(e))
@@ -806,6 +809,7 @@ const newDepsCount = computed(() => task.value?.dependencies.length ?? 0)
               {{ aiBusy === 'analyze' ? t('taskDetail.ai.analyzing') : t('taskDetail.ai.analyze') }}
             </Button>
           </div>
+          <AiLanguagePicker v-model="outputLanguage" hint />
           <p class="text-xs text-subtle">{{ aiEnabled ? t('taskDetail.ai.hint') : t('taskDetail.ai.disabled') }}</p>
 
           <!-- AI narrative kept visually separate from the deterministic metrics above -->

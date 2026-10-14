@@ -199,11 +199,8 @@
       "copyUuid": "ユーザー ID をコピー",
       "manage": "アカウントを管理",
       "signOutTitle": "サインアウト",
-      "signOutSubtitle": "サインアウトには2つの方法があり、影響範囲が異なります。",
-      "signOutTickPointHint": "このブラウザの TickPoint セッションを終了します。Aryuki Accounts のサインインと他のアプリは有効なままです。",
-      "signOutEverywhereHint": "Aryuki Accounts の中央セッションを終了します。このブラウザの他の Aryuki アプリからもサインアウトされます。",
-      "everywhereConfirmTitle": "Aryuki Accounts からサインアウトしますか？",
-      "everywhereConfirm": "すべてからサインアウト"
+      "signOutSubtitle": "このブラウザでのセッションを終了します。",
+      "signOutHint": "このブラウザで TickPoint と Aryuki アカウントからサインアウトします。同じ Aryuki アカウントを使う他のアプリでは、再度サインインが必要になります。"
     }
   },
   "notificationsPanel": {

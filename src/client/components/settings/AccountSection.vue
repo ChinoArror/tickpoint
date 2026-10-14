@@ -1,21 +1,20 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
 import { useQueryClient } from '@tanstack/vue-query'
-import { Copy, ExternalLink, LogOut, ShieldAlert } from 'lucide-vue-next'
+import { Copy, ExternalLink, LogOut } from 'lucide-vue-next'
 import Avatar from '@/components/ui/Avatar.vue'
 import Badge from '@/components/ui/Badge.vue'
 import Button from '@/components/ui/Button.vue'
 import Card from '@/components/ui/Card.vue'
 import IconButton from '@/components/ui/IconButton.vue'
 import { confirm } from '@/composables/useConfirm'
+import { runActivity } from '@/composables/useActivity'
 import { useToast } from '@/composables/useToast'
 import { useErrorMessage } from '@/composables/useTasks'
 import { useSessionStore } from '@/stores/session'
 
 const { t } = useI18n()
-const router = useRouter()
 const qc = useQueryClient()
 const session = useSessionStore()
 const toast = useToast()
@@ -37,27 +36,24 @@ async function copyUuid() {
   }
 }
 
-async function signOutTickPoint() {
-  try {
-    await session.signOutLocal()
-    qc.clear()
-    void router.replace('/signin?signedOut=1')
-  } catch (e) {
-    toast.error(errMsg(e))
-  }
-}
+const signingOut = ref(false)
 
-async function signOutEverywhere() {
+async function signOut() {
+  if (signingOut.value) return
   const ok = await confirm({
-    title: t('settingsPage.account.everywhereConfirmTitle'),
-    message: t('account.signOutEverywhereHint'),
-    confirmLabel: t('settingsPage.account.everywhereConfirm'),
-    danger: true,
+    title: t('feedback.signOutTitle'),
+    message: t('feedback.signOutMessage'),
+    confirmLabel: t('account.signOut'),
   })
   if (!ok) return
+  signingOut.value = true
   try {
-    await session.signOutEverywhere()
+    await runActivity(t('feedback.activity.signingOut'), async () => {
+      qc.clear()
+      await session.signOut()
+    })
   } catch (e) {
+    signingOut.value = false
     toast.error(errMsg(e))
   }
 }
@@ -105,17 +101,9 @@ async function signOutEverywhere() {
     </Card>
 
     <Card :title="t('settingsPage.account.signOutTitle')" :subtitle="t('settingsPage.account.signOutSubtitle')" :padded="true">
-      <div class="flex flex-col gap-5">
-        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p class="max-w-md text-xs leading-relaxed text-muted">{{ t('settingsPage.account.signOutTickPointHint') }}</p>
-          <Button variant="secondary" class="shrink-0" @click="signOutTickPoint"><LogOut class="size-4" aria-hidden="true" />{{ t('account.signOutTickPoint') }}</Button>
-        </div>
-        <div class="flex flex-col gap-3 border-t border-border pt-5 sm:flex-row sm:items-center sm:justify-between">
-          <p class="max-w-md text-xs leading-relaxed text-muted">
-            <ShieldAlert class="mr-1 inline size-3.5 align-[-2px] text-warning" aria-hidden="true" />{{ t('settingsPage.account.signOutEverywhereHint') }}
-          </p>
-          <Button variant="danger-ghost" class="shrink-0" @click="signOutEverywhere"><LogOut class="size-4" aria-hidden="true" />{{ t('account.signOutEverywhere') }}</Button>
-        </div>
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p class="max-w-md text-xs leading-relaxed text-muted">{{ t('settingsPage.account.signOutHint') }}</p>
+        <Button variant="secondary" class="shrink-0" :loading="signingOut" @click="signOut"><LogOut class="size-4" aria-hidden="true" />{{ t('account.signOut') }}</Button>
       </div>
     </Card>
   </div>

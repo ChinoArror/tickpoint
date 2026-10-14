@@ -2,6 +2,7 @@
 import { computed, reactive, ref, watch, type Component } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useMediaQuery } from '@vueuse/core'
+import { useQuery } from '@tanstack/vue-query'
 import { VueDraggable } from 'vue-draggable-plus'
 import { AlarmClock, AlertTriangle, Archive, CalendarDays, CheckCircle2, Columns3, CornerDownRight, Copy, ExternalLink, Inbox, LayoutList, ListChecks, MoreHorizontal, Pause, Play, Plus, SlidersHorizontal, Sun, Trash2 } from 'lucide-vue-next'
 import Button from '@/components/ui/Button.vue'
@@ -15,10 +16,11 @@ import Select from '@/components/ui/Select.vue'
 import Skeleton from '@/components/ui/Skeleton.vue'
 import PillNav from '@/components/mobile/PillNav.vue'
 import TaskRow from '@/components/domain/TaskRow.vue'
+import CheckpointRow from '@/components/domain/CheckpointRow.vue'
 import CountdownChip from '@/components/domain/CountdownChip.vue'
 import PriorityFlag from '@/components/domain/PriorityFlag.vue'
 import { api } from '@/lib/api'
-import type { Paged, Task } from '@/lib/types'
+import type { Checkpoint, Paged, Task } from '@/lib/types'
 import { useProjects, useTaskActions, useTaskList, useErrorMessage } from '@/composables/useTasks'
 import { useFormat } from '@/composables/useFormat'
 import { useNow } from '@/composables/useNow'
@@ -26,6 +28,7 @@ import { useToast } from '@/composables/useToast'
 import { confirm } from '@/composables/useConfirm'
 import { useUiStore } from '@/stores/ui'
 import { BOARD_STATUSES, PRIORITIES } from '@shared/constants'
+import { addDaysToIsoDate, endOfZonedDay, isoDateInZone } from '@shared/time'
 import { taskDueDate } from '@/components/views/planningModel'
 
 /**
@@ -35,10 +38,14 @@ import { taskDueDate } from '@/components/views/planningModel'
  */
 type View = 'inbox' | 'today' | 'upcoming' | 'deadlines' | 'completed' | 'archived'
 type BoardStatus = (typeof BOARD_STATUSES)[number]
+/** A row in list mode: a task, or a checkpoint on the Today and Upcoming views. */
+type ListRow =
+  | { kind: 'task'; key: string; sortAt: number | null; dateKey: string | null; task: Task }
+  | { kind: 'checkpoint'; key: string; sortAt: number; dateKey: string; cp: Checkpoint }
 interface Group {
   id: string
   label: string | null
-  items: Task[]
+  items: ListRow[]
 }
 
 const props = defineProps<{ view: View }>()
@@ -113,6 +120,33 @@ const params = computed(() => {
   return p
 })
 
+// ---- Checkpoints (list mode, Today and Upcoming only) -------------------------------
+const todayIso = computed(() => isoDateInZone(now.value, f.tz.value))
+const showsCheckpoints = computed(() => (props.view === 'today' || props.view === 'upcoming') && mode.value === 'list')
+// Today looks back 30 days so overdue checkpoints appear; Upcoming matches the server's 14-day horizon.
+const cpRange = computed(() => {
+  const today = todayIso.value
+  return props.view === 'today' ? { from: addDaysToIsoDate(today, -30), to: today } : { from: today, to: addDaysToIsoDate(today, 14) }
+})
+const cpQuery = useQuery({
+  queryKey: computed(() => ['checkpoints-range', cpRange.value.from, cpRange.value.to] as const),
+  queryFn: ({ signal }) => api.get<Checkpoint[]>('/checkpoints', { ...cpRange.value }, signal),
+  enabled: showsCheckpoints,
+})
+const cpLoading = computed(() => showsCheckpoints.value && cpQuery.isPending.value)
+
+/** Pending checkpoints with a target date that pass the page filters. Empty when the kind filter is task or deadline. */
+const checkpointItems = computed<Checkpoint[]>(() => {
+  if (!showsCheckpoints.value || kindFilter.value === 'task' || kindFilter.value === 'deadline') return []
+  return (cpQuery.data.value ?? []).filter(
+    (cp) =>
+      cp.status === 'pending' &&
+      !!cp.targetDate &&
+      (projectFilter.value === 'all' || cp.projectId === projectFilter.value) &&
+      (priorityFilter.value === 'all' || cp.priority === priorityFilter.value),
+  )
+})
+
 // ---- Data and pagination ----------------------------------------------------------
 const { data: firstPage, isPending, isError, refetch } = useTaskList(params)
 const appended = ref<Task[]>([])
@@ -155,24 +189,52 @@ async function loadMore() {
 }
 
 // ---- List grouping ----------------------------------------------------------------
+/** Sort by time: timed rows first (earliest first), untimed rows after them in their current order. */
+function byTime(a: ListRow, b: ListRow): number {
+  if ((a.sortAt == null) !== (b.sortAt == null)) return a.sortAt == null ? 1 : -1
+  return (a.sortAt ?? 0) - (b.sortAt ?? 0)
+}
+
+/** Every list-mode row. Today and Upcoming merge checkpoints into the task order by time. */
+const listRows = computed<ListRow[]>(() => {
+  const rows: ListRow[] = items.value.map((x) => ({
+    kind: 'task',
+    key: x.id,
+    sortAt: x.due.sortAt,
+    dateKey: taskDueDate(x, f.tz.value) ?? (x.scheduledDate || null),
+    task: x,
+  }))
+  if (!showsCheckpoints.value) return rows
+  // A checkpoint is due at the end of its target day, like a date-only task deadline.
+  for (const cp of checkpointItems.value) {
+    const date = cp.targetDate!
+    rows.push({ kind: 'checkpoint', key: 'cp:' + cp.id, sortAt: endOfZonedDay(date, f.tz.value), dateKey: date, cp })
+  }
+  return rows.sort(byTime)
+})
+
+const listCount = computed(() => items.value.length + checkpointItems.value.length)
+
 const groups = computed<Group[]>(() => {
-  const list = items.value
+  const list = listRows.value
   if (props.view === 'today') {
-    const overdue = list.filter((x) => x.status !== 'completed' && x.due.sortAt != null && x.due.sortAt < now.value)
-    const rest = list.filter((x) => !overdue.includes(x))
+    const today = todayIso.value
+    const isOverdue = (r: ListRow) => (r.kind === 'task' ? r.task.status !== 'completed' && r.sortAt != null && r.sortAt < now.value : r.dateKey < today)
+    const overdue = list.filter(isOverdue)
+    const rest = list.filter((r) => !isOverdue(r))
     const out: Group[] = []
     if (overdue.length) out.push({ id: 'overdue', label: t('taskList.sections.overdue'), items: overdue })
     if (rest.length || !overdue.length) out.push({ id: 'today', label: t('time.today'), items: rest })
     return out
   }
   if (props.view === 'upcoming' || props.view === 'deadlines') {
-    const byDay = new Map<string, Task[]>()
-    for (const x of list) {
+    const byDay = new Map<string, ListRow[]>()
+    for (const r of list) {
       // Date-only deadlines group under their own date (sortAt is the end-of-day boundary).
-      const key = taskDueDate(x, f.tz.value) ?? (x.scheduledDate || 'none')
+      const key = r.dateKey ?? 'none'
       const bucket = byDay.get(key)
-      if (bucket) bucket.push(x)
-      else byDay.set(key, [x])
+      if (bucket) bucket.push(r)
+      else byDay.set(key, [r])
     }
     return [...byDay].map(([key, bucket]) => ({ id: key, label: key === 'none' ? t('due.unknown') : f.relativeDay(key), items: bucket }))
   }
@@ -327,7 +389,7 @@ function projectOf(task: Task) {
       <div class="animate-fade-up min-w-0">
         <h1 class="text-2xl font-semibold tracking-tight text-fg md:text-[28px]">{{ t(`nav.${view}`) }}</h1>
         <p v-if="!isPending && !isError" class="mt-1 text-[13px] text-muted">
-          <span class="tabular">{{ t('taskList.count', { n: f.number(items.length, 0) }) }}</span><span v-if="hasMore">+</span>
+          <span class="tabular">{{ t('taskList.count', { n: f.number(listCount, 0) }) }}</span><span v-if="hasMore">+</span>
         </p>
       </div>
       <div class="flex items-center gap-2">
@@ -366,7 +428,7 @@ function projectOf(task: Task) {
       </EmptyState>
 
       <template v-else-if="mode === 'list'">
-        <EmptyState v-if="!items.length" :icon="EMPTY_ICON[view]" :title="t(`taskList.empty.${view}.title`)" :description="t(`taskList.empty.${view}.description`)">
+        <EmptyState v-if="!listCount && !cpLoading" :icon="EMPTY_ICON[view]" :title="t(`taskList.empty.${view}.title`)" :description="t(`taskList.empty.${view}.description`)">
           <Button v-if="emptyAction" variant="primary" size="sm" @click="emptyAction.run()">{{ emptyAction.label }}</Button>
         </EmptyState>
 
@@ -377,7 +439,10 @@ function projectOf(task: Task) {
               <span class="tabular rounded-full bg-surface-sunken px-1.5 text-[11px] font-medium normal-case tracking-normal">{{ g.items.length }}</span>
             </h2>
             <TransitionGroup name="list" tag="div" class="tap-task-rows relative flex flex-col gap-0.5" role="list">
-              <TaskRow v-for="task in g.items" :key="task.id" :task="task" :menu="rowMenu(task)" />
+              <template v-for="row in g.items" :key="row.key">
+                <TaskRow v-if="row.kind === 'task'" :task="row.task" :menu="rowMenu(row.task)" />
+                <CheckpointRow v-else :checkpoint="row.cp" :today="todayIso" />
+              </template>
             </TransitionGroup>
           </section>
         </div>

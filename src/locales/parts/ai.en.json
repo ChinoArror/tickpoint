@@ -1,0 +1,8 @@
+{
+  "aiLanguage": {
+    "label": "Output language",
+    "english": "English",
+    "japanese": "日本語",
+    "hint": "AI-written titles and notes will be in this language. Your source text isn't translated."
+  }
+}

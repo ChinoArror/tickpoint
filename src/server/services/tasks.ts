@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, gte, inArray, isNotNull, isNull, like, lt, lte, ne, notInArray, or, sql, type SQL } from 'drizzle-orm'
+import { and, asc, desc, eq, gt, gte, inArray, isNotNull, isNull, like, lt, lte, ne, notInArray, or, sql, type SQL } from 'drizzle-orm'
 import { schema } from '../db/client'
 import { newId } from '../lib/crypto'
 import { AppError, notFound } from '../lib/http'
@@ -41,7 +41,8 @@ export async function listTasks(ctx: ServiceCtx, q: TaskListQuery) {
     case 'today':
       conds.push(
         inArray(t.status, [...OPEN]),
-        or(eq(t.scheduledDate, today), and(isNotNull(t.dueSortAt), lt(t.dueSortAt, dayEnd))),
+        // Date-only deadlines sort at the end of their day, so today's end boundary is inclusive.
+        or(eq(t.scheduledDate, today), and(isNotNull(t.dueSortAt), lte(t.dueSortAt, dayEnd))),
       )
       order = [sql`${t.dueSortAt} IS NULL`, asc(t.dueSortAt), asc(t.sortOrder)]
       break
@@ -50,7 +51,8 @@ export async function listTasks(ctx: ServiceCtx, q: TaskListQuery) {
       conds.push(
         inArray(t.status, [...OPEN]),
         or(
-          and(gte(t.dueSortAt, dayStart), lte(t.dueSortAt, horizon)),
+          // Yesterday's date-only deadlines sort exactly at the start of today, so that bound is exclusive.
+          and(gt(t.dueSortAt, dayStart), lte(t.dueSortAt, horizon)),
           and(gte(t.scheduledDate, today), lte(t.scheduledDate, addDaysToIsoDate(today, 14))),
         ),
       )

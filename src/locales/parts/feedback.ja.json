@@ -1,0 +1,19 @@
+{
+  "feedback": {
+    "undone": "取り消しました。変更はありません。",
+    "commitFailed": "変更を完了できませんでした。",
+    "saving": "保存中…",
+    "backupRemoving": "バックアップを削除します。",
+    "recipientRemoving": "{address} を削除します。",
+    "wipeScheduled": "数秒後に TickPoint のデータをすべて削除します。",
+    "activity": {
+      "creatingBackup": "バックアップを作成中…",
+      "restoringBackup": "バックアップを復元中…",
+      "importing": "インポート中…",
+      "deletingAll": "TickPoint のデータをすべて削除中…",
+      "signingOut": "サインアウト中…"
+    },
+    "signOutTitle": "サインアウトしますか？",
+    "signOutMessage": "このブラウザで TickPoint と Aryuki アカウントからサインアウトします。同じ Aryuki アカウントを使う他のアプリでは、再度サインインが必要になります。"
+  }
+}

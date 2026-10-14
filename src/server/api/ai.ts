@@ -3,7 +3,7 @@ import { and, desc, eq, gte, sql } from 'drizzle-orm'
 import type { AppBindings } from '../env'
 import { schema } from '../db/client'
 import { AppError, ok, parse, readJson } from '../lib/http'
-import { LIMITS } from '../../shared/constants'
+import { LIMITS, type Locale } from '../../shared/constants'
 import { checkQuota } from '../auth/authcenter'
 import { bodyLimit } from '../middleware'
 import {
@@ -21,12 +21,14 @@ import * as ai from '../ai/service'
 
 export const aiRoutes = new Hono<AppBindings>()
 const idParam = (v: string) => parse(idSchema, v)
+/** A request may ask for AI-written text in a language other than the interface language. */
+const withLanguage = (ctx: ai.AiCtx, lang: Locale | null | undefined): ai.AiCtx => (lang ? { ...ctx, locale: lang } : ctx)
 
 // Smart Capture -------------------------------------------------------------
 
 aiRoutes.post('/extract', bodyLimit(256 * 1024), async (c) => {
   const input = await readJson(c, extractRequestSchema)
-  return ok(c, await ai.extract(await aiCtx(c), input), 201)
+  return ok(c, await ai.extract(withLanguage(await aiCtx(c), input.outputLanguage), input), 201)
 })
 aiRoutes.get('/extract/:id', async (c) => ok(c, await ai.getExtractionDraft(await svc(c), idParam(c.req.param('id')))))
 aiRoutes.post('/extract/:id/confirm', async (c) => {
@@ -40,14 +42,18 @@ aiRoutes.post('/extract/:id/reject', async (c) => {
 
 // Checkpoint planning ---------------------------------------------------------
 
-aiRoutes.post('/checkpoints', async (c) => ok(c, await ai.generatePlan(await aiCtx(c), await readJson(c, planRequestSchema)), 201))
+aiRoutes.post('/checkpoints', async (c) => {
+  const input = await readJson(c, planRequestSchema)
+  return ok(c, await ai.generatePlan(withLanguage(await aiCtx(c), input.outputLanguage), input), 201)
+})
 aiRoutes.get('/checkpoints/:id', async (c) => ok(c, await ai.getPlanDraft(await svc(c), idParam(c.req.param('id')))))
 aiRoutes.put('/checkpoints/:id', async (c) =>
   ok(c, await ai.savePlanDraft(await svc(c), idParam(c.req.param('id')), (await readJson(c, planDraftUpdateSchema)).checkpoints)),
 )
-aiRoutes.post('/checkpoints/:id/regenerate', async (c) =>
-  ok(c, await ai.regeneratePlan(await aiCtx(c), idParam(c.req.param('id')), await readJson(c, planRegenerateSchema))),
-)
+aiRoutes.post('/checkpoints/:id/regenerate', async (c) => {
+  const input = await readJson(c, planRegenerateSchema)
+  return ok(c, await ai.regeneratePlan(withLanguage(await aiCtx(c), input.outputLanguage), idParam(c.req.param('id')), input))
+})
 aiRoutes.post('/checkpoints/:id/confirm', async (c) =>
   ok(c, await ai.confirmPlan(await svc(c), idParam(c.req.param('id')), (await readJson(c, planConfirmSchema)).checkpoints), 201),
 )
@@ -58,7 +64,10 @@ aiRoutes.delete('/checkpoints/:id', async (c) => {
 
 // Analysis ----------------------------------------------------------------------
 
-aiRoutes.post('/analyze', async (c) => ok(c, await ai.analyze(await aiCtx(c), await readJson(c, analyzeRequestSchema))))
+aiRoutes.post('/analyze', async (c) => {
+  const input = await readJson(c, analyzeRequestSchema)
+  return ok(c, await ai.analyze(withLanguage(await aiCtx(c), input.outputLanguage), input))
+})
 
 // Usage -------------------------------------------------------------------------
 

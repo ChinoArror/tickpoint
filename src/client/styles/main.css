@@ -281,6 +281,13 @@
 .list-enter-from { opacity: 0; transform: translateY(6px) }
 .list-leave-to { opacity: 0; transform: translateX(12px) }
 
+/* Notice countdown bar (Toaster) and indeterminate activity track (ActivityHost). */
+.toast-countdown { transform-origin: left center; animation-name: toast-countdown; animation-timing-function: linear; animation-fill-mode: forwards }
+@keyframes toast-countdown { from { transform: scaleX(1) } to { transform: scaleX(0) } }
+.activity-indeterminate { animation: activity-indeterminate 1.4s ease-in-out infinite }
+@keyframes activity-indeterminate { from { transform: translateX(-100%) } to { transform: translateX(300%) } }
+@media (prefers-reduced-motion: reduce) { .activity-indeterminate { animation: none; transform: translateX(0) } }
+
 /* Staggered reveal: set style="--i: n" on children of .stagger. */
 .stagger > * { animation: fade-up var(--dur-slow) var(--ease-out) both; animation-delay: calc(var(--i, 0) * 40ms) }
 

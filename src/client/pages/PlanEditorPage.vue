@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from '@tanstack/vue-query'
 import { VueDraggable } from 'vue-draggable-plus'
 import { AlertTriangle, Check, CheckCircle2, Info, Plus, Sparkles, Trash2 } from 'lucide-vue-next'
 import AiBadge from '@/components/ai/AiBadge.vue'
+import AiLanguagePicker from '@/components/ai/AiLanguagePicker.vue'
 import Button from '@/components/ui/Button.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
 import Field from '@/components/ui/Field.vue'
@@ -15,6 +16,7 @@ import { api, ApiError } from '@/lib/api'
 import type { DraftCheckpoint, Feasibility, GoalDetail, PlanCheck, PlanDraft, TaskDetail } from '@/lib/types'
 import { invalidatePlanning, useErrorMessage } from '@/composables/useTasks'
 import { useFormat } from '@/composables/useFormat'
+import { useAiLanguage } from '@/composables/useAiLanguage'
 import { confirm as askConfirm } from '@/composables/useConfirm'
 import { useToast } from '@/composables/useToast'
 import { useRouter } from 'vue-router'
@@ -188,6 +190,7 @@ function othersOf(id: string) {
 // ------------------------------------------------------------- regenerate
 const selectedIds = ref<string[]>([])
 const instructions = ref('')
+const outputLanguage = useAiLanguage()
 const regenBusy = ref(false)
 const flashIds = ref<string[]>([])
 
@@ -217,6 +220,7 @@ async function regenerate(overwriteEdited: boolean): Promise<void> {
     const r = await api.post<PlanDraft>(`/ai/checkpoints/${props.draftId}/regenerate`, {
       checkpointIds: ids,
       instructions: instructions.value.trim() || null,
+      outputLanguage: outputLanguage.value,
       overwriteEdited,
     })
     applyDraft(r)
@@ -386,6 +390,7 @@ const parentKind = computed(() => (parent.value?.kind === 'goal' ? t('plan.paren
           <Field v-slot="{ id, describedby }" :label="t('plan.regenerate.instructions')" class="min-w-0 flex-1 basis-56">
             <Input :id="id" v-model="instructions" :placeholder="t('plan.regenerate.instructionsPlaceholder')" :aria-describedby="describedby" />
           </Field>
+          <AiLanguagePicker v-model="outputLanguage" class="shrink-0" />
           <Button variant="ai" :loading="regenBusy" @click="regenerate(false)"><Sparkles aria-hidden="true" />{{ t('plan.regenerate.button', { n: selectedIds.length }) }}</Button>
           <Button variant="ghost" size="sm" @click="selectedIds = []">{{ t('plan.regenerate.clear') }}</Button>
         </div>
