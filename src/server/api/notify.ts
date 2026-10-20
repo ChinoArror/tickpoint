@@ -13,6 +13,7 @@ import { activity, getOwnedCheckpoint, getOwnedGoal, getOwnedTask } from '../ser
 import { syncRule } from '../reminders/schedule'
 import { copyFor } from '../notifications/templates'
 import { emailProvider, sendPush } from '../notifications/channels'
+import { sendNative } from '../notifications/fcm'
 import * as emails from '../services/emails'
 import { testEmail } from '../notifications/email-templates'
 import { rateLimit } from '../middleware'
@@ -162,7 +163,10 @@ notifyRoutes.post('/notifications/test', rateLimit('notify-test', 600_000, 5), a
   const results: Record<string, { status: string; detail?: string; sent?: number; total?: number }> = {}
   await ctx.db.insert(schema.notifications).values({ id: newId(), ownerUuid: ctx.owner, type: 'test', title: copy.testTitle, body: copy.testBody, link: '/settings/notifications' })
   results.in_app = { status: 'sent' }
-  if (s.notifyPush) results.push = await sendPush(c.env, ctx.db, { owner: ctx.owner, title: copy.testTitle, body: copy.testBody, link: '/settings/notifications', tag: 'tp-test' })
+  if (s.notifyPush) {
+    results.push = await sendPush(c.env, ctx.db, { owner: ctx.owner, title: copy.testTitle, body: copy.testBody, link: '/settings/notifications', tag: 'tp-test' })
+    results.native = await sendNative(c.env, ctx.db, { owner: ctx.owner, title: copy.testTitle, body: copy.testBody, link: '/settings/notifications', tag: 'tp-test' })
+  }
   if (s.notifyEmail) {
     const provider = emailProvider(c.env)
     const addresses = await emails.deliverableAddresses(ctx.db, ctx.owner)

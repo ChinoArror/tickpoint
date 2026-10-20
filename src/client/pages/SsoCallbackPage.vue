@@ -25,11 +25,16 @@ onMounted(async () => {
     return
   }
   try {
-    const r = await api.post<{ redirect: string }>('/auth/session', {
+    const r = await api.post<{ redirect: string; native?: boolean }>('/auth/session', {
       token,
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       locale: i18n.global.locale.value,
     })
+    // Android sign-in: this browser holds no TickPoint session. Hand off to the app page with a full navigation.
+    if (r.native && typeof r.redirect === 'string' && r.redirect.startsWith(location.origin + '/app/auth-complete')) {
+      location.replace(r.redirect)
+      return
+    }
     try {
       localStorage.setItem('tp.hadSession', '1')
     } catch {

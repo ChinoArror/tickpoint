@@ -14,6 +14,7 @@ import { reminderEmail } from '../notifications/email-templates'
 import { buildReminderEmailData } from '../notifications/reminder-email-data'
 import { deliverableAddresses } from '../services/emails'
 import { emailProvider, sendPush, type SendOutcome } from '../notifications/channels'
+import { sendNative } from '../notifications/fcm'
 import { loadTargetState, ruleChannels } from './schedule'
 import { wallClockAt, zonedTimeToUtc, isoDateInZone, addDaysToIsoDate } from '../../shared/time'
 
@@ -122,6 +123,8 @@ async function processJob(env: Env, db: DB, id: string, token: string, now: numb
   if (!settings?.notifyInApp) enabled.delete('in_app')
   if (!settings?.notifyPush) enabled.delete('push')
   if (!settings?.notifyEmail) enabled.delete('email')
+  // Native (FCM) follows the push channel: it runs only when push is on for this rule and the user's notifyPush is set.
+  if (enabled.has('push')) enabled.add('native')
 
   const done = await db
     .select({ channel: schema.notificationDeliveries.channel })
@@ -155,6 +158,12 @@ async function processJob(env: Env, db: DB, id: string, token: string, now: numb
     const o = await sendPush(env, db, { owner: job.ownerUuid, title, body, link, tag: `tp-${job.ruleId}` })
     outcomes.push(o)
     await log('push', o)
+  }
+
+  if (enabled.has('native') && !alreadyDone.has('native')) {
+    const o = await sendNative(env, db, { owner: job.ownerUuid, title, body, link, tag: `tp-${id}` })
+    outcomes.push(o)
+    await log('native', o)
   }
 
   if (enabled.has('email') && !alreadyDone.has('email')) {
@@ -203,10 +212,14 @@ export async function housekeeping(env: Env, now = Date.now()) {
     db.delete(schema.reminderJobs).where(and(inArray(schema.reminderJobs.status, ['sent', 'cancelled', 'permanent_failure']), lt(schema.reminderJobs.updatedAt, now - 60 * day))),
     db.delete(schema.notificationDeliveries).where(lt(schema.notificationDeliveries.attemptedAt, now - 90 * day)),
     db.delete(schema.rateLimits).where(lt(schema.rateLimits.windowStart, now - 2 * day)),
+    // Sign-in hand-offs are only useful for minutes; keep a day for diagnosis.
+    db.delete(schema.nativeLogins).where(lt(schema.nativeLogins.createdAt, now - day)),
     // Pending extraction drafts keep a temporary source copy; drop it after 7 days.
     db.update(schema.aiExtractionDrafts).set({ sourceText: null, status: 'rejected' }).where(and(eq(schema.aiExtractionDrafts.status, 'pending'), lt(schema.aiExtractionDrafts.createdAt, now - 7 * day))),
     db.delete(schema.aiExtractionDrafts).where(and(inArray(schema.aiExtractionDrafts.status, ['rejected']), lt(schema.aiExtractionDrafts.updatedAt, now - 30 * day))),
     db.delete(schema.aiPlanningDrafts).where(and(inArray(schema.aiPlanningDrafts.status, ['rejected', 'pending']), lt(schema.aiPlanningDrafts.updatedAt, now - 30 * day))),
     db.delete(schema.notifications).where(and(sql`${schema.notifications.readAt} is not null`, lt(schema.notifications.createdAt, now - 180 * day))),
   ])
+  // Android devices whose bearer session no longer exists (expired or logged out elsewhere).
+  await env.DB.prepare('DELETE FROM native_devices WHERE session_hash IS NOT NULL AND session_hash NOT IN (SELECT id_hash FROM sessions)').run()
 }

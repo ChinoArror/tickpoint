@@ -1,5 +1,11 @@
-// Typed fetch wrapper for the /api/v1 envelope. Cookies carry the session;
-// the JWT never reaches JavaScript storage.
+// Typed fetch wrapper for the /api/v1 envelope. In the browser, cookies carry the session;
+// the JWT never reaches JavaScript storage. In the Android app, the native shell holds the
+// token and every request carries it as a bearer header.
+
+import { apiBase, native } from '@/platform'
+import { goTo } from '@/platform/navigate'
+import { toast } from '@/composables/useToast'
+import { i18n } from '@/i18n'
 
 export interface ApiErrorBody {
   code: string
@@ -18,18 +24,36 @@ export class ApiError extends Error {
   }
 }
 
-const BASE = '/api/v1'
+const BASE = apiBase()
 let renewing = false
+
+async function authHeaders(): Promise<Record<string, string>> {
+  if (!native) return {}
+  const token = await native.getAuthToken()
+  return token ? { Authorization: `Bearer ${token}` } : {}
+}
 
 /**
  * Silent renewal: when the session expired, bounce through AuthCenter which
  * re-issues a JWT without a prompt if its central session is still valid.
  * The server guards against redirect loops.
+ * On native, the shell runs the Custom Tab sign-in; failures land on /signin.
  */
-export function startSignIn(returnTo = location.pathname + location.search + location.hash) {
-  if (renewing) return
+export function startSignIn(returnTo = location.pathname + location.search + location.hash): Promise<void> {
+  if (renewing) return Promise.resolve()
   renewing = true
+  if (native) {
+    return native
+      .signIn(returnTo)
+      .catch(() => {
+        goTo('/signin')
+      })
+      .finally(() => {
+        renewing = false
+      })
+  }
   location.assign(`${BASE}/auth/login?return=${encodeURIComponent(returnTo)}`)
+  return Promise.resolve()
 }
 
 type Query = Record<string, string | number | boolean | null | undefined>
@@ -43,7 +67,7 @@ function qs(query?: Query) {
 }
 
 export async function request<T>(method: string, path: string, opts: { body?: unknown; query?: Query; raw?: boolean; form?: FormData; signal?: AbortSignal } = {}): Promise<T> {
-  const headers: Record<string, string> = { Accept: 'application/json' }
+  const headers: Record<string, string> = { Accept: 'application/json', ...(await authHeaders()) }
   let body: BodyInit | undefined
   if (opts.form) body = opts.form
   else if (opts.body !== undefined) {
@@ -52,7 +76,13 @@ export async function request<T>(method: string, path: string, opts: { body?: un
   }
   let res: Response
   try {
-    res = await fetch(BASE + path + qs(opts.query), { method, headers, body, credentials: 'same-origin', signal: opts.signal })
+    res = await fetch(BASE + path + qs(opts.query), {
+      method,
+      headers,
+      body,
+      credentials: native ? 'omit' : 'same-origin',
+      signal: opts.signal,
+    })
   } catch (e) {
     if ((e as Error).name === 'AbortError') throw e
     throw new ApiError('NETWORK_ERROR', 0, 'Network error')
@@ -69,7 +99,7 @@ export async function request<T>(method: string, path: string, opts: { body?: un
   }
   if (!res.ok || !json?.success) {
     const err = json?.error ?? { code: 'HTTP_ERROR', message: res.statusText }
-    if (err.code === 'SESSION_EXPIRED') startSignIn()
+    if (err.code === 'SESSION_EXPIRED') void startSignIn()
     throw new ApiError(err.code, res.status, err.message, err.details)
   }
   return json.data
@@ -84,12 +114,59 @@ export const api = {
   upload: <T>(path: string, form: FormData) => request<T>('POST', path, { form }),
 }
 
-/** Trigger a browser download for an authenticated GET endpoint. */
-export function downloadUrl(path: string, query?: Query) {
+/**
+ * Download an authenticated GET endpoint.
+ * Browser: a plain navigation to the URL (the session cookie authorises it).
+ * Native: fetch with the bearer token, then hand the bytes to the share sheet.
+ * Never rejects; native failures are shown as an error toast.
+ */
+export async function downloadUrl(path: string, query?: Query): Promise<void> {
+  if (native) return downloadNative(path, query)
   const a = document.createElement('a')
   a.href = BASE + path + qs(query)
   a.rel = 'noopener'
   document.body.appendChild(a)
   a.click()
   a.remove()
+}
+
+async function downloadNative(path: string, query?: Query): Promise<void> {
+  try {
+    const res = await fetch(BASE + path + qs(query), {
+      headers: { Accept: '*/*', ...(await authHeaders()) },
+      credentials: 'omit',
+    })
+    if (!res.ok) throw new ApiError('HTTP_ERROR', res.status, res.statusText)
+    const blob = await res.blob()
+    const filename = filenameFromDisposition(res.headers.get('Content-Disposition')) ?? fallbackFilename(path, blob.type)
+    await native?.saveFile(blob, filename)
+  } catch (e) {
+    if ((e as Error).name === 'AbortError') return
+    toast(i18n.global.t('nativePlatform.download.failed'), { kind: 'error' })
+  }
+}
+
+function filenameFromDisposition(header: string | null): string | null {
+  if (!header) return null
+  const star = header.match(/filename\*\s*=\s*(?:UTF-8'')?([^;]+)/i)
+  if (star) {
+    try {
+      return sanitizeFilename(decodeURIComponent(star[1].trim().replace(/^"|"$/g, '')))
+    } catch {
+      /* fall through to the plain form */
+    }
+  }
+  const plain = header.match(/filename\s*=\s*"?([^";]+)"?/i)
+  return plain ? sanitizeFilename(plain[1].trim()) : null
+}
+
+function sanitizeFilename(name: string): string | null {
+  const cleaned = name.replace(/[\/:*?"<>|\x00-\x1f]/g, '_').trim()
+  return cleaned || null
+}
+
+function fallbackFilename(path: string, mime: string): string {
+  const segment = path.split('/').filter(Boolean).pop() ?? 'download'
+  const ext = mime.includes('json') ? '.json' : mime.includes('csv') ? '.csv' : mime.includes('zip') ? '.zip' : ''
+  return `tickpoint-${segment}${ext}`
 }

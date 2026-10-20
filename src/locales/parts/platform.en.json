@@ -1,0 +1,67 @@
+{
+  "nativePlatform": {
+    "download": {
+      "failed": "We couldn't prepare that file. Check your connection and try again."
+    },
+    "authComplete": {
+      "title": "Finish signing in",
+      "heading": "Almost there",
+      "body": "Sign-in is complete. Tap the button to continue in the TickPoint app.",
+      "button": "Return to TickPoint",
+      "closeHint": "You can close this page after you return to the app.",
+      "invalid": "This sign-in link is incomplete or has expired. Go back to the app and try signing in again.",
+      "desktop": "This page finishes signing in to the TickPoint Android app. Open the sign-in link on your Android phone."
+    },
+    "signedOut": {
+      "title": "You're signed out",
+      "body": "You have been signed out of TickPoint on this device.",
+      "button": "Return to TickPoint",
+      "web": "Open TickPoint on the web"
+    },
+    "terms": {
+      "gateTitle": "Before you start",
+      "summary": "TickPoint keeps your tasks, goals and reminders. Please read the Terms of Service and Privacy Policy before you continue.",
+      "readFull": "Read the Terms of Service",
+      "privacy": "Privacy Policy",
+      "agree": "I have read and agree to the Terms of Service",
+      "accept": "Accept and continue",
+      "decline": "Decline",
+      "declineTitle": "TickPoint can't be used without accepting the Terms.",
+      "reviewAgain": "Review again",
+      "closeApp": "Close app",
+      "acceptFailed": "We couldn't save your acceptance. Please try again."
+    },
+    "push": {
+      "title": "Android notifications",
+      "hint": "Get reminders as Android notifications, even when TickPoint is closed.",
+      "note": "Android notifications need Google Play services and can be delayed by battery optimisation. You can change this at any time in Android settings.",
+      "turnOn": "Turn on",
+      "turnOff": "Turn off",
+      "openSettings": "Open Android settings",
+      "status": {
+        "checking": "Checking…",
+        "granted": "On",
+        "denied": "Blocked in Android settings",
+        "prompt": "Off",
+        "unavailable": "Unavailable (Google Play services required)"
+      },
+      "channels": {
+        "deadlines": "Deadlines & reminders",
+        "general": "General notices"
+      }
+    },
+    "pushPrompt": {
+      "title": "Get reminders on this phone",
+      "body": "TickPoint can notify you before deadlines and checkpoints. You can change this anytime in Settings → Notifications.",
+      "allow": "Allow notifications",
+      "notNow": "Not now",
+      "enabled": "Notifications are on for this phone.",
+      "denied": "Notifications are off. You can turn them on in Android settings.",
+      "unavailable": "Push notifications aren't available on this device (Google Play services required).",
+      "failed": "We couldn't turn on notifications. Try again in Settings → Notifications."
+    },
+    "network": {
+      "offline": "You're offline. Changes can't be saved until you reconnect."
+    }
+  }
+}

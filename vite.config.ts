@@ -43,6 +43,7 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src/client', import.meta.url)),
       '@shared': fileURLToPath(new URL('./src/shared', import.meta.url)),
       '@locales': fileURLToPath(new URL('./src/locales', import.meta.url)),
+      '@native-platform': fileURLToPath(new URL('./src/client/platform/none.ts', import.meta.url)),
     },
   },
   build: {

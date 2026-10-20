@@ -112,7 +112,8 @@ tickpoint/
     integration/     Tests that run inside workerd against a migrated D1
   scripts/           sync-secrets.mjs (local .dev.vars and remote Worker secrets)
   docs/              API.md, UI_GUIDE.md, CONFIGURATION.md, IMPLEMENTATION_CHECKLIST.md
-  public/            Static files: _headers (HTML security headers and CSP), icons, theme-init.js
+  public/            Static files: _headers (HTML security headers and CSP), icons, theme-init.js, .well-known/assetlinks.json
+  android-app/       Android app (Capacitor 8): native project, build/sign scripts, docs, release artifacts — see android-app/docs/ANDROID.md
   .design/           Local-only secret inputs (git-ignored)
   wrangler.jsonc     Worker configuration: routes, bindings, cron triggers, non-secret vars
   vite.config.ts     Vite, Vue, Tailwind, Cloudflare plugin and PWA configuration

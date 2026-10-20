@@ -7,6 +7,8 @@ import { MoreHorizontal, PanelLeftClose, PanelLeftOpen, Plus, Search } from 'luc
 import Logo from '@/components/brand/Logo.vue'
 import Kbd from '@/components/ui/Kbd.vue'
 import AppFooter from '@/components/shell/AppFooter.vue'
+import NativePushPrompt from '@/components/shell/NativePushPrompt.vue'
+import { isNative } from '@/platform'
 import TopBarActions from './TopBarActions.vue'
 import { MOBILE_NAV, NAV, TASK_VIEW_PATHS } from './nav'
 import { useUiStore } from '@/stores/ui'
@@ -208,5 +210,6 @@ onKeyStroke('q', (e) => {
     <QuickAdd v-if="ui.quickAddOpen" />
     <SearchPalette v-if="ui.searchOpen" />
     <MoreSheet v-if="ui.moreSheetOpen" />
+    <NativePushPrompt v-if="isNative" />
   </div>
 </template>

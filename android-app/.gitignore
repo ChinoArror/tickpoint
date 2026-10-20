@@ -1,0 +1,36 @@
+# Dependencies and generated web bundle
+node_modules/
+www/
+
+# Local test output (screenshots, emulator logs)
+test-output/
+
+# Gradle / Android build output and machine-specific files
+android/local.properties
+android/.gradle/
+android/build/
+android/app/build/
+android/capacitor-cordova-android-plugins/build/
+android/.idea/
+android/*.iml
+android/app/*.iml
+android/app/release/
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
+
+# Signing material: never commit (the repo keeps only the config and scripts)
+*.jks
+*.keystore
+*.p12
+keystore.properties
+*.properties.local
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Firebase client config (project identifiers): not committed
+google-services.json

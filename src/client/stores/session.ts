@@ -5,6 +5,8 @@ import type { Me, PublicConfig, Settings } from '@/lib/types'
 import { setServerTime } from '@/composables/useNow'
 import { i18n, LOCALE_STORAGE_KEY, setLocale } from '@/i18n'
 import { applyTheme } from '@/composables/useTheme'
+import { native } from '@/platform'
+import { goTo } from '@/platform/navigate'
 
 export const useSessionStore = defineStore('session', () => {
   const me = ref<Me | null>(null)
@@ -69,6 +71,20 @@ export const useSessionStore = defineStore('session', () => {
    */
   async function signOut() {
     await api.post('/auth/logout').catch(() => undefined)
+    if (native) {
+      // Native: the shell unregisters the device, clears the token and runs the central logout.
+      try {
+        localStorage.removeItem('tp.hadSession')
+      } catch {
+        /* ignore */
+      }
+      me.value = null
+      status.value = 'anonymous'
+      const cfg = await loadConfig()
+      await native.signOut({ authBaseUrl: cfg.authBaseUrl })
+      goTo('/signin?signedOut=1')
+      return
+    }
     try {
       localStorage.removeItem('tp.hadSession')
     } catch {

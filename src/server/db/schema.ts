@@ -43,8 +43,61 @@ export const sessions = sqliteTable(
     createdAt: createdAt(),
     revokedAt: integer('revoked_at'),
     userAgent: text('user_agent'),
+    /** web = cookie session; native = bearer token issued to the Android app. */
+    kind: text('kind').notNull().default('web'),
   },
   (t) => [index('sessions_user_idx').on(t.userUuid), index('sessions_exp_idx').on(t.jwtExp)],
+)
+
+/**
+ * Pending and completed Android sign-ins (PKCE hand-off). Rows are short-lived:
+ * housekeeping deletes them one day after creation.
+ */
+export const nativeLogins = sqliteTable(
+  'native_logins',
+  {
+    /** SHA-256 of the tp_native cookie value. */
+    idHash: text('id_hash').primaryKey(),
+    state: text('state').notNull(),
+    codeChallenge: text('code_challenge').notNull(),
+    returnPath: text('return_path'),
+    status: text('status').notNull().default('pending'), // pending | authorized | used
+    /** SHA-256 of the one-time exchange code. */
+    codeHash: text('code_hash').unique(),
+    /** AuthCenter JWT encrypted with the session secret (purpose native-login-jwt). */
+    jwtEnc: text('jwt_enc'),
+    userUuid: text('user_uuid'),
+    createdAt: integer('created_at').notNull().default(now),
+    expiresAt: integer('expires_at').notNull(),
+    usedAt: integer('used_at'),
+  },
+  (t) => [index('native_logins_created_idx').on(t.createdAt)],
+)
+
+/** Android installations receiving FCM pushes. The token is never returned by the API. */
+export const nativeDevices = sqliteTable(
+  'native_devices',
+  {
+    id: text('id').primaryKey(),
+    ownerUuid: text('owner_uuid').notNull().references(() => users.uuid, { onDelete: 'cascade' }),
+    installationId: text('installation_id').notNull(),
+    platform: text('platform').notNull().default('android'),
+    fcmToken: text('fcm_token').notNull(),
+    /** Bearer session that registered the device; logout removes its devices. */
+    sessionHash: text('session_hash'),
+    appVersion: text('app_version'),
+    locale: text('locale'),
+    failureCount: integer('failure_count').notNull().default(0),
+    lastSuccessAt: integer('last_success_at'),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [
+    uniqueIndex('native_devices_installation_uq').on(t.installationId),
+    uniqueIndex('native_devices_token_uq').on(t.fcmToken),
+    index('native_devices_owner_idx').on(t.ownerUuid),
+    index('native_devices_session_idx').on(t.sessionHash),
+  ],
 )
 
 export const workspaces = sqliteTable(
@@ -83,6 +136,9 @@ export const userSettings = sqliteTable('user_settings', {
   aiPlanningStyle: text('ai_planning_style').notNull().default('balanced'),
   /** Set once the user explicitly picks a locale; then it wins over browser detection. */
   localeExplicit: integer('locale_explicit', { mode: 'boolean' }).notNull().default(false),
+  /** Terms of Service version the user accepted (Android first-launch gate), and when. */
+  termsVersion: text('terms_version'),
+  termsAcceptedAt: integer('terms_accepted_at'),
   updatedAt: updatedAt(),
 })
 

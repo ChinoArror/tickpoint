@@ -1,0 +1,110 @@
+apply plugin: 'com.android.application'
+
+// ---------------------------------------------------------------------------
+// Release signing
+//
+// The keystore and its passwords are NOT in the repository. Gradle reads a properties file with
+// keys storeFile, storePassword, keyAlias, keyPassword. Its location is taken from the env var
+// TICKPOINT_SIGNING_PROPS, or else from <user.home>/.tickpoint-signing/keystore.properties.
+// Release builds FAIL when that file is missing. There is no fallback to the debug key.
+// ---------------------------------------------------------------------------
+def signingPropsPath = System.getenv('TICKPOINT_SIGNING_PROPS') ?: (System.getProperty('user.home') + '/.tickpoint-signing/keystore.properties')
+def signingPropsFile = new File(signingPropsPath)
+def releaseSigning = new Properties()
+if (signingPropsFile.exists()) {
+    signingPropsFile.withInputStream { releaseSigning.load(it) }
+}
+
+gradle.taskGraph.whenReady { graph ->
+    def buildsRelease = graph.allTasks.any { t ->
+        (t.name.startsWith('assemble') || t.name.startsWith('bundle')) && t.name.toLowerCase().contains('release')
+    }
+    if (buildsRelease) {
+        if (!signingPropsFile.exists()) {
+            throw new GradleException("Release signing properties not found at ${signingPropsFile}. " +
+                "Create it (see android-app/docs/ANDROID_SIGNING.md) or set TICKPOINT_SIGNING_PROPS. " +
+                "Release builds are never signed with the debug key.")
+        }
+        for (k in ['storeFile', 'storePassword', 'keyAlias', 'keyPassword']) {
+            if (!releaseSigning.getProperty(k)) {
+                throw new GradleException("Release signing properties are missing the key '${k}'.")
+            }
+        }
+        if (!new File(releaseSigning.getProperty('storeFile')).exists()) {
+            throw new GradleException("Keystore file from the signing properties does not exist.")
+        }
+    }
+}
+
+android {
+    namespace = "com.aryuki.tickpoint"
+    compileSdk = rootProject.ext.compileSdkVersion
+    // Installed SDK build-tools (apksigner and aapt2 are used by scripts/release.mjs as well).
+    buildToolsVersion = "36.0.0"
+    defaultConfig {
+        applicationId "com.aryuki.tickpoint"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        // Keep versionCode increasing on every release. versionName must equal android-app/package.json
+        // "version" (scripts/release.mjs checks this).
+        versionCode 2
+        versionName "1.0.1"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        aaptOptions {
+             // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
+             // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
+            ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+    }
+
+    signingConfigs {
+        release {
+            if (signingPropsFile.exists() && releaseSigning.getProperty('storeFile')) {
+                storeFile file(releaseSigning.getProperty('storeFile'))
+                storePassword releaseSigning.getProperty('storePassword')
+                keyAlias releaseSigning.getProperty('keyAlias')
+                keyPassword releaseSigning.getProperty('keyPassword')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (signingPropsFile.exists()) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+}
+
+repositories {
+    flatDir{
+        dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
+    implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
+    implementation project(':capacitor-android')
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+    implementation project(':capacitor-cordova-android-plugins')
+}
+
+apply from: 'capacitor.build.gradle'
+
+// Firebase (FCM). Applied only when google-services.json is present, so the project builds without it.
+// Without the file, push reports "unavailable" at runtime (see AppSettingsPlugin.pushSupport).
+def googleServicesFile = file('google-services.json')
+if (googleServicesFile.exists()) {
+    apply plugin: 'com.google.gms.google-services'
+} else {
+    logger.lifecycle("google-services.json not found: Firebase plugin not applied. Push notifications will report 'unavailable'.")
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand: the same indigo as the web theme-color and PWA icons. -->
+    <color name="colorPrimary">#4F46E5</color>
+    <color name="colorPrimaryDark">#3730A3</color>
+    <color name="colorAccent">#6366F1</color>
+    <color name="ic_launcher_background_start">#6366F1</color>
+    <color name="ic_launcher_background_end">#4F46E5</color>
+    <color name="notification_color">#4F46E5</color>
+    <!-- Light background of the web app (bg token), and its dark counterpart. -->
+    <color name="splash_background">#F8F9FB</color>
+</resources>

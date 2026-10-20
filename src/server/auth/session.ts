@@ -2,13 +2,18 @@ import type { Context } from 'hono'
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
 import { eq } from 'drizzle-orm'
 import type { AppBindings, AuthIdentity, Env } from '../env'
-import { getDb, schema } from '../db/client'
+import { getDb, schema, type DB } from '../db/client'
 import { AppError } from '../lib/http'
 import { decryptString, encryptString, newId, randomToken, sha256Hex } from '../lib/crypto'
 import { verifyToken, type VerifiedIdentity } from './authcenter'
 
 export const SESSION_COOKIE = 'tp_session'
+/** Short-lived cookie that ties the Android Custom Tab's sign-in to its pending native login. */
+export const NATIVE_COOKIE = 'tp_native'
 const COOKIE_MAX_AGE_S = 30 * 24 * 3600
+/** Upper bound for a raw session token (cookie or bearer). */
+const MAX_TOKEN_LENGTH = 100
+export type SessionKind = 'web' | 'native'
 /** Re-check the JWT with AuthCenter at most this often (detects central revocation). */
 const REVERIFY_INTERVAL_MS = 5 * 60_000
 /** If AuthCenter is briefly unreachable, keep serving a recently verified session. */
@@ -25,21 +30,35 @@ export function devBypassEnabled(c: Context<AppBindings>): boolean {
   return c.env.APP_ENV === 'development' && c.env.DEV_AUTH_BYPASS === 'true' && isLocalRequest(c)
 }
 
-function cookieOptions(c: Context) {
+export function cookieOptions(c: Context) {
   const secure = new URL(c.req.url).protocol === 'https:'
   return { httpOnly: true, secure, sameSite: 'Lax' as const, path: '/' }
 }
 
-/** Upsert the user, ensure workspace + settings exist, and open a local session. */
+/** Bearer token from `Authorization: Bearer <token>`, or null when the header is absent. */
+export function bearerToken(c: Context): string | null {
+  const h = c.req.header('authorization')
+  if (!h || !/^Bearer\s/i.test(h)) return null
+  return h.replace(/^Bearer\s+/i, '').trim()
+}
+
+/**
+ * Upsert the user, ensure workspace + settings exist, and open a local session.
+ * web: the raw token is set as the HttpOnly session cookie.
+ * native: no cookie; the raw token is returned once and sent back as a bearer token.
+ * The raw token is returned in both cases; only its SHA-256 is stored.
+ */
 export async function createSession(
   c: Context<AppBindings>,
   identity: VerifiedIdentity,
   token: string,
   initial: { timeZone?: string | null; locale?: 'en' | 'ja' | null } = {},
-): Promise<void> {
+  opts: { kind?: SessionKind } = {},
+): Promise<string> {
   const env = c.env
   const db = getDb(env.DB)
   const now = Date.now()
+  const kind: SessionKind = opts.kind ?? 'web'
   const raw = randomToken(32)
   const idHash = await sha256Hex(raw)
   const accountEmail = identity.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identity.email) ? identity.email.trim().toLowerCase() : null
@@ -109,46 +128,69 @@ export async function createSession(
       scopePermissions: identity.scopePermissions ? JSON.stringify(identity.scopePermissions) : null,
       lastVerifiedAt: now,
       userAgent: (c.req.header('user-agent') ?? '').slice(0, 300),
+      kind,
     }),
   ])
 
-  setCookie(c, SESSION_COOKIE, raw, { ...cookieOptions(c), maxAge: COOKIE_MAX_AGE_S })
+  if (kind === 'web') setCookie(c, SESSION_COOKIE, raw, { ...cookieOptions(c), maxAge: COOKIE_MAX_AGE_S })
+  return raw
 }
 
-function sessionSecret(env: Env): string {
+export function sessionSecret(env: Env): string {
   if (!env.AUTH_APP_SECRET) throw new AppError('NOT_CONFIGURED', 500, 'Server authentication is not configured')
   return env.AUTH_APP_SECRET
 }
 
+/** Delete a session row; a native session also drops the devices that registered through it. */
+async function removeSession(db: DB, idHash: string, kind: string | null | undefined): Promise<void> {
+  if (kind === 'native') {
+    await db.batch([
+      db.delete(schema.nativeDevices).where(eq(schema.nativeDevices.sessionHash, idHash)),
+      db.delete(schema.sessions).where(eq(schema.sessions.idHash, idHash)),
+    ])
+    return
+  }
+  await db.delete(schema.sessions).where(eq(schema.sessions.idHash, idHash))
+}
+
+/** Ends the caller's session (bearer or cookie). Idempotent: an unknown token is not an error. */
 export async function destroySession(c: Context<AppBindings>): Promise<void> {
-  const raw = getCookie(c, SESSION_COOKIE)
-  if (raw) {
+  const bearer = bearerToken(c)
+  const raw = bearer ?? getCookie(c, SESSION_COOKIE)
+  if (raw && raw.length <= MAX_TOKEN_LENGTH) {
     const db = getDb(c.env.DB)
-    await db.delete(schema.sessions).where(eq(schema.sessions.idHash, await sha256Hex(raw)))
+    const idHash = await sha256Hex(raw)
+    const s = await db.query.sessions.findFirst({ where: eq(schema.sessions.idHash, idHash), columns: { kind: true } })
+    if (s) await removeSession(db, idHash, s.kind)
   }
   deleteCookie(c, SESSION_COOKIE, cookieOptions(c))
 }
 
 /**
  * Resolve the request's identity.
- * - No/unknown cookie            -> UNAUTHENTICATED (401)
+ * - `Authorization: Bearer` (native app) wins over the cookie and must name a native session.
+ * - No/unknown token             -> UNAUTHENTICATED (401)
  * - JWT expired or revoked       -> SESSION_EXPIRED (401): client performs the
  *   AuthCenter silent-renewal redirect.
  */
 export async function loadIdentity(c: Context<AppBindings>): Promise<AuthIdentity> {
-  const raw = getCookie(c, SESSION_COOKIE)
-  if (!raw || raw.length > 100) throw new AppError('UNAUTHENTICATED', 401, 'Sign-in required')
+  const bearer = bearerToken(c)
+  const isBearer = bearer !== null
+  const raw = bearer ?? getCookie(c, SESSION_COOKIE)
+  if (!raw || raw.length > MAX_TOKEN_LENGTH) throw new AppError('UNAUTHENTICATED', 401, 'Sign-in required')
   const idHash = await sha256Hex(raw)
   const db = getDb(c.env.DB)
   const s = await db.query.sessions.findFirst({ where: eq(schema.sessions.idHash, idHash) })
-  if (!s || s.revokedAt) {
-    deleteCookie(c, SESSION_COOKIE, cookieOptions(c))
+  const wantKind: SessionKind = isBearer ? 'native' : 'web'
+  if (!s || s.revokedAt || (s.kind ?? 'web') !== wantKind) {
+    // Bearer failures never touch the browser's cookie.
+    if (!isBearer) deleteCookie(c, SESSION_COOKIE, cookieOptions(c))
     throw new AppError('UNAUTHENTICATED', 401, 'Sign-in required')
   }
 
   const now = Date.now()
   const expire = async () => {
-    await db.delete(schema.sessions).where(eq(schema.sessions.idHash, idHash))
+    await removeSession(db, idHash, s.kind)
     throw new AppError('SESSION_EXPIRED', 401, 'Session expired')
   }
 

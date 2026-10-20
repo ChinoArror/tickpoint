@@ -26,5 +26,32 @@
     "title": "プライバシーポリシー",
     "heading": "プライバシーポリシー",
     "effective": "施行日: 2026年10月13日"
+  },
+  "termsPage": {
+    "title": "利用規約",
+    "heading": "利用規約",
+    "effective": "施行日: {date}",
+    "privacyLink": "プライバシーポリシーを読む"
+  },
+  "aboutLegal": {
+    "title": "概要と法的情報",
+    "subtitle": "TickPoint の利用規約、プライバシー、ヘルプ。",
+    "terms": {
+      "label": "利用規約",
+      "hint": "TickPoint のご利用にあたってのルール。"
+    },
+    "privacy": {
+      "label": "プライバシーポリシー",
+      "hint": "取り扱う情報と、その理由。"
+    },
+    "help": {
+      "label": "ヘルプ",
+      "hint": "TickPoint の機能の使い方。"
+    }
+  },
+  "signInLegal": {
+    "text": "サインインを続けると、{terms}に同意し、{privacy}を確認したものとみなされます。",
+    "terms": "利用規約",
+    "privacy": "プライバシーポリシー"
   }
 }

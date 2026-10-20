@@ -1,0 +1,67 @@
+{
+  "nativePlatform": {
+    "download": {
+      "failed": "ファイルを準備できませんでした。通信状況を確認して、もう一度お試しください。"
+    },
+    "authComplete": {
+      "title": "サインインを完了",
+      "heading": "もうすぐ完了です",
+      "body": "サインインが完了しました。ボタンをタップして TickPoint アプリで続けてください。",
+      "button": "TickPoint に戻る",
+      "closeHint": "アプリに戻ったら、このページは閉じて構いません。",
+      "invalid": "このサインインリンクは不完全か、期限切れです。アプリに戻って、もう一度サインインしてください。",
+      "desktop": "このページは TickPoint の Android アプリへのサインインを完了するためのものです。Android スマートフォンでサインインリンクを開いてください。"
+    },
+    "signedOut": {
+      "title": "サインアウトしました",
+      "body": "この端末での TickPoint からのサインアウトが完了しました。",
+      "button": "TickPoint に戻る",
+      "web": "ウェブ版の TickPoint を開く"
+    },
+    "terms": {
+      "gateTitle": "はじめに",
+      "summary": "TickPoint は、タスク、目標、リマインダーを保存します。続ける前に利用規約とプライバシーポリシーをお読みください。",
+      "readFull": "利用規約を読む",
+      "privacy": "プライバシーポリシー",
+      "agree": "利用規約を読み、同意します",
+      "accept": "同意して続ける",
+      "decline": "同意しない",
+      "declineTitle": "利用規約に同意いただかないと、TickPoint を使用できません。",
+      "reviewAgain": "もう一度確認する",
+      "closeApp": "アプリを閉じる",
+      "acceptFailed": "同意を保存できませんでした。もう一度お試しください。"
+    },
+    "push": {
+      "title": "Android の通知",
+      "hint": "TickPoint を閉じていても、リマインダーを Android の通知で受け取れます。",
+      "note": "Android の通知には Google Play 開発者サービスが必要で、バッテリーの最適化により遅れることがあります。Android の設定からいつでも変更できます。",
+      "turnOn": "オンにする",
+      "turnOff": "オフにする",
+      "openSettings": "Android の設定を開く",
+      "status": {
+        "checking": "確認中…",
+        "granted": "オン",
+        "denied": "Android の設定でブロック中",
+        "prompt": "オフ",
+        "unavailable": "利用できません（Google Play 開発者サービスが必要です）"
+      },
+      "channels": {
+        "deadlines": "期限とリマインダー",
+        "general": "一般のお知らせ"
+      }
+    },
+    "pushPrompt": {
+      "title": "この端末でリマインダーを受け取る",
+      "body": "期限やチェックポイントの前に TickPoint からお知らせできます。設定 → 通知からいつでも変更できます。",
+      "allow": "通知を許可",
+      "notNow": "あとで",
+      "enabled": "この端末で通知がオンになりました。",
+      "denied": "通知はオフのままです。Android の設定からオンにできます。",
+      "unavailable": "この端末ではプッシュ通知を利用できません（Google Play 開発者サービスが必要です）。",
+      "failed": "通知をオンにできませんでした。設定 → 通知からもう一度お試しください。"
+    },
+    "network": {
+      "offline": "オフラインです。再接続するまで変更を保存できません。"
+    }
+  }
+}

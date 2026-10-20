@@ -7,6 +7,7 @@
 .env
 .env.*
 !.env.example
+.design
 
 # Dependencies and build output
 node_modules/

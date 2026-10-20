@@ -4,19 +4,22 @@
 import { Hono } from 'hono'
 import type { AppBindings, Env } from './env'
 import { AppError, fail } from './lib/http'
-import { bodyLimit, csrfGuard, requireAuth, securityHeaders } from './middleware'
+import { bodyLimit, csrfGuard, nativeCors, requireAuth, securityHeaders } from './middleware'
 import { authRoutes } from './api/auth'
 import { planningRoutes } from './api/planning'
 import { aiRoutes } from './api/ai'
 import { notifyRoutes } from './api/notify'
 import { overviewRoutes } from './api/overview'
 import { dataRoutes } from './api/data'
+import { devicesRoutes } from './api/devices'
+import { termsRoutes } from './api/terms'
 import { dispatchDueReminders, housekeeping } from './reminders/dispatcher'
 
 export function createApp() {
   const app = new Hono<AppBindings>()
 
   app.use('/api/*', securityHeaders)
+  app.use('/api/*', nativeCors)
   app.use('/api/*', csrfGuard)
   // Default 1 MB body limit; upload/import routes apply their own larger limits.
   const defaultLimit = bodyLimit(1024 * 1024)
@@ -32,6 +35,8 @@ export function createApp() {
   protectedApi.route('/', notifyRoutes)
   protectedApi.route('/', overviewRoutes)
   protectedApi.route('/', dataRoutes)
+  protectedApi.route('/', devicesRoutes)
+  protectedApi.route('/', termsRoutes)
   v1.route('/', protectedApi)
 
   app.route('/api/v1', v1)

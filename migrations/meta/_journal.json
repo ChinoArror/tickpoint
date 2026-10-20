@@ -15,6 +15,13 @@
       "when": 1791869135510,
       "tag": "0001_notification_emails",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1792424231607,
+      "tag": "0002_android",
+      "breakpoints": true
     }
   ]
 }

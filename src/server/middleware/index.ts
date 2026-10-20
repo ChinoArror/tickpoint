@@ -1,7 +1,7 @@
 import type { Context, MiddlewareHandler } from 'hono'
 import type { AppBindings } from '../env'
 import { AppError } from '../lib/http'
-import { loadIdentity } from '../auth/session'
+import { bearerToken, loadIdentity } from '../auth/session'
 import { reportTestUsage } from '../auth/authcenter'
 import { randomToken } from '../lib/crypto'
 
@@ -27,9 +27,42 @@ export function bodyLimit(maxBytes: number): MiddlewareHandler<AppBindings> {
   }
 }
 
+/** Origins of the Android app (Capacitor WebView). Exact matches from NATIVE_APP_ORIGINS only. */
+export function nativeAppOrigin(c: Context<AppBindings>): string | null {
+  const origin = c.req.header('origin')
+  if (!origin) return null
+  const list = (c.env.NATIVE_APP_ORIGINS ?? '').split(',').map((o) => o.trim()).filter(Boolean)
+  return list.includes(origin) ? origin : null
+}
+
+/** Only the app's exchange endpoint may be called cross-origin without a bearer (it carries no cookie). */
+const NATIVE_EXCHANGE_PATH = '/api/v1/auth/native/exchange'
+
+/**
+ * CORS for the Android app. Only origins in NATIVE_APP_ORIGINS get headers, never credentials.
+ * Headers are set before and after the handler so error responses carry them too.
+ */
+export const nativeCors: MiddlewareHandler<AppBindings> = async (c, next) => {
+  const origin = nativeAppOrigin(c)
+  if (!origin) return next()
+  const headers: Record<string, string> = {
+    'Access-Control-Allow-Origin': origin,
+    Vary: 'Origin',
+    'Access-Control-Allow-Headers': 'Authorization, Content-Type, Accept',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE',
+    'Access-Control-Max-Age': '600',
+    'Access-Control-Expose-Headers': 'Content-Disposition',
+  }
+  for (const [k, v] of Object.entries(headers)) c.header(k, v)
+  if (c.req.method === 'OPTIONS') return c.body(null, 204)
+  await next()
+  if (c.res) for (const [k, v] of Object.entries(headers)) c.res.headers.set(k, v)
+}
+
 /**
  * CSRF protection for cookie-authenticated mutations: the session cookie is
  * SameSite=Lax and every state-changing request must come from our own origin.
+ * The Android app may mutate cross-origin only with a bearer token (or to exchange its code).
  */
 export const csrfGuard: MiddlewareHandler<AppBindings> = async (c, next) => {
   const m = c.req.method
@@ -37,7 +70,8 @@ export const csrfGuard: MiddlewareHandler<AppBindings> = async (c, next) => {
     const self = new URL(c.req.url).origin
     const origin = c.req.header('origin')
     const fetchSite = c.req.header('sec-fetch-site')
-    const allowed = origin ? origin === self : fetchSite === 'same-origin'
+    const fromApp = nativeAppOrigin(c) !== null && (bearerToken(c) !== null || c.req.path === NATIVE_EXCHANGE_PATH)
+    const allowed = fromApp || (origin ? origin === self : fetchSite === 'same-origin')
     if (!allowed) throw new AppError('CSRF_REJECTED', 403, 'Cross-site request rejected')
   }
   await next()

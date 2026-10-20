@@ -4,6 +4,9 @@ import { beforeEach } from 'vitest'
 const e = env as unknown as { DB: D1Database; TEST_MIGRATIONS: Parameters<typeof applyD1Migrations>[1] }
 await applyD1Migrations(e.DB, e.TEST_MIGRATIONS)
 
+// Android app origin for CORS and CSRF tests (vitest.config.ts does not bind it).
+e.NATIVE_APP_ORIGINS = 'https://localhost'
+
 // Storage is shared across tests in a file: start every test from empty tables.
 beforeEach(async () => {
   const { results } = await e.DB.prepare(

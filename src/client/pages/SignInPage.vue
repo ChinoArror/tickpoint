@@ -90,6 +90,10 @@ const features = [
           <ArrowRight class="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
         </Button>
         <p class="mt-3 text-center text-xs text-subtle">{{ t('auth.accountsNote') }}</p>
+        <i18n-t keypath="signInLegal.text" tag="p" class="mt-2 text-center text-xs text-subtle">
+          <template #terms><RouterLink to="/terms" class="font-medium text-primary-text hover:underline">{{ t('signInLegal.terms') }}</RouterLink></template>
+          <template #privacy><RouterLink to="/privacy" class="font-medium text-primary-text hover:underline">{{ t('signInLegal.privacy') }}</RouterLink></template>
+        </i18n-t>
 
         <div v-if="session.config?.devBypass" class="mt-10 rounded-xl border border-dashed border-warning/60 bg-warning-soft/40 p-3">
           <p class="mb-2 text-xs font-medium text-warning-text">{{ t('auth.devOnly') }}</p>

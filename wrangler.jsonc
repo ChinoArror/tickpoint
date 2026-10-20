@@ -48,6 +48,7 @@
     "VAPID_PUBLIC_KEY": "BLMhbqV2IRkW9FNjctoZ1S_nKLD22QdM0fzstywts0ROc8r55jKAGFjA9a2UjnHhwLUausnCs35A77b6VL5yOD8",
     "VAPID_SUBJECT": "mailto:noreply@point.aryuki.com",
     "EMAIL_PROVIDER": "cloudflare",
-    "EMAIL_FROM": "TickPoint <noreply@point.aryuki.com>"
+    "EMAIL_FROM": "TickPoint <noreply@point.aryuki.com>",
+    "NATIVE_APP_ORIGINS": "https://localhost"
   }
 }

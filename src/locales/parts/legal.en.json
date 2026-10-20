@@ -26,5 +26,32 @@
     "title": "Privacy Policy",
     "heading": "Privacy Policy",
     "effective": "Effective: October 13, 2026"
+  },
+  "termsPage": {
+    "title": "Terms of Service",
+    "heading": "Terms of Service",
+    "effective": "Effective: {date}",
+    "privacyLink": "Read the Privacy Policy"
+  },
+  "aboutLegal": {
+    "title": "About & legal",
+    "subtitle": "Terms, privacy and help for TickPoint.",
+    "terms": {
+      "label": "Terms of Service",
+      "hint": "The rules for using TickPoint."
+    },
+    "privacy": {
+      "label": "Privacy Policy",
+      "hint": "What information we handle, and why."
+    },
+    "help": {
+      "label": "Help",
+      "hint": "A guide to TickPoint's features."
+    }
+  },
+  "signInLegal": {
+    "text": "By continuing you agree to the {terms} and acknowledge the {privacy}.",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy"
   }
 }

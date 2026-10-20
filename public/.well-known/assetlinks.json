@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.aryuki.tickpoint",
+      "sha256_cert_fingerprints": [
+        "B2:03:61:C2:98:27:EB:5C:6C:26:DE:14:01:7F:F3:96:69:21:E7:6C:A7:13:1D:F6:AD:80:0F:CF:49:B3:5F:20"
+      ]
+    }
+  }
+]

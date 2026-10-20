@@ -1,0 +1,2 @@
+b507a7d0f1ef9ff78272ecf95ec7b74dcd272f519c0910e8275027b68d9f93ff  TickPoint-v1.0.1-release.apk
+6dcec45f4f73cb99c8314cc74240f8d41ce5a8ec8abd8928551bac6a6354f173  TickPoint-v1.0.1-release.aab

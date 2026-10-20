@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Adaptive icon foreground: white progress arc and check mark, centred in the 66dp safe zone.
+     Glyph geometry is the same as the web icon (scripts/generate-icons.mjs), drawn at 50% scale. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+    <group
+        android:scaleX="0.5"
+        android:scaleY="0.5"
+        android:translateX="25"
+        android:translateY="25">
+        <path
+            android:pathData="M50,8 A42,42 0 1 1 20.3,20.3"
+            android:strokeColor="#FFFFFFFF"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:strokeWidth="10" />
+        <path
+            android:pathData="M31,51 L44.5,64.5 L70,37"
+            android:strokeColor="#FFFFFFFF"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:strokeWidth="11" />
+    </group>
+</vector>

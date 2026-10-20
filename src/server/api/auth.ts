@@ -1,12 +1,14 @@
 import { Hono } from 'hono'
 import { z } from 'zod'
 import type { AppBindings } from '../env'
-import { AppError, ok, readJson } from '../lib/http'
+import { AppError, ok, parse, readJson } from '../lib/http'
 import { looksLikeJwt } from '../lib/crypto'
 import { getDb, schema } from '../db/client'
 import { eq } from 'drizzle-orm'
+import { deleteCookie, getCookie } from 'hono/cookie'
 import { loginUrl, profileUrl, trackEvent, verifyToken, type VerifiedIdentity } from '../auth/authcenter'
-import { consumeLoginState, createSession, destroySession, devBypassEnabled, DEV_BYPASS_MARKER, recordLoginAttempt, safeReturnPath } from '../auth/session'
+import { consumeLoginState, createSession, destroySession, devBypassEnabled, DEV_BYPASS_MARKER, NATIVE_COOKIE, recordLoginAttempt, safeReturnPath, cookieOptions } from '../auth/session'
+import { authorizeNativeLogin, exchangeNativeCode, pendingNativeLogin, pkceValueRegex, startNativeLogin } from '../auth/native'
 import { hitRateLimit, requireAuth } from '../middleware'
 import { timeZoneSchema } from '../../shared/schemas'
 import { getSettingsRow, serializeSettings } from '../services/settings'
@@ -49,9 +51,46 @@ authRoutes.post('/session', async (c) => {
     const status = out.reason === 'app_not_allowed' ? 403 : 401
     throw new AppError(out.reason === 'app_not_allowed' ? 'FORBIDDEN' : 'AUTH_REJECTED', status, 'Sign-in could not be verified', { reason: out.reason })
   }
+  // Android sign-in: a valid pending tp_native cookie hands the JWT to the app instead of the browser.
+  const pending = await pendingNativeLogin(c)
+  if (pending) {
+    const redirect = await authorizeNativeLogin(c, pending, token, out.identity)
+    c.executionCtx.waitUntil(trackEvent(c.env, out.identity.uuid, 'login'))
+    return ok(c, { redirect, native: true })
+  }
+  // A stale or unknown tp_native cookie is dropped and the normal web sign-in continues.
+  if (getCookie(c, NATIVE_COOKIE)) deleteCookie(c, NATIVE_COOKIE, cookieOptions(c))
+
   await createSession(c, out.identity, token, { timeZone, locale })
   c.executionCtx.waitUntil(trackEvent(c.env, out.identity.uuid, 'login'))
   return ok(c, { redirect: consumeLoginState(c) })
+})
+
+const nativeStartQuery = z.object({
+  state: z.string().regex(pkceValueRegex, 'INVALID_STATE'),
+  challenge: z.string().regex(pkceValueRegex, 'INVALID_CHALLENGE'),
+  return: z.string().max(512).optional(),
+})
+
+/** Android: begin sign-in in the Custom Tab. Sets tp_native and redirects to AuthCenter. */
+authRoutes.get('/native/start', async (c) => {
+  const ip = c.req.header('cf-connecting-ip') ?? 'local'
+  const rl = await hitRateLimit(c.env.DB, `native-start:${ip}`, 600_000, 30)
+  if (!rl.allowed) throw new AppError('RATE_LIMITED', 429, 'Too many sign-in attempts')
+  const q = parse(nativeStartQuery, c.req.query())
+  await startNativeLogin(c, { state: q.state, challenge: q.challenge, returnPath: q.return })
+  return c.redirect(loginUrl(c.env), 302)
+})
+
+const pkceField = z.string().regex(pkceValueRegex, 'INVALID_GRANT')
+
+/** Android: trade the one-time code and PKCE verifier for a bearer session. Public, CORS-allowed. */
+authRoutes.post('/native/exchange', async (c) => {
+  const ip = c.req.header('cf-connecting-ip') ?? 'local'
+  const rl = await hitRateLimit(c.env.DB, `native-exchange:${ip}`, 600_000, 20)
+  if (!rl.allowed) throw new AppError('RATE_LIMITED', 429, 'Too many sign-in attempts')
+  const body = await readJson(c, z.object({ code: pkceField, verifier: pkceField, timeZone: timeZoneSchema.nullish(), locale: z.enum(['en', 'ja']).nullish() }))
+  return ok(c, await exchangeNativeCode(c, body))
 })
 
 /** Development-only sign-in for local testing (AuthCenter cannot redirect to localhost). */

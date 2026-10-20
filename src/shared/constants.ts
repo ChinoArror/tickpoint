@@ -4,6 +4,9 @@ export const SUPPORTED_LOCALES = ['en', 'ja'] as const
 export type Locale = (typeof SUPPORTED_LOCALES)[number]
 export const DEFAULT_LOCALE: Locale = 'en'
 
+/** Current Terms of Service version (the effective date). Changing it asks Android users to accept again. */
+export const TERMS_VERSION = '2026-10-20'
+
 export const TASK_KINDS = ['task', 'deadline'] as const
 export type TaskKind = (typeof TASK_KINDS)[number]
 

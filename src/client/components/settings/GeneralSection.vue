@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { Monitor, Moon, Sun } from 'lucide-vue-next'
+import { RouterLink } from 'vue-router'
+import { ChevronRight, FileText, LifeBuoy, Monitor, Moon, ShieldCheck, Sun } from 'lucide-vue-next'
 import Card from '@/components/ui/Card.vue'
 import Input from '@/components/ui/Input.vue'
 import Segmented from '@/components/ui/Segmented.vue'
@@ -69,38 +70,66 @@ const themeOptions = computed(() => [
 
 const weekStart = field('weekStart')
 const weekStartOptions = computed(() => [0, 1, 6].map((d) => ({ value: d, label: t(`settingsPage.general.weekdays.${d}`) })))
+
+const legalLinks = [
+  { to: '/terms', icon: FileText, key: 'terms' },
+  { to: '/privacy', icon: ShieldCheck, key: 'privacy' },
+  { to: '/docs', icon: LifeBuoy, key: 'help' },
+] as const
 </script>
 
 <template>
-  <Card :title="t('settingsPage.general.title')" :subtitle="t('settingsPage.general.subtitle')" :padded="true">
-    <div class="divide-y divide-border">
-      <SettingRow :label="t('settingsPage.general.language')" :description="t('settingsPage.general.languageHint')">
-        <Segmented v-model="localeChoice" :label="t('settingsPage.general.language')" :options="[{ value: 'en', label: 'English' }, { value: 'ja', label: '日本語' }]" />
-      </SettingRow>
+  <div class="flex flex-col gap-6">
+    <Card :title="t('settingsPage.general.title')" :subtitle="t('settingsPage.general.subtitle')" :padded="true">
+      <div class="divide-y divide-border">
+        <SettingRow :label="t('settingsPage.general.language')" :description="t('settingsPage.general.languageHint')">
+          <Segmented v-model="localeChoice" :label="t('settingsPage.general.language')" :options="[{ value: 'en', label: 'English' }, { value: 'ja', label: '日本語' }]" />
+        </SettingRow>
 
-      <SettingRow stacked :label="t('settingsPage.general.timeZone')" :description="t('settingsPage.general.timeZoneHint')" html-for="setting-timezone">
-        <div class="flex w-full flex-col gap-2 sm:w-72">
-          <Input v-model="zoneQuery" type="search" autocomplete="off" :placeholder="t('settingsPage.general.timeZoneSearch')" :aria-label="t('settingsPage.general.timeZoneSearch')" />
-          <Select id="setting-timezone" v-model="zone" :options="zoneOptions" />
-          <p class="tabular text-xs text-muted" aria-live="polite">{{ t('settingsPage.general.zonePreview', { time: zonePreview }) }}</p>
-        </div>
-      </SettingRow>
+        <SettingRow stacked :label="t('settingsPage.general.timeZone')" :description="t('settingsPage.general.timeZoneHint')" html-for="setting-timezone">
+          <div class="flex w-full flex-col gap-2 sm:w-72">
+            <Input v-model="zoneQuery" type="search" autocomplete="off" :placeholder="t('settingsPage.general.timeZoneSearch')" :aria-label="t('settingsPage.general.timeZoneSearch')" />
+            <Select id="setting-timezone" v-model="zone" :options="zoneOptions" />
+            <p class="tabular text-xs text-muted" aria-live="polite">{{ t('settingsPage.general.zonePreview', { time: zonePreview }) }}</p>
+          </div>
+        </SettingRow>
 
-      <SettingRow :label="t('settingsPage.general.dateFormat')" :description="t('settingsPage.general.dateFormatHint')" html-for="setting-date-format">
-        <Select id="setting-date-format" v-model="dateFormat" :options="dateFormatOptions" class="sm:w-56" />
-      </SettingRow>
+        <SettingRow :label="t('settingsPage.general.dateFormat')" :description="t('settingsPage.general.dateFormatHint')" html-for="setting-date-format">
+          <Select id="setting-date-format" v-model="dateFormat" :options="dateFormatOptions" class="sm:w-56" />
+        </SettingRow>
 
-      <SettingRow stacked :label="t('settingsPage.general.timeFormat')" :description="t('settingsPage.general.timeFormatHint')">
-        <Segmented v-model="timeFormat" :label="t('settingsPage.general.timeFormat')" :options="timeFormatOptions" />
-      </SettingRow>
+        <SettingRow stacked :label="t('settingsPage.general.timeFormat')" :description="t('settingsPage.general.timeFormatHint')">
+          <Segmented v-model="timeFormat" :label="t('settingsPage.general.timeFormat')" :options="timeFormatOptions" />
+        </SettingRow>
 
-      <SettingRow stacked :label="t('settingsPage.general.theme')" :description="t('settingsPage.general.themeHint')">
-        <Segmented v-model="themeModel" :label="t('settingsPage.general.theme')" :options="themeOptions" />
-      </SettingRow>
+        <SettingRow stacked :label="t('settingsPage.general.theme')" :description="t('settingsPage.general.themeHint')">
+          <Segmented v-model="themeModel" :label="t('settingsPage.general.theme')" :options="themeOptions" />
+        </SettingRow>
 
-      <SettingRow :label="t('settingsPage.general.weekStart')" :description="t('settingsPage.general.weekStartHint')" html-for="setting-week-start">
-        <Select id="setting-week-start" v-model="weekStart" :options="weekStartOptions" class="sm:w-56" />
-      </SettingRow>
-    </div>
-  </Card>
+        <SettingRow :label="t('settingsPage.general.weekStart')" :description="t('settingsPage.general.weekStartHint')" html-for="setting-week-start">
+          <Select id="setting-week-start" v-model="weekStart" :options="weekStartOptions" class="sm:w-56" />
+        </SettingRow>
+      </div>
+    </Card>
+
+    <Card :title="t('aboutLegal.title')" :subtitle="t('aboutLegal.subtitle')" :padded="true">
+      <nav :aria-label="t('aboutLegal.title')" class="-mx-2 divide-y divide-border">
+        <RouterLink
+          v-for="l in legalLinks"
+          :key="l.key"
+          :to="l.to"
+          class="group flex items-center gap-3 rounded-lg px-2 py-3 transition-colors duration-150 hover:bg-surface-hover"
+        >
+          <span class="grid size-8 shrink-0 place-items-center rounded-lg bg-surface-sunken text-muted group-hover:text-primary-text">
+            <component :is="l.icon" class="size-4" aria-hidden="true" />
+          </span>
+          <span class="min-w-0 flex-1">
+            <span class="block text-[13px] font-medium text-fg">{{ t(`aboutLegal.${l.key}.label`) }}</span>
+            <span class="block text-xs text-muted">{{ t(`aboutLegal.${l.key}.hint`) }}</span>
+          </span>
+          <ChevronRight class="size-4 shrink-0 text-subtle transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+        </RouterLink>
+      </nav>
+    </Card>
+  </div>
 </template>

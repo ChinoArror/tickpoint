@@ -37,6 +37,8 @@ export function serializeSettings(s: SettingsRow) {
     aiSaveSourceDefault: s.aiSaveSourceDefault,
     aiAvailableHoursPerDay: s.aiAvailableHoursPerDay,
     aiPlanningStyle: s.aiPlanningStyle,
+    termsVersion: s.termsVersion,
+    termsAcceptedAt: s.termsAcceptedAt,
   }
 }
 

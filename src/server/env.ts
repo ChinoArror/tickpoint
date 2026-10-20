@@ -13,12 +13,16 @@ export interface Env {
   VAPID_SUBJECT: string
   EMAIL_PROVIDER: 'none' | 'resend' | 'cloudflare'
   EMAIL_FROM: string
+  /** Comma-separated origins of the Android app (exact match). Default https://localhost. */
+  NATIVE_APP_ORIGINS: string
 
   // Secrets
   AUTH_APP_SECRET: string
   GEMINI_API_KEY?: string
   VAPID_PRIVATE_KEY?: string
   RESEND_API_KEY?: string
+  /** Firebase service-account JSON (project_id, client_email, private_key) for FCM HTTP v1. */
+  FCM_SERVICE_ACCOUNT?: string
 
   /** Cloudflare Email Service send_email binding (when EMAIL_PROVIDER = 'cloudflare'). */
   EMAIL?: {

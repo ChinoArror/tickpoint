@@ -357,6 +357,19 @@ export const pushSubscriptionSchema = z.object({
   keys: z.object({ p256dh: z.string().min(10).max(200), auth: z.string().min(8).max(100) }),
 })
 
+/** Android installation id, generated and kept by the app. */
+export const installationIdSchema = z.string().min(8).max(100).regex(/^[A-Za-z0-9_-]+$/, 'INVALID_ID')
+
+/** Register or refresh this Android installation for FCM pushes. */
+export const deviceRegisterSchema = z.object({
+  installationId: installationIdSchema,
+  platform: z.literal('android'),
+  fcmToken: z.string().min(20).max(4096),
+  appVersion: z.string().max(40).nullish(),
+  locale: z.enum(SUPPORTED_LOCALES).nullish(),
+})
+export type DeviceRegisterInput = z.infer<typeof deviceRegisterSchema>
+
 // ---------------------------------------------------------------------------
 // Tags
 // ---------------------------------------------------------------------------

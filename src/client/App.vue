@@ -6,6 +6,7 @@ import { TooltipProvider } from 'reka-ui'
 import Toaster from '@/components/ui/Toaster.vue'
 import ActivityHost from '@/components/ui/ActivityHost.vue'
 import ConfirmHost from '@/components/ui/ConfirmHost.vue'
+import { isNative } from '@/platform'
 
 const PwaPrompt = defineAsyncComponent(() => import('@/components/shell/PwaPrompt.vue'))
 const route = useRoute()
@@ -29,6 +30,6 @@ watchEffect(() => {
       <Toaster />
     </div>
     <ConfirmHost />
-    <PwaPrompt />
+    <PwaPrompt v-if="!isNative" />
   </TooltipProvider>
 </template>

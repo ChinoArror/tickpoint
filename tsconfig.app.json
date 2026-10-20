@@ -17,7 +17,8 @@
     "paths": {
       "@/*": ["./src/client/*"],
       "@shared/*": ["./src/shared/*"],
-      "@locales/*": ["./src/locales/*"]
+      "@locales/*": ["./src/locales/*"],
+      "@native-platform": ["./src/client/platform/none.ts"]
     }
   },
   "include": ["src/client/**/*", "src/shared/**/*", "src/locales/*.json", "src/client/**/*.vue", "env.d.ts"],

@@ -14,6 +14,7 @@ import EmailRecipients from './EmailRecipients.vue'
 import { useSettingSave } from './useSettingSave'
 import { api } from '@/lib/api'
 import { usePush, type PushResult } from '@/composables/usePush'
+import { isNative, native, type NativePushStatus } from '@/platform'
 import { useFormat } from '@/composables/useFormat'
 import { useErrorMessage } from '@/composables/useTasks'
 import { useToast } from '@/composables/useToast'
@@ -74,7 +75,8 @@ const hasVerifiedEmail = computed(() => (recipients.data.value?.items ?? []).som
 const emailSwitchDisabled = computed(() => emailMissing.value || (!hasVerifiedEmail.value && !notifyEmail.value))
 
 onMounted(() => {
-  void push.refresh()
+  if (isNative) void refreshNativePush()
+  else void push.refresh()
 })
 
 // ---- Push --------------------------------------------------------------
@@ -101,6 +103,53 @@ async function togglePush(on: boolean) {
   } finally {
     pushBusy.value = false
   }
+}
+
+// ---- Android push (native shell) -------------------------------------------
+const nativePushStatus = ref<NativePushStatus | null>(null)
+const nativePushLabel = computed(() =>
+  nativePushStatus.value ? t(`nativePlatform.push.status.${nativePushStatus.value}`) : t('nativePlatform.push.status.checking'),
+)
+// Turn on: permission not asked yet, or allowed on the device but switched off in TickPoint.
+const showNativeTurnOn = computed(() => nativePushStatus.value === 'prompt' || (nativePushStatus.value === 'granted' && !pushOn.value))
+const showNativeTurnOff = computed(() => nativePushStatus.value === 'granted' && pushOn.value)
+
+async function refreshNativePush() {
+  if (!native) return
+  nativePushStatus.value = await native.push.status().catch((): NativePushStatus => 'unavailable')
+}
+
+async function turnOnNativePush() {
+  if (!native) return
+  pushBusy.value = true
+  try {
+    const result = await native.push.enable()
+    nativePushStatus.value = result
+    // The dispatcher only sends to the device when the account's notifyPush is on.
+    if (result === 'granted' && !session.settings?.notifyPush) await save({ notifyPush: true })
+  } catch (e) {
+    toast.error(errMsg(e))
+  } finally {
+    pushBusy.value = false
+  }
+}
+
+async function turnOffNativePush() {
+  if (!native) return
+  pushBusy.value = true
+  try {
+    // notifyPush stays as it is: Web Push in other browsers reads the same flag.
+    await native.push.disable()
+    nativePushStatus.value = await native.push.status().catch((): NativePushStatus => 'unavailable')
+  } catch (e) {
+    toast.error(errMsg(e))
+  } finally {
+    pushBusy.value = false
+  }
+}
+
+async function openNativeSettings() {
+  await native?.push.openSettings().catch(() => undefined)
 }
 
 // ---- Test notification -----------------------------------------------------
@@ -213,7 +262,19 @@ function deviceName(ua: string | null | undefined) {
           <Switch v-model="notifyInApp" :label="t('settingsPage.notifications.inApp')" />
         </SettingRow>
 
-        <SettingRow :label="t('settingsPage.notifications.push')" :description="t('settingsPage.notifications.pushHint')">
+        <SettingRow v-if="isNative" :label="t('nativePlatform.push.title')" :description="t('nativePlatform.push.hint')">
+          <div class="flex w-full flex-col items-end gap-2 sm:w-auto">
+            <span class="text-xs font-medium text-muted" role="status">{{ nativePushLabel }}</span>
+            <Button v-if="showNativeTurnOn" variant="primary" size="sm" :loading="pushBusy" @click="turnOnNativePush">{{ t('nativePlatform.push.turnOn') }}</Button>
+            <Button v-if="showNativeTurnOff" variant="secondary" size="sm" :loading="pushBusy" @click="turnOffNativePush">{{ t('nativePlatform.push.turnOff') }}</Button>
+            <Button v-if="nativePushStatus === 'denied'" variant="secondary" size="sm" @click="openNativeSettings">{{ t('nativePlatform.push.openSettings') }}</Button>
+          </div>
+          <template #note>
+            <p class="text-xs leading-relaxed text-muted">{{ t('nativePlatform.push.note') }}</p>
+          </template>
+        </SettingRow>
+
+        <SettingRow v-else :label="t('settingsPage.notifications.push')" :description="t('settingsPage.notifications.pushHint')">
           <Switch :model-value="pushOn" :disabled="pushBusy || !push.supported" :label="t('settingsPage.notifications.push')" @update:model-value="togglePush" />
           <template #note>
             <p v-if="!push.supported" class="text-xs text-muted">{{ t('settingsPage.notifications.pushResult.unsupported') }}</p>
